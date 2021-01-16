@@ -19,6 +19,8 @@ function isUpperAlpha(char: string) {
 function getTokenType(word: string): [TokenType, SymbolType] {
   switch (word) {
     case '#':
+    case 'ϵ':
+    case 'λ':
       return [TokenType.Keyword, SymbolType.Empty];
     case '->':
       return [TokenType.Operator, SymbolType.Follow];
