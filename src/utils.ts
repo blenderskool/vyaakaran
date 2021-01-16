@@ -79,7 +79,7 @@ function more(line: string, pos: [number, number] = [0, 0]): [Token, number] {
     {
       value: result,
       type: [tokenType, getSymbolType(result)],
-      position: [lineIdx, col],
+      position: [lineIdx+1, col+1],
     },
     i-1
   ];
