@@ -12,48 +12,29 @@ function isUpperAlpha(char: string) {
 }
 
 /**
- * Returns the type of the token from the character
- * @param char Character to check
+ * Finds the token type and it's symbolic type
+ * @param word String to check
+ * @returns Array containing TokenType and SymbolType
  */
-function getTokenType(char: string): TokenType {
-  if (char === '#') {
-    return TokenType.Keyword;
-  } else if (new Set([ '-', '>', '|', '.' ]).has(char)) {
-    return TokenType.Separator;
-  } else if (char === '/') {
-    return TokenType.Comment;
-  } else if (isUpperAlpha(char)) {
-    return TokenType.Identifier;
-  }
-  
-  return TokenType.Literal;
-}
-
-/**
- * Returns the type of the symbol from the token
- * @param token Token to check
- */
-function getSymbolType(token: string): SymbolType {
-  switch (token) {
+function getTokenType(word: string): [TokenType, SymbolType] {
+  switch (word) {
     case '#':
-      return SymbolType.Empty;
+      return [TokenType.Keyword, SymbolType.Empty];
     case '->':
-      return SymbolType.Follow;
+      return [TokenType.Operator, SymbolType.Follow];
     case '|':
-      return SymbolType.Or;
+      return [TokenType.Operator, SymbolType.Or];
     case '.':
-      return SymbolType.Dot;
+      return [TokenType.Separator, SymbolType.Dot];
     case '//':
-      return SymbolType.Comment;
-  };
+      return [TokenType.Comment, SymbolType.Comment];
+  }
 
-  const tokenType = getTokenType(token[0]);
-  switch (tokenType) {
-    case TokenType.Identifier:
-      return SymbolType.State;
-    case TokenType.Literal:
-      return SymbolType.Literal;
-  };
+  if (isUpperAlpha(word[0])) {
+    return [TokenType.Identifier, SymbolType.State];
+  }
+
+  return [TokenType.Literal, SymbolType.Literal];
 }
 
 /**
@@ -67,10 +48,9 @@ function more(line: string, pos: [number, number] = [0, 0]): [Token, number] {
   const [lineIdx, col] = pos;
 
   let result = line[col];
-  const tokenType = getTokenType(result);
 
   let i = col + 1;
-  while(i < line.length && getTokenType(line[i]) === tokenType && line[i] !== ' ') {
+  while(i < line.length && line[i] !== ' ' && getTokenType(result)[0] === TokenType.Literal) {
     result += line[i];
     i++;
   }
@@ -78,7 +58,7 @@ function more(line: string, pos: [number, number] = [0, 0]): [Token, number] {
   return [
     {
       value: result,
-      type: [tokenType, getSymbolType(result)],
+      type: getTokenType(result),
       position: [lineIdx+1, col+1],
     },
     i-1

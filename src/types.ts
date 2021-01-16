@@ -4,6 +4,7 @@ enum TokenType {
   Keyword = 'KEYWORD',
   Separator = 'SEPARATOR',
   Comment = 'COMMENT',
+  Operator = 'OPERATOR',
 };
 
 enum SymbolType {
