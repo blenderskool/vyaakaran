@@ -33,7 +33,11 @@ class Lexer {
       return [TokenType.Identifier, SymbolType.State];
     }
 
-    return [TokenType.Literal, SymbolType.Literal];
+    if (!['#', 'ϵ', 'λ', '->', '|', '.', '//'].some((token) => word.includes(token))) {
+      return [TokenType.Literal, SymbolType.Literal];
+    }
+
+    return [null, null];
   }
 
   /**
@@ -46,13 +50,13 @@ class Lexer {
   protected more(line: string, pos: [number, number] = [0, 0]): [Token, number] {
     const [lineIdx, col] = pos;
 
-    let result = line[col];
+    let result = '';
+    let i = col;
 
-    let i = col + 1;
-    while(i < line.length && line[i] !== ' ' && this.getTokenType(result)[0] === TokenType.Literal) {
+    do {
       result += line[i];
       i++;
-    }
+    } while(i < line.length && line[i] !== ' ' && this.getTokenType(result + line[i])[0] !== null);
 
     return [
       {
@@ -60,7 +64,7 @@ class Lexer {
         type: this.getTokenType(result),
         position: [lineIdx+1, col+1],
       },
-      i-1
+      i-1,
     ];
   }
 
