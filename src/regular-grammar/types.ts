@@ -23,4 +23,9 @@ interface Token {
   position: [number, number];
 };
 
-export { TokenType, Token, SymbolType };
+interface ParseTree {
+  type: string;
+  body: (ParseTree|Token)[];
+};
+
+export { TokenType, Token, SymbolType, ParseTree };
