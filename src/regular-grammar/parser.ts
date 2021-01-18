@@ -1,4 +1,4 @@
-import { SymbolType } from './types';
+import { SymbolType, Token, ParseTree } from './types';
 import Lexer from './lexer';
 
 class Parser {
@@ -42,32 +42,37 @@ class Parser {
    * Parses the given program using a parse table
    * @returns an array consiting of productions to derive the program and errors
    */
-  parse(): [string[], string] {
-    const productions = [];
-    const scope = ['Statement'];
+  parse(): [ParseTree, string] {
+    const parseTreeRoot = { type: 'Statement', body: [] };
+    const scope = [ parseTreeRoot ];
     const tokenStream = new Lexer(this.program).lex();
     let token = tokenStream.next();
-
+    
     while(!token.done && scope.length) {
-      const topToken = token.value;
+      const topToken: Token = token.value;
       const topScope = scope[0];
 
-      if (topScope === 'EPSILON') {
+      if (topScope.type === 'EPSILON') {
         scope.shift();
-      } else if (topToken.type[1] === topScope) {
+      } else if (topToken.type[1] === topScope.type) {
+        topScope.body.push(topToken);
         // Stream next token as the current token was successfully matched
         token = tokenStream.next();
         scope.shift();
-      } else if (Parser.parseTable[topScope] && Parser.parseTable[topScope][topToken.type[1]]) {
-        const production = Parser.parseTable[topScope][topToken.type[1]];
+      } else if (Parser.parseTable[topScope.type] && Parser.parseTable[topScope.type][topToken.type[1]]) {
+        const production = Parser.parseTable[topScope.type][topToken.type[1]];
 
         scope.shift();
-        scope.unshift(...production.split(' '));
-        productions.push([ topScope, '::=', production].join(' '));
+        const childNodes = production.split(' ').map((prod) => ({
+          type: prod,
+          body: [],
+        }));
+        scope.unshift(...childNodes);
+        topScope.body.push(...childNodes);
       } else {
         let error: string;
-        if (Parser.parseTable[topScope]) {
-          const keys = Object.keys(Parser.parseTable[topScope]).filter(key => key !== '$');
+        if (Parser.parseTable[topScope.type]) {
+          const keys = Object.keys(Parser.parseTable[topScope.type]).filter(key => key !== '$');
 
           if (keys.length === 1) {
             error = `Expected ${keys[0]} at ${topToken.position.join(':')}`;
@@ -75,14 +80,14 @@ class Parser {
             error = `Expected one of ${keys.join(', ')} at ${topToken.position.join(':')}`;
           }
         } else {
-          error = `Expected ${topScope} at ${topToken.position.join(':')}`;
+          error = `Expected ${topScope.type} at ${topToken.position.join(':')}`;
         }
 
         return [null, error];
       }
     }
 
-    return [productions, null];
+    return [parseTreeRoot, null];
   }
 }
 
