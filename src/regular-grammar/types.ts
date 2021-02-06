@@ -28,4 +28,9 @@ interface ParseTree {
   body: (ParseTree|Token)[];
 };
 
-export { TokenType, Token, SymbolType, ParseTree };
+interface CompileError {
+  type: 'Error' | 'Warning';
+  message: string;
+};
+
+export { TokenType, Token, SymbolType, ParseTree, CompileError };

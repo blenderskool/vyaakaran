@@ -1,4 +1,4 @@
-import { SymbolType, Token, ParseTree } from './types';
+import { SymbolType, Token, ParseTree, CompileError } from './types';
 import Lexer from './lexer';
 
 class Parser {
@@ -38,11 +38,28 @@ class Parser {
     this.program = program;
   }
 
+  protected createError(topScope): CompileError {
+    const error: CompileError = { type: 'Error', message: '' };
+    if (Parser.parseTable[topScope.type]) {
+      const keys = Object.keys(Parser.parseTable[topScope.type]).filter(key => key !== '$');
+
+      if (keys.length === 1) {
+        error.message = `Expected ${keys[0]}`;
+      } else {
+        error.message = `Expected one of ${keys.join(', ')}`;
+      }
+    } else {
+      error.message = `Expected ${topScope.type}`;
+    }
+
+    return error;
+  }
+
   /**
    * Parses the given program using a parse table
-   * @returns an array consiting of productions to derive the program and errors
+   * @returns an array consiting of parse tree and errors
    */
-  parse(): [ParseTree, string] {
+  parse(): [ParseTree, CompileError] {
     const parseTreeRoot = { type: 'Statement', body: [] };
     const scope = [ parseTreeRoot ];
     const tokenStream = new Lexer(this.program).lex();
@@ -70,21 +87,25 @@ class Parser {
         scope.unshift(...childNodes);
         topScope.body.push(...childNodes);
       } else {
-        let error: string;
-        if (Parser.parseTable[topScope.type]) {
-          const keys = Object.keys(Parser.parseTable[topScope.type]).filter(key => key !== '$');
-
-          if (keys.length === 1) {
-            error = `Expected ${keys[0]} at ${topToken.position.join(':')}`;
-          } else {
-            error = `Expected one of ${keys.join(', ')} at ${topToken.position.join(':')}`;
-          }
-        } else {
-          error = `Expected ${topScope.type} at ${topToken.position.join(':')}`;
-        }
+        const error = this.createError(topScope);
+        error.message += `at ${topToken.position.join(':')}`;
 
         return [null, error];
       }
+    }
+
+    while(scope.length) {
+      const topScope = scope[0];
+      const toTerminal = Parser.parseTable[topScope.type];
+      if (toTerminal?.['$'] === `EPSILON`) {
+        scope.shift();
+        continue;
+      }
+
+      const error = this.createError(topScope);
+      error.message += `at the end of program`;
+
+      return [null, error];
     }
 
     return [parseTreeRoot, null];
