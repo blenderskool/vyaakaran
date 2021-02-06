@@ -29,11 +29,11 @@ class Lexer {
         return [TokenType.Comment, SymbolType.Comment];
     }
 
-    if (isUpperAlpha(word[0])) {
-      return [TokenType.Identifier, SymbolType.State];
-    }
-
     if (!['#', 'ϵ', 'λ', '->', '|', '.', '//'].some((token) => word.includes(token))) {
+      if (isUpperAlpha(word[0])) {
+        return [TokenType.Identifier, SymbolType.State];
+      }
+
       return [TokenType.Literal, SymbolType.Literal];
     }
 
