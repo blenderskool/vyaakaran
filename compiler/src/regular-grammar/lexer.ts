@@ -2,7 +2,7 @@ import { Token, TokenType, SymbolType } from './types';
 import { isUpperAlpha } from '../utils';
 
 class Lexer {
-  program: string;
+  private program: string;
 
   constructor(program: string) {
     this.program = program;

@@ -2,12 +2,11 @@ import { SymbolType, Token, ParseTree, CompileError } from './types';
 import Lexer from './lexer';
 
 class Parser {
-  program: string;
-  parseTable: object;
+  private program: string;
   /**
    * Parse table for this right linear grammar iteration 2
    */
-  static parseTable = {
+  private static parseTable = {
     'Statement': {
       [SymbolType.State]: `${SymbolType.State} ${SymbolType.Follow} Symbol Expression Statement`,
       '$': `EPSILON`,

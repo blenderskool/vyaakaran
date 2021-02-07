@@ -1,12 +1,10 @@
-import { ParseTree, SymbolType, Token, CompileError } from './types';
+import { ParseTree, SymbolType, Token, CompileError, TokenType } from './types';
 
 class SemanticAnalyzer {
-  parseTree: ParseTree;
-  nonTerminals: Set<string>;
+  private parseTree: ParseTree;
 
   constructor(parseTree: ParseTree) {
     this.parseTree = parseTree;
-    this.nonTerminals = new Set();
   }
 
   static inorder(root: ParseTree, cb: (root: ParseTree) => void) {
@@ -54,8 +52,14 @@ class SemanticAnalyzer {
       }
     });
 
-    return Object.values(undeclared)
-      .map((token) => ({ type: 'Error', message: `${token.value} is undeclared` }));
+    const errors: CompileError[] = Object.values(undeclared)
+      .map((token) => ({ type: 'Error', message: `${token.value} is not defined` }));
+
+    if (!declared.has('S')) {
+      errors.push({ type: 'Error', message: `Start symbol 'S' is not defined` })
+    }
+
+    return errors;
   }
 
   /**
@@ -122,7 +126,7 @@ class SemanticAnalyzer {
   analyze(): CompileError[] {
     const undeclared = this.checkUndeclaredNonTerminals();
     const unreachable = this.checkUnreachable();
-    
+
     return [...undeclared, ...unreachable];
   }
 }
