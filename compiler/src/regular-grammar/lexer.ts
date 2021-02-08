@@ -16,7 +16,7 @@ class Lexer {
   private getTokenType(word: string): [TokenType, SymbolType] {
     switch (word) {
       case '#':
-      case 'ϵ':
+      case 'ε':
       case 'λ':
         return [TokenType.Keyword, SymbolType.Empty];
       case '->':
@@ -29,7 +29,7 @@ class Lexer {
         return [TokenType.Comment, SymbolType.Comment];
     }
 
-    if (!['#', 'ϵ', 'λ', '->', '|', '.', '//'].some((token) => word.includes(token))) {
+    if (!['#', 'ε', 'λ', '->', '|', '.', '//'].some((token) => word.includes(token))) {
       if (isUpperAlpha(word[0])) {
         return [TokenType.Identifier, SymbolType.State];
       }
