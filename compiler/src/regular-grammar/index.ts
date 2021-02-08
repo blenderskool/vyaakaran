@@ -3,6 +3,8 @@ import RegularGrammarParser from './parser';
 import RegularGrammarSemanticAnalyzer from './semantic';
 import { ParseTree, CompileError, Token, SymbolType } from './types';
 
+type FAGraph = Record<string, { nodes: Record<string, Set<string>>, final: boolean}>;
+
 class RegularGrammar {
   program: string;
   errors: CompileError[];
@@ -54,7 +56,7 @@ class RegularGrammar {
    *          a series of states are created which derive w from Vi and end in a final state _FIN.
    *          Intermidate states get added for every terminal in w.
    * 
-   *        3. If the production is of the form Vi -> ∈, then
+   *        3. If the production is of the form Vi -> ε, then
    *          Vi is marked as a final state
    * 
    *        4. If the production is of the form Vi -> Vj, then
@@ -63,7 +65,7 @@ class RegularGrammar {
   toFA() {
     if (this.errors.length) return this;
 
-    const graph: Record<string, { nodes: Record<string, Set<string>>, final: boolean}> = {};
+    const graph: FAGraph = {};
     let midStateCnt = 0;
 
     /**
@@ -164,11 +166,208 @@ class RegularGrammar {
 
     };
     dfs(this.parseTree, null);
-    
+
     this.result = graph;
+    return this;
+  }
+
+  /**
+   * Naive Finite Automata Optimizer
+   * 
+   * Optimizes the following:
+   *    - Removes unreachable states (states without any incoming transitions)
+   *    - TODO: Merge duplicate states (states which have same outgoing transitions)
+   */
+  optimizeFA() {
+    const graph: FAGraph = this.result;
+    let incomingNodes = new Set([ 'S' ]);
+
+    // Construct set of all nodes that have incoming edges
+    for(const from in graph) {
+      for(const via in graph[from].nodes) {
+        incomingNodes = new Set([ ...incomingNodes, ...graph[from].nodes[via] ]);
+      }
+    }
+
+    // Remove nodes which are unreachable
+    for(const from in graph) {
+      if (!incomingNodes.has(from)) {
+        delete graph[from];
+      }
+    }
+
+    this.result = graph;
+    return this;
+  }
+
+  /**
+   * Constructs Epsilon-Free Finite Automata by using Epsilon Finite Automata.
+   * 
+   * Makes use of following rules:
+   *  - For all Vi -ε-> Vj transitions as T:
+   *    - Add all non ε transitions from Vj to any other Vk as transitions from Vi to Vk
+   *    - If there's some Vj -ε-> Vk transition, then
+   *          - Add all non ε transitions from Vk to any other Vn as transitions from Vi to Vn
+   *          - Repeat this recusively for all states along the path that have some outgoing ε transition (using DFS)
+   *          - If Vn is a final state, mark Vj as final
+   *    - Remove transition T
+   * 
+   *    - If Vj is a final state, mark Vi also final
+   * 
+   * NOTE: Optimizer should be run to remove unreachable states after transition deletions in above steps.
+   */
+  toEpsilonFreeFA() {
+    const visited: Set<string> = new Set();
+    const graph: FAGraph = this.toFA().result;
+    const resultGraph: FAGraph = {};
+
+    // DFS to get all non ε transitions along ε transition path recursively
+    const dfs = (root: string, stack: [string, string][]) => {
+      if (visited.has(root)) return;
+      visited.add(root);
+
+      for(const via in graph[root].nodes) {
+        if (via === '#') continue;
+
+        graph[root].nodes[via].forEach((to) => {
+          stack.push([via, to]);
+        });
+      }
+
+      if (graph[root].nodes['#']) {
+        graph[root].nodes['#'].forEach((to) => {
+          dfs(to, stack);
+
+          if (graph[to].final) {
+            graph[root].final = true;
+          }
+        });
+      }
+    };
+
+    // For every node in the graph, check if ε transitions exist
+    for(const node in graph) {
+      resultGraph[node] = { nodes: {...graph[node].nodes}, final: graph[node].final };
+
+      // If no ε transition exist, then check next node
+      if (!graph[node].nodes['#']) continue;
+
+      // Remove the ε transition
+      delete resultGraph[node].nodes['#'];
+
+      // For all the nodes reachable via ε transition, get all non ε transition stack along the path using DFS
+      graph[node].nodes['#'].forEach((to) => {
+        const stack: [string, string][] = [];
+        visited.clear();
+        dfs(to, stack);
+
+        // Add the transitions from the stack
+        stack.forEach(([ via, to ]) => {
+          const { nodes } = resultGraph[node];
+          if (!nodes[via]) {
+            nodes[via] = new Set();
+          }
+          nodes[via].add(to);
+        });
+
+        // Marking the current node final if to node is final
+        if (graph[to].final) {
+          resultGraph[node].final = true;
+        }
+      });
+    }
+
+    this.result = resultGraph;
+    return this;
+  }
+
+  /**
+   * Constructs a Regular Expression from Finite Automata.
+   * 
+   * Makes use of Brzozowski algebraic method
+   * Reference: This amazing StackOverflow answer - https://cs.stackexchange.com/a/2392
+   */
+  toRegEx() {
+    const graph: FAGraph = this.toEpsilonFreeFA().optimizeFA().result;
+
+    const sigma: Set<String> = new Set();
+    const dfs = (root: ParseTree) => {
+      if (!root) return;
+      if (!root.body) return;
+
+      if (root.type === SymbolType.Literal) {
+        const token = root.body[0] as Token;
+        sigma.add(token.value);
+      }
+
+      for(let i = 0; i < root.body.length; i++) {
+        dfs(root.body[i] as ParseTree);
+      }
+    }
+    dfs(this.parseTree);
+
+    const star = (exp) => {
+      if (!exp || exp === 'ε') return 'ε';
+
+      return exp + '*';
+    }
+    const concat = (a, b) => {
+      if (!a || !b) return '';
+
+      if (a === 'ε') return b;
+      if (b === 'ε') return a;
+
+      return `(${a}.${b})`;
+    }
+
+    const union = (a, b) => {
+      if (!a || !b || a === b) return a || b;
+
+      return `(${a} + ${b})`;
+    };
+
+    const nodes = Object.keys(graph);
+    const B: string[] = nodes.map(i => graph[i].final ? 'ε' : '');
+    const A = [];
+
+    for(let i=0; i < nodes.length; i++) {
+      A[i] = [];
+      for(let j=0; j < nodes.length; j++) {
+        A[i][j] = '';
+        sigma.forEach((a: string) => {
+          A[i][j] = union(A[i][j], graph[nodes[i]].nodes[a]?.has(nodes[j]) ? a : '');
+        });
+      }
+    }
+
+    for(let n = B.length-1; n >= 0; n--) {
+      B[n] = concat(star(A[n][n]), B[n]);
+
+      for(let j=0; j<n; j++) {
+        A[n][j] = concat(star(A[n][n]), A[n][j]);
+      }
+
+      for(let i=0; i<n; i++) {
+        B[i] = union(B[i], concat(A[i][n], B[n]));
+
+        for(let j=0; j<n; j++) {
+          A[i][j] = union(A[i][j], concat(A[i][n], A[n][j]));
+        }
+        
+      }
+    }
+
+    this.result = B[0];
+    
     return this;
   }
 }
 
 
-export { RegularGrammarLexer, RegularGrammarParser, RegularGrammarSemanticAnalyzer, RegularGrammar };
+export {
+  RegularGrammarLexer,
+  RegularGrammarParser,
+  RegularGrammarSemanticAnalyzer,
+  RegularGrammar,
+  FAGraph,
+};
