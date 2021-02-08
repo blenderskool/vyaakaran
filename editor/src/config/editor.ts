@@ -1,4 +1,6 @@
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import 'monaco-editor/esm/vs/editor/contrib/find/findController';
+import 'monaco-editor/esm/vs/editor/contrib/multicursor/multicursor';
 
 monaco.languages.register({ id: 'Vyaakaran Regular Grammar' });
 monaco.languages.setMonarchTokensProvider('Vyaakaran Regular Grammar', {
@@ -29,11 +31,12 @@ monaco.editor.defineTheme('vyaakaran', {
   colors: {},
 });
 
-const editorConfig = {
+const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
   theme: 'vyaakaran',
   fontLigatures: true,
-  fontFamily: 'Fira Code',
+  fontFamily: 'Fira Code, monospace',
   fontWeight: '500',
+  renderWhitespace: 'none',
   minimap: {
     enabled: false,
   },
