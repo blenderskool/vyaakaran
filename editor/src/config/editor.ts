@@ -1,4 +1,4 @@
-import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 monaco.languages.register({ id: 'Vyaakaran Regular Grammar' });
 monaco.languages.setMonarchTokensProvider('Vyaakaran Regular Grammar', {
