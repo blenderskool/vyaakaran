@@ -87,7 +87,7 @@ class Parser {
         topScope.body.push(...childNodes);
       } else {
         const error = this.createError(topScope);
-        error.message += `at ${topToken.position.join(':')}`;
+        error.message += ` at ${topToken.position.join(':')}`;
 
         return [null, error];
       }
@@ -102,7 +102,7 @@ class Parser {
       }
 
       const error = this.createError(topScope);
-      error.message += `at the end of program`;
+      error.message += ` at the end of program`;
 
       return [null, error];
     }
