@@ -16,7 +16,7 @@ export default defineComponent({
 
 <style scoped>
   header {
-    padding: 10px 20px;
+    padding: 10px 20px 20px;
     font-weight: 500;
   }
 </style>

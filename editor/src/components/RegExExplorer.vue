@@ -34,7 +34,7 @@ export default defineComponent({
 <style scoped>
   .regex-explorer p {
     font-weight: 500;
-    padding: 35px 30px;
+    padding: 35px 20px;
     color: #34febb;
     font-family: 'Fira Code';
     white-space: nowrap;
