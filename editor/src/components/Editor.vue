@@ -10,7 +10,7 @@ import { editorConfig } from '../config/editor';
 import { codeStore } from '../store/code';
 
 export default defineComponent({
-  name: 'App',
+  name: 'Editor',
   setup() {
     const editorRef = ref<HTMLElement>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
@@ -38,8 +38,7 @@ export default defineComponent({
 <style scoped>
   .editor {
     text-align: left;
-    height: 100vh;
     overflow: hidden;
-    width: 50vw;
+    height: 100vh;
   }
 </style>

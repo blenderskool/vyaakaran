@@ -1,9 +1,16 @@
-import { reactive, computed } from 'vue';
-import { RegularGrammar } from '../../../compiler/src/regular-grammar/';
+import { reactive } from 'vue';
+import { CompileError } from '../../../compiler/src/regular-grammar/types';
+
+interface ConsoleStream {
+  type: 'Error' | 'Warning' | 'Success',
+  timestamp: Date;
+  message: string;
+};
 
 interface Store {
   program: string;
-  compiled: RegularGrammar|null;
+  errors: CompileError[];
+  consoleStream: ConsoleStream[];
 };
 
 const codeStore = reactive({
@@ -37,6 +44,8 @@ A -> b.A | c.A | ε
 C -> a.C | b.C | ε
 B -> a.B | c.B | ε
 `,
+  errors: [],
+  consoleStream: [],
 } as Store);
 
 export { codeStore };

@@ -36,7 +36,6 @@ export default defineComponent({
     let network: Network;
 
     const generateVisGraph = () => {
-      console.log(faType);
       let graph;
 
       switch (faType.value) {

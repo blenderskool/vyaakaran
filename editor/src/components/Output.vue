@@ -6,11 +6,11 @@
         <path d="M7 4v16l13 -8z" />
       </svg>
     </button>
-    <Splitpanes class="output-container" horizontal v-if="compiled">
+    <Splitpanes class="output-container" horizontal v-if="compiled && !compiled.errors.length">
       <Pane min-size="6.5">
         <FiniteAutomataExplorer :compiled="compiled" :key="`${progKey} FA`" />
       </Pane>
-      <Pane min-size="6.5" max-size="20">
+      <Pane min-size="6.5" max-size="20.8">
         <RegExExplorer :compiled="compiled" :key="`${progKey} RegEx`" />
       </Pane>
     </Splitpanes>
@@ -41,7 +41,21 @@ export default defineComponent({
 
     function compile() {
       const program = codeStore.program;
+
+      const start = Date.now();
       compiled.value = new RegularGrammar(program).parse().semanticAnalysis();
+      const timeTaken = Date.now() - start;
+
+      codeStore.errors = compiled.value.errors;
+      const errors = compiled.value.errors.map(err => ({ ...err, timestamp: new Date() }));
+      const warnings = compiled.value.warnings.map(err => ({ ...err, timestamp: new Date() }));
+
+      if (!errors.length) {
+        codeStore.consoleStream = [ ...warnings, { type: 'Success', message: `Compiled successfully in ${timeTaken}ms`, timestamp: new Date() } ];
+      } else {
+        codeStore.consoleStream = [ ...errors, ...warnings ];
+      }
+
       progKey.value = Math.trunc(Math.random() * 10000);
     }
 
@@ -61,7 +75,7 @@ export default defineComponent({
     height: 65px;
     border-radius: 100%;
     position: absolute;
-    top: 50px;
+    top: 70px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
@@ -78,6 +92,10 @@ export default defineComponent({
   .run:hover {
     background-color: #34D399;
     transform: scale(1.1) translateX(-45%);
+  }
+
+  .run.compiling {
+    border-color: white;
   }
 </style>
 
