@@ -1,5 +1,6 @@
 <template>
   <div class="playground">
+    <Sidebar class="sidebar" />
     <div class="editor-container">
       <Splitpanes watch-slots horizontal>
         <Pane>
@@ -16,6 +17,7 @@
 import { defineComponent } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 
+import Sidebar from './components/Sidebar.vue';
 import Editor from './components/Editor.vue';
 import Output from './components/Output.vue';
 import Console from './components/Console.vue';
@@ -28,6 +30,7 @@ export default defineComponent({
     Console,
     Splitpanes,
     Pane,
+    Sidebar,
   },
 });
 </script>
@@ -38,9 +41,13 @@ export default defineComponent({
     display: flex;
   }
 
+  .sidebar {
+    width: 60px;
+  }
+
   .editor-container {
     height: 100vh;
-    width: 50vw;
+    width: calc(50vw - 60px/2);
   }
 </style>
 
@@ -55,5 +62,19 @@ export default defineComponent({
     background-color: #27272A;
     font-family: 'Poppins', sans-serif;
     color: #d6e9ff;
+    overflow: hidden;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+ 
+  *::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
   }
 </style>
