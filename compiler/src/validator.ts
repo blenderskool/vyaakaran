@@ -79,7 +79,7 @@ class EarleyParser {
         } else if (state.symbol_is_nonterminal) {
           this.predictor(state, k, extension);
         } else {
-          this.scanner(state, k, token)
+          this.scanner(state, k, token);
         }
       }
 
@@ -108,7 +108,7 @@ class EarleyParser {
   }
 
   private scanner(state: State, origin, token) {
-    if (state.symbol.value === token) {
+    if (state.symbol.value === token || (state.symbol.type[1] === SymbolType.Empty && this.states.length > origin + 1)) {
       this.states[origin + 1].add(state.shift);
     }
   }
