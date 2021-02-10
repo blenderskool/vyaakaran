@@ -13,6 +13,7 @@ interface Store {
   errors: CompileError[];
   consoleStream: ConsoleStream[];
   compiled?: RegularGrammar;
+  progKey: number;
 };
 
 const codeStore = reactive({
@@ -48,6 +49,7 @@ B -> a.B | c.B | ε
 `,
   errors: [],
   consoleStream: [],
+  progKey: 0,
 } as Store);
 
 function compile() {
@@ -66,6 +68,8 @@ function compile() {
   } else {
     codeStore.consoleStream = [ ...errors, ...warnings ];
   }
+
+  codeStore.progKey = Math.trunc(Math.random() * 10000);
 }
 
 export { codeStore, ConsoleStream, compile };

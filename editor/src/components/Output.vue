@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="run" @click="compile">
+    <button class="run" title="Compile the program" @click="compile">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
         <path d="M7 4v16l13 -8z" />
@@ -8,10 +8,10 @@
     </button>
     <Splitpanes class="output-container" horizontal v-if="codeStore.compiled && !codeStore.compiled.errors.length">
       <Pane min-size="6.5">
-        <FiniteAutomataExplorer :compiled="codeStore.compiled" />
+        <FiniteAutomataExplorer :compiled="codeStore.compiled" :key="`FA ${codeStore.progKey}`" />
       </Pane>
       <Pane min-size="6.5" max-size="20.8">
-        <RegExExplorer :compiled="codeStore.compiled" />
+        <RegExExplorer :compiled="codeStore.compiled" :key="`RegEx ${codeStore.progKey}`" />
       </Pane>
     </Splitpanes>
   </div>
@@ -44,7 +44,7 @@ export default defineComponent({
 
 <style scoped>
   .output-container {
-    width: calc(50vw - 14px);
+    width: calc(50vw - 14px - 60px/2);
     height: 100vh;
   }
 
@@ -54,9 +54,9 @@ export default defineComponent({
     border-radius: 100%;
     position: absolute;
     top: 70px;
-    left: 50%;
+    left: calc(50% + 60px/2);
     transform: translateX(-50%);
-    z-index: 10;
+    z-index: 20;
     display: inline-flex;
     justify-content: center;
     align-items: center;
