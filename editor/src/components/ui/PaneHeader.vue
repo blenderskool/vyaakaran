@@ -18,5 +18,8 @@ export default defineComponent({
   header {
     padding: 10px 20px 20px;
     font-weight: 500;
+    position: relative;
+    z-index: 10;
+    background-color: #27272A;
   }
 </style>

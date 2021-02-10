@@ -1,8 +1,9 @@
 import { reactive } from 'vue';
 import { CompileError } from '../../../compiler/src/regular-grammar/types';
+import { RegularGrammar } from '../../../compiler/src/regular-grammar';
 
 interface ConsoleStream {
-  type: 'Error' | 'Warning' | 'Success',
+  type: 'Error' | 'Warning' | 'Success' | 'Output',
   timestamp: Date;
   message: string;
 };
@@ -11,6 +12,7 @@ interface Store {
   program: string;
   errors: CompileError[];
   consoleStream: ConsoleStream[];
+  compiled?: RegularGrammar;
 };
 
 const codeStore = reactive({
@@ -48,4 +50,22 @@ B -> a.B | c.B | ε
   consoleStream: [],
 } as Store);
 
-export { codeStore };
+function compile() {
+  const program = codeStore.program;
+
+  const start = Date.now();
+  codeStore.compiled = new RegularGrammar(program).parse().semanticAnalysis();
+  const timeTaken = Date.now() - start;
+
+  codeStore.errors = codeStore.compiled.errors;
+  const errors = codeStore.compiled.errors.map(err => ({ ...err, timestamp: new Date() }));
+  const warnings = codeStore.compiled.warnings.map(err => ({ ...err, timestamp: new Date() }));
+
+  if (!errors.length) {
+    codeStore.consoleStream = [ ...warnings, { type: 'Success', message: `Compiled successfully in ${timeTaken}ms`, timestamp: new Date() } ];
+  } else {
+    codeStore.consoleStream = [ ...errors, ...warnings ];
+  }
+}
+
+export { codeStore, ConsoleStream, compile };

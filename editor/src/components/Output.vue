@@ -6,12 +6,12 @@
         <path d="M7 4v16l13 -8z" />
       </svg>
     </button>
-    <Splitpanes class="output-container" horizontal v-if="compiled && !compiled.errors.length">
+    <Splitpanes class="output-container" horizontal v-if="codeStore.compiled && !codeStore.compiled.errors.length">
       <Pane min-size="6.5">
-        <FiniteAutomataExplorer :compiled="compiled" :key="`${progKey} FA`" />
+        <FiniteAutomataExplorer :compiled="codeStore.compiled" />
       </Pane>
       <Pane min-size="6.5" max-size="20.8">
-        <RegExExplorer :compiled="compiled" :key="`${progKey} RegEx`" />
+        <RegExExplorer :compiled="codeStore.compiled" />
       </Pane>
     </Splitpanes>
   </div>
@@ -22,7 +22,7 @@ import { defineComponent, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 
 import { FAGraph, RegularGrammar } from '../../../compiler/src/regular-grammar';
-import { codeStore } from '../store/code';
+import { codeStore, compile } from '../store/code';
 import FiniteAutomataExplorer from './FiniteAutomataExplorer.vue';
 import RegExExplorer from './RegExExplorer.vue';
 
@@ -36,30 +36,8 @@ export default defineComponent({
   },
   setup() {
     const FA = ref<FAGraph>(null);
-    const compiled = ref<RegularGrammar>(null);
-    const progKey = ref(0);
 
-    function compile() {
-      const program = codeStore.program;
-
-      const start = Date.now();
-      compiled.value = new RegularGrammar(program).parse().semanticAnalysis();
-      const timeTaken = Date.now() - start;
-
-      codeStore.errors = compiled.value.errors;
-      const errors = compiled.value.errors.map(err => ({ ...err, timestamp: new Date() }));
-      const warnings = compiled.value.warnings.map(err => ({ ...err, timestamp: new Date() }));
-
-      if (!errors.length) {
-        codeStore.consoleStream = [ ...warnings, { type: 'Success', message: `Compiled successfully in ${timeTaken}ms`, timestamp: new Date() } ];
-      } else {
-        codeStore.consoleStream = [ ...errors, ...warnings ];
-      }
-
-      progKey.value = Math.trunc(Math.random() * 10000);
-    }
-
-    return { compile, progKey, compiled };
+    return { compile, codeStore };
   }
 })
 </script>

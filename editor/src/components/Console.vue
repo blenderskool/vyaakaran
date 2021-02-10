@@ -1,5 +1,5 @@
 <template>
-  <Pane class="console-pane" min-size="6.5" v-life:updated="scrollToBottom" max-size="40">
+  <Pane class="console-pane" min-size="6.5" v-life:updated="scrollToBottom" max-size="50">
     <PaneHeader>
       <div class="header">
         <span>Console</span>
@@ -29,10 +29,15 @@
             {{ error.timestamp.toLocaleTimeString() }}
           </div>
           <div class="message">
-            {{ error.type }}: {{ error.message }}
+            {{ error.type }}: <span v-html="error.message" />
           </div>
         </li>
       </ul>
+
+      <div class="command-input">
+        >
+        <input v-model="inputCommand" placeholder="Type help for list of commands" @keydown.enter="submitCommand" />
+      </div>
     </div>
   </Pane>
 </template>
@@ -42,6 +47,7 @@ import { computed, defineComponent, ref } from 'vue';
 import { Pane }  from 'splitpanes';
 import PaneHeader from './ui/PaneHeader.vue';
 import { codeStore } from '../store/code';
+import { COMMANDS } from '../config/console'; 
 
 export default defineComponent({
   name: 'Console',
@@ -49,9 +55,22 @@ export default defineComponent({
     PaneHeader,
     Pane,
   },
+  methods: {
+    submitCommand() {
+      const command = this.inputCommand.trim().split(' ')[0];
+
+      if (COMMANDS[command]) {
+        codeStore.consoleStream.push(COMMANDS[command](this.inputCommand));
+      } else {
+        codeStore.consoleStream.push({ type: 'Error', message: `Command '${command}' was not found. Type 'help' for list of supported commands`, timestamp: new Date() });
+      }
+      this.inputCommand = '';
+    }
+  },
   setup() {
     const consoleRef = ref<HTMLElement>(null);
     const cnt = ref<number>(0);
+    const inputCommand = ref<string>('');
     const errorsCount = computed(() => codeStore.consoleStream.filter((err) => err.type === 'Error').length);
     const warningsCount = computed(() => codeStore.consoleStream.filter((err) => err.type === 'Warning').length);
 
@@ -59,7 +78,7 @@ export default defineComponent({
       consoleRef.value.scrollTo(0, consoleRef.value.scrollHeight + 100);
     };
 
-    return { cnt, codeStore, scrollToBottom, consoleRef, errorsCount, warningsCount };
+    return { cnt, codeStore, scrollToBottom, consoleRef, errorsCount, warningsCount, inputCommand };
   },
 });
 </script>
@@ -88,12 +107,13 @@ export default defineComponent({
     height: calc(100% - 50px);
     font-family: 'Fira Code';
     font-weight: 500;
+    position: relative;
   }
 
   ul {
     list-style: none;
     overflow-y: auto;
-    max-height: 100%;
+    max-height: calc(100% - 50px);
   }
 
   li {
@@ -121,5 +141,31 @@ export default defineComponent({
 
   li .message {
     margin-left: 1.5rem;
+  }
+
+  .command-input {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid #27272A;
+    padding: 15px 20px;
+    color: #586f89;
+  }
+  .command-input, .command-input input {
+    background-color: black;
+    font-family: 'Fira Code';
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .command-input input {
+    color: #d6e9ff;
+    border: none;
+    outline: none;
+    padding-right: 20px;
+    width: 95%;
+  }
+  .command-input input::placeholder {
+    color: #586f89;
   }
 </style>

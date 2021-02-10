@@ -40,6 +40,7 @@ export default defineComponent({
     white-space: nowrap;
     max-width: 100%;
     overflow-x: auto;
+    font-variant-ligatures: none;
   }
 
   header .info {
