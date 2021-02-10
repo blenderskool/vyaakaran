@@ -2,6 +2,7 @@ import RegularGrammarLexer from './lexer';
 import RegularGrammarParser from './parser';
 import RegularGrammarSemanticAnalyzer from './semantic';
 import { ParseTree, CompileError, Token, SymbolType } from './types';
+import { SimplifiedGrammarRepresentation } from '../utils';
 
 type FAGraph = Record<string, { nodes: Record<string, Set<string>>, final: boolean}>;
 
@@ -43,7 +44,7 @@ class RegularGrammar {
   /**
    * Constructs a finite automata from the parse tree
    * Involves following steps:
-   *    - Finds all "NON-TERMINAL" -> "TERMS" rules from the parse tree using DFS.
+   *    - Finds all "NON-TERMINAL" -> "TERMS" rules from the parse tree using DFS in Grammar2DRepresentation.
    *      Every OR production is extracted separately here.
    * 
    *    Reference: http://www.jflap.org/modules/ConvertedFiles/Regular%20Grammar%20to%20DFA%20Conversion%20Module.pdf
@@ -69,103 +70,64 @@ class RegularGrammar {
     let midStateCnt = 0;
 
     /**
-     * Creates an array of all symbols occuring in a "Term".
-     * "Term" is defined as RHS of a production rule.
-     */
-    const termsDFS = (root: ParseTree, termsStack: Token[]) => {
-      if (!root) return;
-      if (!root.body) return;
-
-      if (root.type === SymbolType.Literal || root.type === SymbolType.State || root.type === SymbolType.Empty) {
-        const token = root.body[0] as Token;
-        termsStack.push(token);
-      }
-
-      for(let i = 0; i < root.body.length; i++) {
-        termsDFS(root.body[i] as ParseTree, termsStack);
-      }
-    };
-
-    /**
      * Helper method to add a transition in the graph.
      * It creates an adjacency list for new nodes as they come.
      */
     const addToGraph = (from, via, to) => {
+      if (!graph[from]) {
+        graph[from] = { nodes: {}, final: false };
+      }
+
       if (!graph[from].nodes[via]) {
         graph[from].nodes[via] = new Set();
       }
       graph[from].nodes[via].add(to);
     }
 
-    // Main DFS traversal to find all production rules
-    const dfs = (root: ParseTree, context: Token) => {
-      if (!root) return;
+    new SimplifiedGrammarRepresentation(this.parseTree).rules.forEach((rule) => {
+      const [context, termsStack] = rule;
 
-      /**
-       * If a subtree of type "Term" is found in the parse tree,
-       * then termDFS is performed to get all symbols associated with
-       * this "Term".
-       * 
-       * Then the four rules are applied to add them in the graph
-       */
-      if (root.type === 'Term' || root.type === SymbolType.Empty) {
-        const termsStack: Token[] = [];
-        termsDFS(root, termsStack);
+      // Add intermediate states and transitions. Required for Rule 1, 2
+      let start = context;
+      for(let i=0; i < termsStack.length-1; i++) {
+        const term = termsStack[i];
 
-        // Add intermediate states and transitions. Required for Rule 1, 2
-        let start = context.value;
-        for(let i=0; i < termsStack.length-1; i++) {
-          const term = termsStack[i];
-
-          const toState = termsStack[i+1].type[1] === SymbolType.State ? termsStack[i+1].value : `_S-${++midStateCnt}`;
-          addToGraph(start, term.value, toState)
-          graph[start].nodes[term.value].add(toState);
-          start = toState;
-
-          if (!graph[start]) {
-            graph[start] = { nodes: {}, final: false };
-          }
+        if (!graph[start]) {
+          graph[start] = { nodes: {}, final: false };
         }
 
-        // Rule 4
-        if (termsStack.length === 1 && termsStack[0].type[1] === SymbolType.State) {
-          addToGraph(context.value, '#', termsStack[0].value);
-        }
+        const toState = termsStack[i+1].type[1] === SymbolType.State ? termsStack[i+1].value : `_S-${++midStateCnt}`;
+        addToGraph(start, term.value, toState);
+        start = toState;
 
-        switch(termsStack[termsStack.length-1].type[1]) {
-          // Rule 2 (Adding transition to _FIN state)
-          case SymbolType.Literal:
-            if (!graph['_FIN']){
-              graph['_FIN'] = { nodes: {}, final: true };
-            }
-            const { value } = termsStack[termsStack.length-1];
-            addToGraph(start, value, '_FIN');
-            break;
-
-          // Rule 3
-          case SymbolType.Empty:
-            graph[context.value].final = true;
-        }
-
-      } else if (root.body) {
-        // LHS of production gets updated here if encountered for new productions
-        const isStatement = root.type === 'Statement';
-        const nextContext = isStatement && root.body[0] ? (root.body[0] as ParseTree).body[0] as Token : context;
-
-        if (isStatement && !graph[nextContext.value]) {
-          graph[nextContext.value] = {
-            nodes: {},
-            final: false,
-          };
-        }
-
-        for(let i = Number(isStatement); i < root.body.length; i++) {
-          dfs(root.body[i] as ParseTree, nextContext);
+        if (!graph[start]) {
+          graph[start] = { nodes: {}, final: false };
         }
       }
 
-    };
-    dfs(this.parseTree, null);
+      // Rule 4
+      if (termsStack.length === 1 && termsStack[0].type[1] === SymbolType.State) {
+        addToGraph(context, '#', termsStack[0].value);
+      }
+
+      switch(termsStack[termsStack.length-1].type[1]) {
+        // Rule 2 (Adding transition to _FIN state)
+        case SymbolType.Literal:
+          if (!graph['_FIN']){
+            graph['_FIN'] = { nodes: {}, final: true };
+          }
+          const { value } = termsStack[termsStack.length-1];
+          addToGraph(start, value, '_FIN');
+          break;
+
+        // Rule 3
+        case SymbolType.Empty:
+          if (!graph[context]) {
+            graph[context] = { nodes: {}, final: false };
+          }
+          graph[context].final = true;
+      }
+    });
 
     this.result = graph;
     return this;
