@@ -288,12 +288,14 @@ class RegularGrammar {
       return `(${a} + ${b})`;
     };
 
-    const nodes = Object.keys(graph);
-    const B: string[] = nodes.map(i => graph[i].final ? 'ε' : '');
+    const nodes = ['S', ...Object.keys(graph).filter(s => s !== 'S')];
     const A = [];
+    const B = [];
 
     for(let i=0; i < nodes.length; i++) {
+      B[i] = graph[nodes[i]].final ? 'ε' : '';
       A[i] = [];
+
       for(let j=0; j < nodes.length; j++) {
         A[i][j] = '';
         sigma.forEach((a: string) => {
@@ -305,17 +307,16 @@ class RegularGrammar {
     for(let n = B.length-1; n >= 0; n--) {
       B[n] = concat(star(A[n][n]), B[n]);
 
-      for(let j=0; j<n; j++) {
+      for(let j=0; j < n; j++) {
         A[n][j] = concat(star(A[n][n]), A[n][j]);
       }
 
-      for(let i=0; i<n; i++) {
+      for(let i=0; i < n; i++) {
         B[i] = union(B[i], concat(A[i][n], B[n]));
 
-        for(let j=0; j<n; j++) {
+        for(let j=0; j < n; j++) {
           A[i][j] = union(A[i][j], concat(A[i][n], A[n][j]));
         }
-        
       }
     }
 
