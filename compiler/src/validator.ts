@@ -26,6 +26,10 @@ class State {
     return this.symbol && this.symbol.type[1] === SymbolType.State;
   }
 
+  get symbol_is_null() {
+    return this.symbol && this.symbol.type[1] === SymbolType.Empty;
+  }
+
   get shift() {
     return new State(this.nonterminal, this.expression, this.dot + 1, this.origin);
   }
@@ -74,6 +78,10 @@ class EarleyParser {
 
         this.states[k].add(state);
 
+        if (state.symbol_is_null) {
+          extension.push(state.shift);
+        }
+
         if (state.finished) {
           this.completer(state, extension)
         } else if (state.symbol_is_nonterminal) {
@@ -108,7 +116,7 @@ class EarleyParser {
   }
 
   private scanner(state: State, origin, token) {
-    if (state.symbol.value === token || (state.symbol.type[1] === SymbolType.Empty && this.states.length > origin + 1)) {
+    if (state.symbol.value === token) {
       this.states[origin + 1].add(state.shift);
     }
   }

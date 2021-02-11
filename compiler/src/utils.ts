@@ -51,7 +51,7 @@ class SimplifiedGrammarRepresentation {
     do {
       nullLength = this.nullNonTerminals.size;
       this.rules.forEach(rule => {
-        if (rule[1].find((token) => token.type[1] === SymbolType.Empty)) {
+        if (rule[1].find((token) => token.type[1] === SymbolType.Empty || this.nullNonTerminals.has(token.value))) {
           this.nullNonTerminals.add(rule[0]);
         }
       });
