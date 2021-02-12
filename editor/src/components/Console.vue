@@ -1,5 +1,5 @@
 <template>
-  <Pane class="console-pane" min-size="6.5" v-life:updated="scrollToBottom" max-size="50">
+  <Pane class="console-pane" min-size="6.5" v-life:updated="scrollToBottom" size="6.5" max-size="50">
     <PaneHeader>
       <div class="header">
         <span>Console</span>

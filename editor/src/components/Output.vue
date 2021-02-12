@@ -10,7 +10,7 @@
       <Pane min-size="6.5">
         <FiniteAutomataExplorer :compiled="codeStore.compiled" :key="`FA ${codeStore.progKey}`" />
       </Pane>
-      <Pane min-size="6.5" max-size="20.8">
+      <Pane min-size="6.5" max-size="20.8" size="20.8">
         <RegExExplorer :compiled="codeStore.compiled" :key="`RegEx ${codeStore.progKey}`" />
       </Pane>
     </Splitpanes>
