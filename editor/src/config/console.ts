@@ -30,8 +30,10 @@ const COMMANDS: Record<string, Command> = {
     if (match === undefined) return { type: 'Error', message: `String to match is not defined. Usage: test "a.b.b.e"`, timestamp: new Date() };
     if (!codeStore.compiled?.parseTree) return { type: 'Error', message: `Program is not compiled yet. Run 'compile'`, timestamp: new Date() };
 
-    const isAccepted = new EarleyParser(codeStore.compiled?.parseTree as ParseTree).isParsable(match);
-    if (isAccepted) {
+    const parseTreeCount = new EarleyParser(codeStore.compiled?.parseTree as ParseTree).isParsable(match);
+    if (parseTreeCount > 1) {
+      return { type: 'Warning', message: `"${match}" was matched with ambiguity`, timestamp: new Date() };
+    } else if (parseTreeCount === 1) {
       return { type: 'Success', message: `"${match}" was matched`, timestamp: new Date() };
     } else {
       return { type: 'Warning', message: `"${match}" did not get accepted`, timestamp: new Date() };

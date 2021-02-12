@@ -94,11 +94,11 @@ class EarleyParser {
     });
   }
 
-  isParsable(text: string) {
+  isParsable(text: string): number {
     this.parse(text);
 
     const lastState: State[] = this.states[this.states.length - 1].list();
-    return lastState.some((state) => state.finished && state.origin === 0);
+    return lastState.reduce((acc, state) => acc + Number(state.finished && state.origin === 0), 0);
   }
 
   private predictor(state: State, origin, extension: State[]) {
