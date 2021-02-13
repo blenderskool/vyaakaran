@@ -7,11 +7,11 @@ monaco.languages.setMonarchTokensProvider('Vyaakaran Regular Grammar', {
   tokenizer: {
     root: [
       [/(->)|\||-/, 'operator'],
-      [/[#ελ]/, 'keyword'],
+      [/[#ελ$]/, 'keyword'],
       [/\./, 'separator'],
       [/\/\/.*/, 'comment'],
-      [/([A-Z][^\.#ελ\/ \-|]*)/, 'non-terminal', ],
-      [/([^A-Z\.#ελ\/ \-|][^\.#ελ\/ \-|]*)/, 'terminal', ],
+      [/([A-Z][^\.#$ελ\/ \-|]*)/, 'non-terminal', ],
+      [/([^A-Z\.#$ελ\/ \-|][^\.#$ελ\/ \-|]*)/, 'terminal', ],
     ],
   },
 });
