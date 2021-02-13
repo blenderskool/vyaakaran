@@ -6,7 +6,7 @@ class Parser {
   /**
    * Parse table for this right linear grammar iteration 2
    */
-  private static parseTable = {
+  protected static readonly parseTable = {
     'Statement': {
       [SymbolType.State]: `${SymbolType.State} ${SymbolType.Follow} Symbol Expression Statement`,
       '$': `EPSILON`,
@@ -38,9 +38,11 @@ class Parser {
   }
 
   protected createError(topScope): CompileError {
+    const parseTable = (this.constructor as any).parseTable;
     const error: CompileError = { type: 'Error', message: '' };
-    if (Parser.parseTable[topScope.type]) {
-      const keys = Object.keys(Parser.parseTable[topScope.type]).filter(key => key !== '$');
+
+    if (parseTable[topScope.type]) {
+      const keys = Object.keys(parseTable[topScope.type]).filter(key => key !== '$');
 
       if (keys.length === 1) {
         error.message = `Expected ${keys[0]}`;
@@ -59,6 +61,7 @@ class Parser {
    * @returns an array consiting of parse tree and errors
    */
   parse(): [ParseTree, CompileError] {
+    const parseTable = (this.constructor as any).parseTable;
     const parseTreeRoot = { type: 'Statement', body: [] };
     const scope = [ parseTreeRoot ];
     const tokenStream = new Lexer(this.program).lex();
@@ -75,8 +78,8 @@ class Parser {
         // Stream next token as the current token was successfully matched
         token = tokenStream.next();
         scope.shift();
-      } else if (Parser.parseTable[topScope.type] && Parser.parseTable[topScope.type][topToken.type[1]]) {
-        const production = Parser.parseTable[topScope.type][topToken.type[1]];
+      } else if (parseTable[topScope.type] && parseTable[topScope.type][topToken.type[1]]) {
+        const production = parseTable[topScope.type][topToken.type[1]];
 
         scope.shift();
         const childNodes = production.split(' ').map((prod) => ({
@@ -95,7 +98,7 @@ class Parser {
 
     while(scope.length) {
       const topScope = scope[0];
-      const toTerminal = Parser.parseTable[topScope.type];
+      const toTerminal = parseTable[topScope.type];
       if (toTerminal?.['$'] === `EPSILON`) {
         scope.shift();
         continue;
