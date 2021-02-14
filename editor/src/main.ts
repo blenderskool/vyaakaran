@@ -1,5 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import router from './router';
+
 import 'splitpanes/dist/splitpanes.css';
 
 const app = createApp(App);
@@ -10,4 +12,5 @@ app.directive('life', {
   }
 });
 
+app.use(router);
 app.mount('#app');
