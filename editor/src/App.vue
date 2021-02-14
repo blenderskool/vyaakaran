@@ -1,37 +1,35 @@
 <template>
   <div class="playground">
     <Sidebar class="sidebar" />
-    <div class="editor-container">
-      <Splitpanes watch-slots horizontal>
-        <Pane>
-          <Editor />
-        </Pane>
-        <Console />
-      </Splitpanes>
+
+    <div>
+      <EditorTabs />
+      <router-view class="view" />
     </div>
-    <Output />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { Splitpanes, Pane } from 'splitpanes';
+import { defineComponent, computed } from 'vue';
 
+import { getActiveStore } from './store/code';
 import Sidebar from './components/Sidebar.vue';
-import Editor from './components/Editor.vue';
-import Output from './components/Output.vue';
-import Console from './components/Console.vue';
+import EditorTabs from './components/EditorTabs.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
-    Editor,
-    Output,
-    Console,
-    Splitpanes,
-    Pane,
     Sidebar,
+    EditorTabs,
   },
+  provide() {
+    return {
+      store: computed(getActiveStore),
+    }
+  },
+  setup() {
+    return { getActiveStore };
+  }
 });
 </script>
 
@@ -45,9 +43,11 @@ export default defineComponent({
     width: 60px;
   }
 
-  .editor-container {
-    height: 100vh;
-    width: calc(50vw - 60px/2);
+  .view {
+    display: flex;
+    position: relative;
+    height: calc(100vh - 40px);
+    width: calc(100vw - 60px);
   }
 </style>
 
@@ -58,11 +58,31 @@ export default defineComponent({
     padding: 0;
   }
 
+  ul, ol {
+    list-style: none;
+  }
+
   body {
     background-color: #27272A;
     font-family: 'Poppins', sans-serif;
     color: #d6e9ff;
     overflow: hidden;
+  }
+
+  button {
+    border: none;
+    color: inherit;
+    font-family: 'Poppins', sans-serif;
+    background-color: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
   }
 
   *::-webkit-scrollbar {
@@ -76,5 +96,23 @@ export default defineComponent({
   
   *::-webkit-scrollbar-thumb {
     background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  
+  .splitpanes__splitter {
+    min-height: 21px !important;
+    position: relative;
+  }
+  .splitpanes__splitter::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    right: 0;
+    height: 1px;
+    background-color: #444c55;
+  }
+  .splitpanes__splitter:active::after {
+    background-color: #586f89;
   }
 </style>

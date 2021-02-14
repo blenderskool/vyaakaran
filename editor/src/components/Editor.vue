@@ -3,15 +3,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue'
+import { ComputedRef, defineComponent, inject, onMounted, onUnmounted, ref, watch } from 'vue'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { editorConfig } from '../config/editor';
-import { codeStore } from '../store/code';
+import { Playground } from '../store/code';
+import router from '../router';
 
 export default defineComponent({
   name: 'Editor',
   setup() {
+    const store = inject<ComputedRef<Playground>>('store');
     const editorRef = ref<HTMLElement>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
 
@@ -19,19 +21,25 @@ export default defineComponent({
       editor = monaco.editor.create(editorRef.value, {
         ...editorConfig,
         language: 'Vyaakaran Regular Grammar',
-        value: codeStore.program,
+        value: store.value.program,
       });
       editor.onDidChangeModelContent(() => {
-        codeStore.program = editor.getValue();
+        store.value.program = editor.getValue();
       });
+    });
+
+    watch(() => router.currentRoute.value, () => {
+      if (editor) {
+        editor.setValue(store.value.program);
+      }
     });
 
     onUnmounted(() => {
       editor.dispose();
     });
 
-    return { editorRef, editor };
-  }
+    return { editorRef, editor, store };
+  },
 })
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <Pane class="console-pane" min-size="6.5" v-life:updated="scrollToBottom" size="6.5" max-size="50">
+  <Pane min-size="6.5" v-life:updated="scrollToBottom" size="6.5" max-size="50">
     <PaneHeader>
       <div class="header">
         <span>Console</span>
@@ -15,7 +15,7 @@
     </PaneHeader>
     <div class="console">
       <ul ref="consoleRef">
-        <li v-for="error in codeStore.consoleStream" :key="error.message" :class="error.type.toLowerCase()">
+        <li v-for="error in store.value.consoleStream" :key="error.message" :class="error.type.toLowerCase()">
           <svg v-if="error.type === 'Error'" class="icon" width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -43,11 +43,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, ComputedRef, defineComponent, inject, ref } from 'vue';
 import { Pane }  from 'splitpanes';
 import PaneHeader from './ui/PaneHeader.vue';
-import { codeStore } from '../store/code';
 import { COMMANDS } from '../config/console'; 
+import { Playground } from '../store/code';
 
 export default defineComponent({
   name: 'Console',
@@ -55,30 +55,32 @@ export default defineComponent({
     PaneHeader,
     Pane,
   },
+  inject: ['store'],
   methods: {
     submitCommand() {
       const command = this.inputCommand.trim().split(' ')[0];
 
       if (COMMANDS[command]) {
-        codeStore.consoleStream.push(COMMANDS[command](this.inputCommand));
+        this.store.value.consoleStream.push(COMMANDS[command](this.inputCommand));
       } else {
-        codeStore.consoleStream.push({ type: 'Error', message: `Command '${command}' was not found. Type 'help' for list of supported commands`, timestamp: new Date() });
+        this.store.value.consoleStream.push({ type: 'Error', message: `Command '${command}' was not found. Type 'help' for list of supported commands`, timestamp: new Date() });
       }
       this.inputCommand = '';
     }
   },
   setup() {
+    const store = inject<ComputedRef<Playground>>('store');
     const consoleRef = ref<HTMLElement>(null);
     const cnt = ref<number>(0);
     const inputCommand = ref<string>('');
-    const errorsCount = computed(() => codeStore.consoleStream.filter((err) => err.type === 'Error').length);
-    const warningsCount = computed(() => codeStore.consoleStream.filter((err) => err.type === 'Warning').length);
+    const errorsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Error').length);
+    const warningsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Warning').length);
 
     const scrollToBottom = () => {
       consoleRef.value.scrollTo(0, consoleRef.value.scrollHeight + 100);
     };
 
-    return { cnt, codeStore, scrollToBottom, consoleRef, errorsCount, warningsCount, inputCommand };
+    return { cnt, scrollToBottom, consoleRef, errorsCount, warningsCount, inputCommand };
   },
 });
 </script>

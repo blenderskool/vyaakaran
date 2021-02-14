@@ -1,5 +1,5 @@
 import { EarleyParser } from '../../../compiler/src/validator';
-import { codeStore, ConsoleStream, compile } from '../store/code';
+import { ConsoleStream, compile, getActiveStore, Playground } from '../store/code';
 import { ParseTree } from '../../../compiler/src/regular-grammar/types';
 
 type Command = (_: string) => ConsoleStream;
@@ -21,16 +21,18 @@ const COMMANDS: Record<string, Command> = {
     return { type: 'Output', message: 'Compiling...', timestamp: new Date() };
   },
   'clear': () => {
-    codeStore.consoleStream = [];
+    const store = getActiveStore() as Playground;
+    store.consoleStream = [];
     return { type: 'Output', message: 'Console cleared', timestamp: new Date() };
   },
   'test': (input: string) => {
+    const store = getActiveStore() as Playground;
     const match = input.match(/test "(.*)"/)?.[1];
 
     if (match === undefined) return { type: 'Error', message: `String to match is not defined. Usage: test "a.b.b.e"`, timestamp: new Date() };
-    if (!codeStore.compiled?.parseTree) return { type: 'Error', message: `Program is not compiled yet. Run 'compile'`, timestamp: new Date() };
+    if (!store.compiled?.parseTree) return { type: 'Error', message: `Program is not compiled yet. Run 'compile'`, timestamp: new Date() };
 
-    const parseTreeCount = new EarleyParser(codeStore.compiled?.parseTree as ParseTree).isParsable(match);
+    const parseTreeCount = new EarleyParser(store.compiled?.parseTree as ParseTree).isParsable(match);
     if (parseTreeCount > 1) {
       return { type: 'Warning', message: `"${match}" was matched with ambiguity`, timestamp: new Date() };
     } else if (parseTreeCount === 1) {
