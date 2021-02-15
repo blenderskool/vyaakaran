@@ -4,14 +4,14 @@
       <router-link :to="String(i)" class="tab-btn">
         {{ tab }}
       </router-link>
-      <button class="close-btn" v-if="tabs.length > 1" @click="() => removeTab(i)">
+      <button class="close-btn" v-if="tabs.length > 1" @click="() => removeTab(i)" :title="`Remove ${tab}`">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="16" height="16" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </li>
     <li class="new-tab">
-      <button @click="addTab">
+      <button @click="addTab" title="Add a new tab">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
@@ -91,9 +91,10 @@ export default defineComponent({
     display: flex;
     align-items: center;
     height: 40px;
-    padding: 0 2rem;
-    font-size: 14px;
+    padding: 0 1rem;
+    font-size: 13px;
     white-space: nowrap;
+    font-weight: 500;
   }
 
   .tabs .close-btn {
