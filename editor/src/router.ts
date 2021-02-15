@@ -5,6 +5,12 @@ import { codeStore } from './store/code';
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    // TODO: Remove redirect once index page is ready
+    {
+      name: 'Index',
+      path: '/',
+      redirect: '/regular-grammar/0',
+    },
     {
       name: 'RegularGrammar',
       path: '/regular-grammar/:id?',
