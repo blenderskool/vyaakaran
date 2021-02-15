@@ -59,15 +59,9 @@ function getActiveStore(all: boolean = false): Playground | undefined | Playgrou
   const { value:route } = router.currentRoute;
   const tabIdx = route.params.id ? Number(route.params.id) : 0;
 
-  let playgrounds: Playground[] = [];
-  switch(route.name) {
-    case 'RegularGrammar':
-      playgrounds = codeStore['regular-grammar'];
-      break;
-    case 'ContextFreeGrammar':
-      playgrounds = codeStore['context-free-grammar'];
-  }
+  if (!route.meta.storeId) return all ? [] : undefined;
 
+  const playgrounds = codeStore[route.meta.storeId];
   return all ? playgrounds : playgrounds[tabIdx];
 }
 
@@ -93,6 +87,7 @@ function compile() {
 }
 
 export {
+  codeStore,
   ConsoleStream,
   compile,
   getActiveStore,
