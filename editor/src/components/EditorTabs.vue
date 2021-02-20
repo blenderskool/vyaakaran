@@ -1,7 +1,7 @@
 <template>
   <ul class="tabs">
     <li v-for="(tab, i) in tabs" :key="i" :class="{ selected: tabIdx === i }">
-      <router-link :to="String(i)" class="tab-btn">
+      <router-link :to="String(i)" class="tab-link">
         {{ tab }}
       </router-link>
       <button class="close-btn" v-if="tabs.length > 1" @click="() => removeTab(i)" :title="`Remove ${tab}`">
@@ -67,6 +67,7 @@ export default defineComponent({
     overflow-y: hidden;
     overflow-x: auto;
     max-width: calc(100vw - 60px);
+    padding-top: 6px;
   }
   .tabs::-webkit-scrollbar {
     height: 3px;
@@ -76,18 +77,24 @@ export default defineComponent({
     display: flex;
     align-items: center;
     border-top: 3px solid transparent;
-  }
-  
-  .tabs li.selected {
-    border-top-color: #34febb;
+    margin: 0 0.25rem;
     background-color: #18181B;
+    opacity: 0.5;
   }
 
-  .tabs li {
-    border-right: 1px solid #18181B;
+  .tabs li:first-of-type {
+    margin-left: 0;
+  }
+  .tabs li:last-of-type {
+    margin-right: 0;
   }
 
-  .tabs .tab-btn {
+  .tabs li.selected {
+    opacity: 1;
+    border-top-color: #34febb;
+  }
+
+  .tabs .tab-link {
     display: flex;
     align-items: center;
     height: 40px;
@@ -105,8 +112,11 @@ export default defineComponent({
     outline: none;
   }
 
-  .new-tab button {
-    height: 40px;
+  .tabs .new-tab {
+    opacity: 1;
+  }
+  .tabs .new-tab button {
+    height: 100%;
     padding: 0 8px;
     color: #586f89;
     outline: none;
