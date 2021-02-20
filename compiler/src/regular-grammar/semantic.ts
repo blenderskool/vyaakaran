@@ -1,26 +1,13 @@
+import { SimplifiedGrammarRepresentation } from '../utils';
 import { ParseTree, SymbolType, Token, CompileError, TokenType } from './types';
 
 class SemanticAnalyzer {
   private parseTree: ParseTree;
+  private grammar: SimplifiedGrammarRepresentation;
 
   constructor(parseTree: ParseTree) {
     this.parseTree = parseTree;
-  }
-
-  static inorder(root: ParseTree, cb: (root: ParseTree) => void) {
-    if (!root) return;
-
-    if (root.body) {
-      for(let i=0; i < root.body.length-1; i++) {
-        this.inorder(root.body[i] as ParseTree, cb);
-      }
-    }
-
-    cb(root);
-
-    if (root.body) {
-      this.inorder(root.body[root.body.length-1] as ParseTree, cb);
-    }
+    this.grammar = new SimplifiedGrammarRepresentation(parseTree);
   }
 
   /**
@@ -31,29 +18,20 @@ class SemanticAnalyzer {
    * of a non-terminal not in the above set.
    */
   private checkUndeclaredNonTerminals(): CompileError[] {
-    const declared: Set<string> = new Set();
-    const undeclared: Record<string, Token> = {};
+    const declared: Set<string> = new Set(this.grammar.rules.map(([lhs]) => lhs));
+    const undeclared: Set<string> = new Set();
 
-    SemanticAnalyzer.inorder(this.parseTree, (root) => {
-      if (root.type === 'Statement' && root.body.length) {
-        const nonTerminalNode = root.body[0] as ParseTree;
-        if (nonTerminalNode.type === SymbolType.State) {
-          declared.add((nonTerminalNode.body[0] as Token).value);
-        }
-      }
-    });
+    this.grammar.rules.map(([, rhs]) => {
+      rhs.forEach((token) => {
+        if (token.type[1] !== SymbolType.State) return;
 
-    SemanticAnalyzer.inorder(this.parseTree, (root) => {
-      if (root.type === SymbolType.State) {
-        const token = root.body[0] as Token;
         if (!declared.has(token.value)) {
-          undeclared[`Undeclared ${token.value}`] = token;
+          undeclared.add(token.value);
         }
-      }
+      });
     });
 
-    const errors: CompileError[] = Object.values(undeclared)
-      .map((token) => ({ type: 'Error', message: `${token.value} is not defined` }));
+    const errors: CompileError[] = [...undeclared].map((nonterminal) => ({ type: 'Error', message: `${nonterminal} is not defined` }));
 
     if (!declared.has('S')) {
       errors.push({ type: 'Error', message: `Start symbol 'S' is not defined` })
@@ -71,38 +49,17 @@ class SemanticAnalyzer {
   private checkUnreachable(): CompileError[] {
     const graph: Record<string, { nodes: Set<string>, visited: boolean }> = {};
 
-    // Uses DFS to contruct a graph of non-terminals leading to adjacent non-terminals
-    const dfs = (root: ParseTree, context: Token) => {
-      if (!root) return;
-
-      if (root.type === SymbolType.State) {
-        const token = root.body[0] as Token;
-        graph[context.value].nodes.add(token.value);
+    this.grammar.rules.forEach(([lhs, rhs]) => {
+      if (!graph[lhs]) {
+        graph[lhs] = { nodes: new Set(), visited: false };
       }
 
-      if (root.body) {
-        const isStatement = root.type === 'Statement';
-
-        // If new statement is found, update the context and add it to graph as a vertex
-        const nextContext = isStatement && root.body[0] ? (root.body[0] as ParseTree).body[0] as Token : context;
-
-        if (isStatement) {
-          graph[nextContext.value] = {
-            nodes: new Set(),
-            visited: false,
-          };
+      rhs.forEach((token) => {
+        if (token.type[1] === SymbolType.State) {
+          graph[lhs].nodes.add(token.value);
         }
-
-        /**
-         * If the current root is of type statement,
-         * then ignore the first child of it as it will be a non-terminal that
-         * is a part of context, not a part of production itself.
-         */
-        for(let i = Number(isStatement); i < root.body.length; i++) {
-          dfs(root.body[i] as ParseTree, nextContext);
-        }
-      }
-    };
+      });
+    });
 
     // Traverses the adjacent nodes in the graph
     const traverseConnected = (curVertex: string) => {
@@ -112,8 +69,6 @@ class SemanticAnalyzer {
       graph[curVertex].visited = true;
       graph[curVertex].nodes.forEach(traverseConnected);
     };
-
-    dfs(this.parseTree, null);
 
     // Start traversal from start state 'S'
     traverseConnected('S');
