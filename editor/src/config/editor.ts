@@ -28,7 +28,9 @@ monaco.editor.defineTheme('vyaakaran', {
     { token: 'source', foreground: '#d6e9ff' },
     { token: 'non-terminal', foreground: '#d6e9ff' },
   ],
-  colors: {},
+  colors: {
+    'editorLineNumber.foreground': '#444c55',
+  },
 });
 
 const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
@@ -40,6 +42,15 @@ const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
   minimap: {
     enabled: false,
   },
+  scrollbar: {
+    verticalScrollbarSize: 6,
+  },
+  lightbulb: {
+    enabled: false,
+  },
+  folding: false,
+  lineNumbersMinChars: 4,
+  lineDecorationsWidth: 20,
 };
 
 export { editorConfig };

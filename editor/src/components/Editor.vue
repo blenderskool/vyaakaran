@@ -50,3 +50,9 @@ export default defineComponent({
     height: 100vh;
   }
 </style>
+
+<style>
+.monaco-editor .margin-view-overlays .line-numbers {
+  font-size: 12px;
+}
+</style>
