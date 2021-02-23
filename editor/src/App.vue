@@ -14,7 +14,7 @@ import { defineComponent, computed } from 'vue';
 
 import { getActiveStore } from './store/code';
 import Sidebar from './components/Sidebar.vue';
-import EditorTabs from './components/EditorTabs.vue';
+import EditorTabs from './components/EditorTabs/EditorTabs.vue';
 
 export default defineComponent({
   name: 'App',

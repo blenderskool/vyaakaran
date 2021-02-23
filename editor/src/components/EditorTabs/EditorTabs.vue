@@ -1,31 +1,35 @@
 <template>
   <ul class="tabs">
-    <li v-for="(tab, i) in tabs" :key="i" :class="{ selected: tabIdx === i }">
-      <router-link :to="String(i)" class="tab-link">
-        {{ tab }}
-      </router-link>
-      <button class="close-btn" v-if="tabs.length > 1" @click="() => removeTab(i)" :title="`Remove ${tab}`">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="16" height="16" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </li>
-    <li class="new-tab">
+    <Tab
+      v-for="(tab, i) in tabs"
+      :key="i"
+      :to="String(i)"
+      :name="tab"
+      :isActive="tabIdx === i"
+      :showRemove="tabs.length > 1"
+      @rename="(name) => renameTab(i, name)"
+      @remove="() => removeTab(i)"
+    />
+    <Tab class="new-tab">
       <button @click="addTab" title="Add a new tab">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
       </button>
-    </li>
+    </Tab>
   </ul>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getActiveStore, newPlayground, Playground } from '../store/code';
+import { getActiveStore, newPlayground, Playground } from '../../store/code';
+import Tab from './Tab.vue';
 
 export default defineComponent({
   name: 'EditorTabs',
+  components: {
+    Tab,
+  },
   computed: {
     tabIdx() {
       const id = Number(this.$route.params.id);
@@ -49,6 +53,10 @@ export default defineComponent({
         mutate();
       }
     },
+    renameTab(i, name) {
+      // NOTE: This assumes that the tab being renamed is the active tab. Might change later
+      (getActiveStore() as Playground).name = name;
+    },
     addTab() {
       const playgrounds = getActiveStore(true) as Playground[];
       playgrounds.push(newPlayground(`Untitled-${playgrounds.length + 1}`));
@@ -71,45 +79,6 @@ export default defineComponent({
   }
   .tabs::-webkit-scrollbar {
     height: 3px;
-  }
-
-  .tabs li {
-    display: flex;
-    align-items: center;
-    border-top: 3px solid transparent;
-    margin: 0 0.25rem;
-    background-color: #18181B;
-    opacity: 0.5;
-  }
-
-  .tabs li:first-of-type {
-    margin-left: 0;
-  }
-  .tabs li:last-of-type {
-    margin-right: 0;
-  }
-
-  .tabs li.selected {
-    opacity: 1;
-    border-top-color: #34febb;
-  }
-
-  .tabs .tab-link {
-    display: flex;
-    align-items: center;
-    height: 40px;
-    padding: 0 1rem;
-    font-size: 13px;
-    white-space: nowrap;
-    font-weight: 500;
-  }
-
-  .tabs .close-btn {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
-    color: #586f89;
-    outline: none;
   }
 
   .tabs .new-tab {
