@@ -1,6 +1,7 @@
 import { reactive } from 'vue';
-import { CompileError } from '../../../compiler/src/regular-grammar/types';
+import { CompileError, CompilerClass } from '../../../compiler/src/regular-grammar/types';
 import { RegularGrammar } from '../../../compiler/src/regular-grammar';
+import { ContextFreeGrammar } from '../../../compiler/src/context-free-grammar';
 import router from '../router';
 
 interface ConsoleStream {
@@ -14,7 +15,7 @@ interface Playground {
   program: string;
   errors: CompileError[];
   consoleStream: ConsoleStream[];
-  compiled?: RegularGrammar;
+  compiled?: CompilerClass;
   progKey: number;
 };
 
@@ -52,7 +53,12 @@ const codeStore = reactive<Record<string, Playground[]>>({
       program,
     },
   ],
-  'context-free-grammar': [],
+  'context-free-grammar': [
+    {
+      ...newPlayground('Untitled-1'),
+      program,
+    },
+  ],
 });
 
 function getActiveStore(all: boolean = false): Playground | undefined | Playground[] {
@@ -66,16 +72,24 @@ function getActiveStore(all: boolean = false): Playground | undefined | Playgrou
 }
 
 function compile() {
+  const storeId = router.currentRoute.value.meta.storeId;
   const store = getActiveStore() as Playground;
   const program = store.program;
 
   const start = Date.now();
-  store.compiled = new RegularGrammar(program).parse().semanticAnalysis();
+  switch (storeId) {
+    case 'regular-grammar':
+      store.compiled = new RegularGrammar(program).parse().semanticAnalysis();
+      break;
+    case 'context-free-grammar':
+      store.compiled = new ContextFreeGrammar(program).parse().semanticAnalysis();
+      break;
+  }
   const timeTaken = Date.now() - start;
 
-  store.errors = store.compiled.errors;
-  const errors = store.compiled.errors.map(err => ({ ...err, timestamp: new Date() }));
-  const warnings = store.compiled.warnings.map(err => ({ ...err, timestamp: new Date() }));
+  store.errors = store.compiled!.errors;
+  const errors = store.compiled!.errors.map(err => ({ ...err, timestamp: new Date() }));
+  const warnings = store.compiled!.warnings.map(err => ({ ...err, timestamp: new Date() }));
 
   if (!errors.length) {
     store.consoleStream = [ ...warnings, { type: 'Success', message: `Compiled successfully in ${timeTaken}ms`, timestamp: new Date() } ];

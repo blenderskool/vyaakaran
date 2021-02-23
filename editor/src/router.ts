@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import RegularGrammarPlayground from './routes/RegularGrammarPlayground.vue';
 import { codeStore } from './store/code';
+
+import RegularGrammarPlayground from './routes/RegularGrammarPlayground.vue';
+import ContextFreeGrammarPlayground from './routes/ContextFreeGrammarPlayground.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -18,6 +20,14 @@ const router = createRouter({
         storeId: 'regular-grammar',
       },
       component: RegularGrammarPlayground,
+    },
+    {
+      name: 'ContextFreeGrammar',
+      path: '/context-free-grammar/:id?',
+      meta: {
+        storeId: 'context-free-grammar',
+      },
+      component: ContextFreeGrammarPlayground,
     },
   ],
 });
