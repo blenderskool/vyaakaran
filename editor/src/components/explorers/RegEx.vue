@@ -8,8 +8,8 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 
-import { RegularGrammar } from '../../../compiler/src/regular-grammar';
-import PaneHeader from './ui/PaneHeader.vue';
+import { RegularGrammar } from '../../../../compiler/src/regular-grammar';
+import PaneHeader from '../ui/PaneHeader.vue';
 
 export default defineComponent({
   name: 'RegExExplorer',

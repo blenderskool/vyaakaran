@@ -29,8 +29,8 @@ import { Pane, Splitpanes } from 'splitpanes';
 import Console from '../components/Console.vue';
 import Editor from '../components/Editor.vue';
 import CompileButton from '../components/ui/CompileButton.vue';
-import FiniteAutomataExplorer from '../components/FiniteAutomataExplorer.vue';
-import RegExExplorer from '../components/RegExExplorer.vue';
+import FiniteAutomataExplorer from '../components/explorers/FiniteAutomata.vue';
+import RegExExplorer from '../components/explorers/RegEx.vue';
 
 import { compile } from '../store/code';
 
