@@ -41,7 +41,7 @@ class HashSet {
  */
 class SimplifiedGrammarRepresentation {
   rules: [string, Token[]][];
-  nullNonTerminals: Set<string>;
+  private nullNonTerminals: Set<string>;
 
   constructor(parseTree: ParseTree) {
     this.constructRules(parseTree);
