@@ -34,4 +34,20 @@ interface CompileError {
   message: string;
 };
 
-export { TokenType, Token, SymbolType, ParseTree, CompileError };
+abstract class CompilerClass {
+  program: string;
+  errors: CompileError[];
+  warnings: CompileError[];
+  parseTree: ParseTree;
+
+  constructor(program: string) {
+    this.program = program;
+    this.errors = [];
+    this.warnings = [];
+  }
+
+  abstract parse();
+  abstract semanticAnalysis();
+};
+
+export { TokenType, Token, SymbolType, ParseTree, CompileError, CompilerClass };

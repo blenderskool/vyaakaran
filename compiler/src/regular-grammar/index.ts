@@ -1,22 +1,16 @@
 import RegularGrammarLexer from './lexer';
 import RegularGrammarParser from './parser';
 import RegularGrammarSemanticAnalyzer from './semantic';
-import { ParseTree, CompileError, Token, SymbolType } from './types';
+import { ParseTree, Token, SymbolType, CompilerClass } from './types';
 import { SimplifiedGrammarRepresentation } from '../utils';
 
 type FAGraph = Record<string, { nodes: Record<string, Set<string>>, final: boolean}>;
 
-class RegularGrammar {
-  program: string;
-  errors: CompileError[];
-  warnings: CompileError[];
-  parseTree: ParseTree;
+class RegularGrammar extends CompilerClass {
   result: any;
 
   constructor(program: string) {
-    this.program = program;
-    this.errors = [];
-    this.warnings = [];
+    super(program);
   }
 
   parse() {
