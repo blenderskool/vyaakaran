@@ -1,3 +1,4 @@
+import * as hljs from 'highlight.js/lib/core';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import 'monaco-editor/esm/vs/editor/contrib/find/findController';
 import 'monaco-editor/esm/vs/editor/contrib/multicursor/multicursor';
@@ -53,4 +54,31 @@ const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
   lineDecorationsWidth: 20,
 };
 
-export { editorConfig };
+hljs.registerLanguage('vyaakaran', () => ({
+  name: 'Vyaakaran',
+  keywords: '# ε λ $',
+  contains: [
+    {
+      className: 'keyword',
+      match: /[#ελ$]/,
+    },
+    {
+      className: 'non-terminal',
+      match: /([A-Z][^\.#$ελ\/ \-|]*)/,
+    },
+    {
+      className: 'terminal',
+      match: /([^A-Z\.#$ελ\/ \-|][^\.#$ελ\/ \-|]*)/,
+    },
+    {
+      className: 'operator',
+      match: /(->)|\||-/,
+    },
+    {
+      className: 'separator',
+      match: /\./,
+    },
+  ],
+}));
+
+export { editorConfig, hljs };

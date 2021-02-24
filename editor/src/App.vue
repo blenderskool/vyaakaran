@@ -115,4 +115,19 @@ export default defineComponent({
   .splitpanes__splitter:active::after {
     background-color: #586f89;
   }
+
+  .hljs-terminal {
+    color: #34febb;
+    font-style: italic;
+  }
+  .hljs-separator {
+    color: #586f89;
+  }
+  .hljs-operator {
+    color: #5d8cc0;
+  }
+  .hljs-keyword {
+    color: #32ae85;
+    font-weight: 600;
+  }
 </style>
