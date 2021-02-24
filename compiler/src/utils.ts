@@ -35,12 +35,26 @@ class HashSet {
   }
 }
 
+class GrammarRule {
+  lhs: string;
+  rhs: Token[];
+
+  constructor(lhs, rhs) {
+    this.lhs = lhs;
+    this.rhs = rhs;
+  }
+
+  toString() {
+    return `${this.lhs} ${SymbolType.Follow} ${this.rhs.map((t) => t.value).join(SymbolType.Dot)}`;
+  }
+}
+
 /**
  * A minimized representation of the grammar constructed from the parse tree.
  * It is useful in implementing some conversion algorithms.
  */
 class SimplifiedGrammarRepresentation {
-  rules: [string, Token[]][];
+  rules: GrammarRule[];
   private nullNonTerminals: Set<string>;
 
   constructor(parseTree: ParseTree) {
@@ -51,8 +65,8 @@ class SimplifiedGrammarRepresentation {
     do {
       nullLength = this.nullNonTerminals.size;
       this.rules.forEach(rule => {
-        if (rule[1].find((token) => token.type[1] === SymbolType.Empty || this.nullNonTerminals.has(token.value))) {
-          this.nullNonTerminals.add(rule[0]);
+        if (rule.rhs.find((token) => token.type[1] === SymbolType.Empty || this.nullNonTerminals.has(token.value))) {
+          this.nullNonTerminals.add(rule.lhs);
         }
       });
     } while(nullLength !== this.nullNonTerminals.size);
@@ -88,7 +102,7 @@ class SimplifiedGrammarRepresentation {
       if (root.type === 'Term' || root.type === SymbolType.Empty) {
         const termsStack: Token[] = [];
         termsDFS(root, termsStack);
-        this.rules.push([context.value, termsStack]);
+        this.rules.push(new GrammarRule(context.value, termsStack));
       } else if (root.body) {
         // LHS of production gets updated here if encountered for new productions
         const isStatement = root.type === 'Statement';
@@ -109,11 +123,19 @@ class SimplifiedGrammarRepresentation {
 
   *trav(nonterminal: string) {
     for(let i=0; i < this.rules.length; i++) {
-      if (this.rules[i][0] === nonterminal) {
+      if (this.rules[i].lhs === nonterminal) {
         yield this.rules[i];
       }
     }
   }
+
+  get terminals() {
+    return [...new Set(this.rules.flatMap(({ rhs }) => rhs.filter(token => token.type[1] === SymbolType.Literal).map(token => token.value)))];
+  }
+
+  get nonterminals() {
+    return [...new Set(this.rules.flatMap(({ lhs }) => lhs))];
+  }
 }
 
-export { isUpperAlpha, HashSet, SimplifiedGrammarRepresentation };
+export { isUpperAlpha, HashSet, SimplifiedGrammarRepresentation, GrammarRule };
