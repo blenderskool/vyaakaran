@@ -28,7 +28,7 @@ class Lexer {
       case '//':
         return [TokenType.Comment, SymbolType.Comment];
       case '$':
-        return [TokenType.Keyword, SymbolType.Reserved];
+        return [TokenType.Keyword, SymbolType.Dollar];
     }
 
     if (!['#', 'ε', 'λ', '->', '|', '.', '//'].some((token) => word.includes(token))) {

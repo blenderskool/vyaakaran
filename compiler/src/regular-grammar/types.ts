@@ -15,7 +15,7 @@ enum SymbolType {
   State = 'NON_TERMINAL',
   Dot = '.',
   Comment = 'COMMENT',
-  Reserved = 'RESERVED',
+  Dollar = '$',
 };
 
 interface Token {
