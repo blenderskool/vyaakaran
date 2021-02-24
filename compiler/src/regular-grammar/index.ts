@@ -79,7 +79,7 @@ class RegularGrammar extends CompilerClass {
     }
 
     new SimplifiedGrammarRepresentation(this.parseTree).rules.forEach((rule) => {
-      const [context, termsStack] = rule;
+      const { lhs: context, rhs: termsStack } = rule;
 
       // Add intermediate states and transitions. Required for Rule 1, 2
       let start = context;

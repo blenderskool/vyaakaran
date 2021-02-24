@@ -1,5 +1,5 @@
 import { SymbolType, ParseTree, Token } from './regular-grammar/types';
-import { HashSet, SimplifiedGrammarRepresentation } from './utils';
+import { GrammarRule, HashSet, SimplifiedGrammarRepresentation } from './utils';
 
 class State {
   nonterminal: string;
@@ -63,7 +63,8 @@ class EarleyParser {
     const gen = this.grammar.trav('S');
     let start = gen.next();
     while (!start.done) {
-      this.states[0].add(new State(start.value[0], start.value[1]));
+      const rule = start.value as  GrammarRule;
+      this.states[0].add(new State(rule.lhs, rule.rhs));
 
       start = gen.next();
     }
@@ -103,15 +104,16 @@ class EarleyParser {
 
   private predictor(state: State, origin, extension: State[]) {
     const gen = this.grammar.trav(state.symbol.value);
-    let rule = gen.next();
-    while(!rule.done) {
-      extension.push(new State(rule.value[0], rule.value[1], 0, origin));
+    let it = gen.next();
+    while(!it.done) {
+      const rule = it.value as GrammarRule;
+      extension.push(new State(rule.lhs, rule.rhs, 0, origin));
 
-      if (this.grammar.isNull(rule.value[0])) {
+      if (this.grammar.isNull(rule.lhs)) {
         extension.push(state.shift);
       }
 
-      rule = gen.next();
+      it = gen.next();
     }
   }
 

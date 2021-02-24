@@ -18,10 +18,10 @@ class SemanticAnalyzer {
    * of a non-terminal not in the above set.
    */
   private checkUndeclaredNonTerminals(): CompileError[] {
-    const declared: Set<string> = new Set(this.grammar.rules.map(([lhs]) => lhs));
+    const declared: Set<string> = new Set(this.grammar.rules.map(({ lhs }) => lhs));
     const undeclared: Set<string> = new Set();
 
-    this.grammar.rules.map(([, rhs]) => {
+    this.grammar.rules.map(({ rhs }) => {
       rhs.forEach((token) => {
         if (token.type[1] !== SymbolType.State) return;
 
@@ -49,7 +49,7 @@ class SemanticAnalyzer {
   private checkUnreachable(): CompileError[] {
     const graph: Record<string, { nodes: Set<string>, visited: boolean }> = {};
 
-    this.grammar.rules.forEach(([lhs, rhs]) => {
+    this.grammar.rules.forEach(({ lhs, rhs }) => {
       if (!graph[lhs]) {
         graph[lhs] = { nodes: new Set(), visited: false };
       }
