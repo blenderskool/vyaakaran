@@ -12,7 +12,7 @@
 
       <Splitpanes horizontal v-if="store.value.compiled && !store.value.compiled.errors.length">
         <Pane min-size="6.5">
-          <ParserExplorer />
+          <ParseTableExplorer :compiled="store.value.compiled" />
         </Pane>
       </Splitpanes>
     </div>
@@ -26,7 +26,7 @@ import { Splitpanes, Pane } from 'splitpanes';
 import Editor from '../components/Editor.vue';
 import Console from '../components/Console.vue';
 import CompileButton from '../components/ui/CompileButton.vue';
-import ParserExplorer from '../components/explorers/Parser.vue';
+import ParseTableExplorer from '../components/explorers/ParseTable.vue';
 
 import { compile } from '../store/code';
 
@@ -38,7 +38,7 @@ export default defineComponent({
     Editor,
     Console,
     CompileButton,
-    ParserExplorer,
+    ParseTableExplorer,
   },
   inject: ['store'],
   setup() {

@@ -2,10 +2,11 @@ import RegularGrammarLexer from '../regular-grammar/lexer';
 import ContextFreeGrammarParser from './parser';
 import RegularGrammarSemanticAnalyzer from '../regular-grammar/semantic';
 import { Token, SymbolType, CompilerClass } from '../regular-grammar/types';
-import { SimplifiedGrammarRepresentation } from '../utils';
+import { SimplifiedGrammarRepresentation, GrammarRule } from '../utils';
 
 class ContextFreeGrammar extends CompilerClass {
   private firstSets: Record<string, Set<string>>;
+  private grammar: SimplifiedGrammarRepresentation;
   result: any;
 
   constructor(program: string) {
@@ -30,6 +31,10 @@ class ContextFreeGrammar extends CompilerClass {
       const errors = new RegularGrammarSemanticAnalyzer(this.parseTree).analyze();
       this.errors.push(...errors.filter(err => err.type === 'Error'));
       this.warnings.push(...errors.filter(err => err.type === 'Warning'));
+    }
+
+    if (!this.errors.length) {
+      this.grammar = new SimplifiedGrammarRepresentation(this.parseTree);
     }
 
     return this;
@@ -59,11 +64,12 @@ class ContextFreeGrammar extends CompilerClass {
   }
 
   findFirstSets() {
-    if (Object.keys(this.firstSets).length !== 0) return this.firstSets;
+    if (Object.keys(this.firstSets).length !== 0) {
+      this.result = this.firstSets;
+      return this;
+    };
 
-    const grammar = new SimplifiedGrammarRepresentation(this.parseTree);
-
-    grammar.rules.forEach(([lhs, ]) => {
+    this.grammar.rules.forEach(({ lhs }) => {
       this.firstSets[lhs] = new Set();
     });
 
@@ -72,7 +78,7 @@ class ContextFreeGrammar extends CompilerClass {
     do {
       done = true;
 
-      grammar.rules.forEach(([lhs, rhs]) => {
+      this.grammar.rules.forEach(({ lhs, rhs }) => {
         const set = new Set([ ...this.firstSets[lhs], ...this.collectSet(this.firstSets[lhs], rhs, new Set([ SymbolType.Empty ])) ]);
 
         if (this.firstSets[lhs].size !== set.size) {
@@ -89,11 +95,10 @@ class ContextFreeGrammar extends CompilerClass {
 
   findFollowSets() {
     this.findFirstSets();
-    const grammar = new SimplifiedGrammarRepresentation(this.parseTree);
     const FOLLOW: Record<string, Set<string>> = {};
 
-    grammar.rules.forEach(([lhs,]) => {
-      FOLLOW[lhs] = new Set(lhs === 'S' ? ['$'] : []);
+    this.grammar.rules.forEach(({ lhs }) => {
+      FOLLOW[lhs] = new Set(lhs === 'S' ? [SymbolType.Dollar] : []);
     });
 
     let done = false;
@@ -101,7 +106,7 @@ class ContextFreeGrammar extends CompilerClass {
     do {
       done = true;
 
-      grammar.rules.forEach(([lhs, rhs]) => {
+      this.grammar.rules.forEach(({ lhs, rhs }) => {
         rhs.forEach((token, i) => {
           if (token.type[1] !== SymbolType.State) return;
 
@@ -123,6 +128,51 @@ class ContextFreeGrammar extends CompilerClass {
     this.result = FOLLOW;
 
     return this;
+  }
+
+  toLL1() {
+    this.findFirstSets();
+    const follow: Record<string, Set<string>> = this.findFollowSets().result;
+
+    const nonterminals = this.grammar.nonterminals;
+    const terminals = Object.fromEntries([...this.grammar.terminals, SymbolType.Dollar].map((term, i) => [term, i]));
+    
+    const parseTable: string[][][] = nonterminals.map(() => Object.keys(terminals).map(() => []));
+    let isLL1 = false;
+
+    nonterminals.forEach((nonterminal, i) => {
+      const gen = this.grammar.trav(nonterminal);
+      let it = gen.next();
+      while (!it.done) {
+        const rule = it.value as GrammarRule;
+
+        if (rule.rhs[0].type[1] === SymbolType.Empty) {
+          follow[nonterminal].forEach((terminal) => {
+            parseTable[i][terminals[terminal]].push(rule.toString());
+            isLL1 ||= parseTable[i][terminals[terminal]].length > 1;
+          });
+        } else {
+          const first = [...this.collectSet(new Set(), rule.rhs, new Set([ SymbolType.Empty ]))][0];
+          parseTable[i][terminals[first]].push(rule.toString());
+          isLL1 ||= parseTable[i][terminals[first]].length > 1;
+        }
+        
+
+        it = gen.next();
+      }
+    });
+
+    this.result = { hasConflicts: isLL1, parseTable };
+
+    return this;
+  }
+
+  get terminals() {
+    return this.grammar.terminals;
+  }
+
+  get nonterminals() {
+    return this.grammar.nonterminals;
   }
 }
 
