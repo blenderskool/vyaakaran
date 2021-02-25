@@ -85,14 +85,14 @@ class Lexer {
 
       for(let j=0; j < line.length; j++) {
         if (line[j] === ' ' || line[j] === '') continue;
-    
+
         const [token, endPos] = this.more(line, [lineIdx, j]);
         // If a comment is encountered, ignore rest of the line
         if (token.type[1] === SymbolType.Comment) {
           break;
         }
         j = endPos;
-    
+
         yield token;
       }
 
