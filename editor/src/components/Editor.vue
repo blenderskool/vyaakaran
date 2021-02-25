@@ -24,7 +24,7 @@ export default defineComponent({
         value: store.value.program,
       });
       editor.onDidChangeModelContent(() => {
-        store.value.program = editor.getValue();
+        store.value.program = editor.getValue().replace(/\r\n/g, '\n');
       });
     });
 
