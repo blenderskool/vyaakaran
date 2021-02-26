@@ -25,7 +25,8 @@
         </tr>
       </table>
       <ul class="notes">
-        <li v-if="parser.hasConflicts">This grammar is not {{ tableType }}</li>
+        <li v-if="parser.conflicts">This grammar is not {{ tableType }}</li>
+        <li v-if="parser.conflicts">There are {{ parser.conflicts }} conflicts</li>
       </ul>
     </div>
   </div>

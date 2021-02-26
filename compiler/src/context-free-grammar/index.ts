@@ -138,7 +138,6 @@ class ContextFreeGrammar extends CompilerClass {
     const terminals = Object.fromEntries([...this.grammar.terminals, SymbolType.Dollar].map((term, i) => [term, i]));
     
     const parseTable: string[][][] = nonterminals.map(() => Object.keys(terminals).map(() => []));
-    let isLL1 = false;
 
     nonterminals.forEach((nonterminal, i) => {
       const gen = this.grammar.trav(nonterminal);
@@ -149,20 +148,26 @@ class ContextFreeGrammar extends CompilerClass {
         if (rule.rhs[0].type[1] === SymbolType.Empty) {
           follow[nonterminal].forEach((terminal) => {
             parseTable[i][terminals[terminal]].push(rule.toString());
-            isLL1 ||= parseTable[i][terminals[terminal]].length > 1;
           });
         } else {
           const first = [...this.collectSet(new Set(), rule.rhs, new Set([ SymbolType.Empty ]))][0];
           parseTable[i][terminals[first]].push(rule.toString());
-          isLL1 ||= parseTable[i][terminals[first]].length > 1;
         }
-        
 
         it = gen.next();
       }
     });
 
-    this.result = { hasConflicts: isLL1, parseTable };
+    let conflicts = 0;
+    parseTable.forEach((row) => {
+      row.forEach((col) => {
+        if (col.length > 1) {
+          conflicts++;
+        }
+      });
+    });
+
+    this.result = { conflicts, parseTable };
 
     return this;
   }
