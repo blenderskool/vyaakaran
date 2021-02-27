@@ -49,13 +49,13 @@ const newPlayground = (name: string): Playground => ({
 const codeStore = reactive<Record<string, Playground[]>>({
   'regular-grammar': [
     {
-      ...newPlayground('Untitled-1'),
+      ...newPlayground('New Tab'),
       program,
     },
   ],
   'context-free-grammar': [
     {
-      ...newPlayground('Untitled-1'),
+      ...newPlayground('New Tab'),
       program,
     },
   ],

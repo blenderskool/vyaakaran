@@ -45,13 +45,9 @@ export default defineComponent({
       const mutate = () => {
         const playgrounds = getActiveStore(true) as Playground[];
         playgrounds.splice(i, 1);
-      }
+      };
 
-      if (this.tabIdx === i) {
-        this.$router.replace(`${i - 1 >= 0 ? i - 1 : i}`).then(mutate);
-      } else {
-        mutate();
-      }
+      this.$router.replace(`${i - 1 >= 0 ? i - 1 : i}`).then(mutate);
     },
     renameTab(i, name) {
       // NOTE: This assumes that the tab being renamed is the active tab. Might change later
@@ -59,7 +55,7 @@ export default defineComponent({
     },
     addTab() {
       const playgrounds = getActiveStore(true) as Playground[];
-      playgrounds.push(newPlayground(`Untitled-${playgrounds.length + 1}`));
+      playgrounds.push(newPlayground('New Tab'));
     }
   },
 });
