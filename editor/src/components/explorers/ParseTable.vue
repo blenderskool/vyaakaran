@@ -84,8 +84,9 @@ export default defineComponent({
     margin-top: 2rem;
     border-collapse: collapse;
     font-family: 'Fira Code', monospace;
-    overflow-x: scroll;
+    overflow: auto;
     max-width: 100%;
+    height: 50vh;
     display: block;
     font-weight: 500;
     white-space: nowrap;
