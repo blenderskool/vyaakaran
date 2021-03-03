@@ -57,8 +57,8 @@ class EarleyParser {
   }
 
   parse(text: string) {
-    text = text.replace(/\.+/g, '.');
-    this.states = [ new HashSet(), ...text.split('.').map(() => new HashSet()) ];
+    text = text.replace(/ +/g, ' ');
+    this.states = [ new HashSet(), ...text.split(' ').map(() => new HashSet()) ];
 
     const gen = this.grammar.trav('S');
     let start = gen.next();
@@ -69,7 +69,7 @@ class EarleyParser {
       start = gen.next();
     }
 
-    text.concat('.\u0000').split('.').forEach((token, k) => {
+    text.concat(' \u0000').split(' ').forEach((token, k) => {
       const extension: State[] = this.states[k].list();
       this.states[k].clear();
 

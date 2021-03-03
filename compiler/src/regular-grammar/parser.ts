@@ -8,13 +8,12 @@ class Parser {
    */
   protected static readonly parseTable = {
     'Statement': {
-      [SymbolType.State]: `${SymbolType.State} ${SymbolType.Follow} Symbol Expression Statement`,
+      [SymbolType.State]: `${SymbolType.State} ${SymbolType.Follow} Symbol Expression ${SymbolType.Dot} Statement`,
       '$': `EPSILON`,
     },
     'Expression': {
-      [SymbolType.State]: `EPSILON`,
+      [SymbolType.Dot]: `EPSILON`,
       [SymbolType.Or]: `${SymbolType.Or} Symbol Expression`,
-      '$': `EPSILON`,
     },
     'Term': {
       [SymbolType.State]: `${SymbolType.State}`,
@@ -26,10 +25,10 @@ class Parser {
       [SymbolType.Empty]: `${SymbolType.Empty}`,
     },
     'NextTerm': {
-      [SymbolType.State]: `EPSILON`,
+      [SymbolType.State]: `Term`,
+      [SymbolType.Literal]: `Term`,
       [SymbolType.Or]: `EPSILON`,
-      [SymbolType.Dot]: `${SymbolType.Dot} Term`,
-      '$': `EPSILON`,
+      [SymbolType.Dot]: `EPSILON`,
     },
   };
 

@@ -26,15 +26,15 @@ const program =`// Type your regular grammar here
 //    * Follow (->):                 ->
 //    * ε or λ:                      ε or λ or #
 //    * Or (|):                      |
-//    * Multiple symbols separator:  .
+//    * End each rule:               .
 //    * Comments:                    // comment
 //    * Non-terminals:               start with uppercase character
 //    * Terminals:                   start with any other character
 
-S -> ε | a.B | a.C | b.A | b.C | c.A | c.B
-A -> b.A | c.A | ε
-C -> a.C | b.C | ε
-B -> a.B | c.B | ε
+S -> ε | a B | a C | b A | b C | c A | c B.
+A -> b A | c A | ε.
+C -> a C | b C | ε.
+B -> a B | c B | ε.
 `;
 
 

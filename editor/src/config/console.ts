@@ -12,7 +12,7 @@ const COMMANDS: Record<string, Command> = {
       `> compile - Compile the program.`,
       `> help - List of all supported commands.`,
       `> test - Test if the string is part of language defined.`,
-      `&nbsp;&nbsp;Usage: test "a.b.b.e" where '.' separates different symbols.`,
+      `&nbsp;&nbsp;Usage: test "a b b e" where ' ' separates different symbols.`,
     ].join('<br>'),
     timestamp: new Date(),
   }),
@@ -29,7 +29,7 @@ const COMMANDS: Record<string, Command> = {
     const store = getActiveStore() as Playground;
     const match = input.match(/test "(.*)"/)?.[1];
 
-    if (match === undefined) return { type: 'Error', message: `String to match is not defined. Usage: test "a.b.b.e"`, timestamp: new Date() };
+    if (match === undefined) return { type: 'Error', message: `String to match is not defined. Usage: test "a b b e"`, timestamp: new Date() };
     if (!store.compiled?.parseTree) return { type: 'Error', message: `Program is not compiled yet. Run 'compile'`, timestamp: new Date() };
 
     const parseTreeCount = new EarleyParser(store.compiled?.parseTree as ParseTree).isParsable(match);
