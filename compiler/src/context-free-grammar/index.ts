@@ -150,8 +150,13 @@ class ContextFreeGrammar extends CompilerClass {
             parseTable[i][terminals[terminal]].push(rule.toString());
           });
         } else {
-          const first = [...this.collectSet(new Set(), rule.rhs, new Set([ SymbolType.Empty ]))][0];
-          parseTable[i][terminals[first]].push(rule.toString());
+          const firstSet = [...this.collectSet(new Set(), rule.rhs, new Set([ SymbolType.Empty ]))];
+
+          firstSet.forEach((first) => {
+            if (first === SymbolType.Empty) return;
+
+            parseTable[i][terminals[first]].push(rule.toString());
+          });
         }
 
         it = gen.next();
