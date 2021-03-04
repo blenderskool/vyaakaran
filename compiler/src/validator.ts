@@ -57,6 +57,11 @@ class EarleyParser {
   }
 
   parse(text: string) {
+    // If text to check is empty, then just add a empty symbol
+    if (text === '') {
+      text = SymbolType.Empty;
+    }
+
     text = text.replace(/ +/g, ' ');
     this.states = [ new HashSet(), ...text.split(' ').map(() => new HashSet()) ];
 
@@ -99,7 +104,7 @@ class EarleyParser {
     this.parse(text);
 
     const lastState: State[] = this.states[this.states.length - 1].list();
-    return lastState.reduce((acc, state) => acc + Number(state.finished && state.origin === 0), 0);
+    return lastState.reduce((acc, state) => acc + Number(state.finished && state.origin === 0 && state.nonterminal === 'S'), 0);
   }
 
   private predictor(state: State, origin, extension: State[]) {
@@ -107,10 +112,11 @@ class EarleyParser {
     let it = gen.next();
     while(!it.done) {
       const rule = it.value as GrammarRule;
-      extension.push(new State(rule.lhs, rule.rhs, 0, origin));
+      const predictedState = new State(rule.lhs, rule.rhs, 0, origin);
+      extension.push(predictedState);
 
-      if (this.grammar.isNull(rule.lhs)) {
-        extension.push(state.shift);
+      if (predictedState.symbol && this.grammar.isNull(predictedState.symbol.value)) {
+        extension.push(predictedState.shift);
       }
 
       it = gen.next();
