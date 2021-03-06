@@ -64,10 +64,7 @@ class ContextFreeGrammar extends CompilerClass {
   }
 
   findFirstSets() {
-    if (Object.keys(this.firstSets).length !== 0) {
-      this.result = this.firstSets;
-      return this;
-    };
+    if (Object.keys(this.firstSets).length !== 0) return this.firstSets;
 
     this.grammar.rules.forEach(({ lhs }) => {
       this.firstSets[lhs] = new Set();
@@ -88,9 +85,7 @@ class ContextFreeGrammar extends CompilerClass {
       });
     } while (!done);
 
-    this.result = this.firstSets;
-
-    return this;
+    return this.firstSets;
   }
 
   findFollowSets() {
@@ -125,14 +120,12 @@ class ContextFreeGrammar extends CompilerClass {
       });
     } while (!done);
 
-    this.result = FOLLOW;
-
-    return this;
+    return FOLLOW;
   }
 
   toLL1() {
     this.findFirstSets();
-    const follow: Record<string, Set<string>> = this.findFollowSets().result;
+    const follow: Record<string, Set<string>> = this.findFollowSets();
 
     const nonterminals = this.grammar.nonterminals;
     const terminals = Object.fromEntries([...this.grammar.terminals, SymbolType.Dollar].map((term, i) => [term, i]));
