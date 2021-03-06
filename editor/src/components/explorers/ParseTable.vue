@@ -8,21 +8,25 @@
     </PaneHeader>
     <div class="output">
       <table>
-        <tr>
-          <th />
-          <th v-for="terminal in compiled.terminals" :key="terminal" class="hljs-terminal">{{ terminal }}</th>
-          <th class="hljs-terminal">$</th>
-        </tr>
-        <tr v-for="(row, i) in parser.parseTable" :key="i">
-          <td>{{ compiled.nonterminals[i] }}</td>
-          <td v-for="(rules, j) in row" :key="j" :class="{ conflict: rules.length > 1 }">
-            <div
-              v-for="rule in rules"
-              :key="rule"
-              v-html="hljs.highlight('vyaakaran', rule).value"
-            />
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th />
+            <th v-for="terminal in compiled.terminals" :key="terminal" class="hljs-terminal">{{ terminal }}</th>
+            <th class="hljs-terminal">$</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, i) in parser.parseTable" :key="i">
+            <th>{{ compiled.nonterminals[i] }}</th>
+            <td v-for="(rules, j) in row" :key="j" :class="{ conflict: rules.length > 1 }">
+              <div
+                v-for="rule in rules"
+                :key="rule"
+                v-html="hljs.highlight('vyaakaran', rule).value"
+              />
+            </td>
+          </tr>
+        </tbody>
       </table>
       <ul class="notes">
         <li v-if="parser.conflicts">This grammar is not {{ tableType }}</li>
@@ -76,25 +80,18 @@ export default defineComponent({
     justify-content: space-between;
   }
 
+  .parser-explorer {
+    padding-top: 10px;
+  }
+
   .output {
     padding: 0 3rem;
   }
   table {
-    width: 100%;
     margin-top: 2rem;
-    border-collapse: collapse;
-    font-family: 'Fira Code', monospace;
     overflow: auto;
     max-width: 100%;
-    height: 50vh;
-    display: block;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-
-  td, th {
-    border: 1px solid #586f89;
-    padding: 0.5rem 1rem;
+    max-height: 50vh;
   }
 
   td.conflict {

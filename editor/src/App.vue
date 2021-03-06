@@ -98,6 +98,34 @@ export default defineComponent({
     background-color: rgba(255, 255, 255, 0.2);
   }
 
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    font-family: 'Fira Code', monospace;
+    display: inline-block;
+    font-weight: 500;
+    white-space: nowrap;
+    border: 1px solid #586f89;
+  }
+
+  td, th {
+    border: 1px solid #586f89;
+    padding: 0.5rem 1rem;
+  }
+
+  table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #27272A;
+  }
+  table tbody th {
+    position: sticky;
+    left: 0;
+    background: #27272A;
+    z-index: 1;
+  }
   
   .splitpanes__splitter {
     min-height: 21px !important;
