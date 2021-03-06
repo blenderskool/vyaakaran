@@ -1,6 +1,6 @@
 import RegularGrammarLexer from '../regular-grammar/lexer';
 import ContextFreeGrammarParser from './parser';
-import RegularGrammarSemanticAnalyzer from '../regular-grammar/semantic';
+import ContextFreeGrammarSemanticAnalyzer from './semantic';
 import { Token, SymbolType, CompilerClass } from '../regular-grammar/types';
 import { SimplifiedGrammarRepresentation, GrammarRule } from '../utils';
 
@@ -28,7 +28,7 @@ class ContextFreeGrammar extends CompilerClass {
 
   semanticAnalysis() {
     if (!this.errors.length) {
-      const errors = new RegularGrammarSemanticAnalyzer(this.parseTree).analyze();
+      const errors = new ContextFreeGrammarSemanticAnalyzer(this.parseTree).analyze();
       this.errors.push(...errors.filter(err => err.type === 'Error'));
       this.warnings.push(...errors.filter(err => err.type === 'Warning'));
     }
@@ -183,6 +183,6 @@ class ContextFreeGrammar extends CompilerClass {
 export {
   RegularGrammarLexer,
   ContextFreeGrammarParser,
-  RegularGrammarSemanticAnalyzer,
+  ContextFreeGrammarSemanticAnalyzer,
   ContextFreeGrammar,
 };

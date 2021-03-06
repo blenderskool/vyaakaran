@@ -2,8 +2,8 @@ import { SimplifiedGrammarRepresentation } from '../utils';
 import { ParseTree, SymbolType, Token, CompileError, TokenType } from './types';
 
 class SemanticAnalyzer {
-  private parseTree: ParseTree;
-  private grammar: SimplifiedGrammarRepresentation;
+  protected parseTree: ParseTree;
+  protected grammar: SimplifiedGrammarRepresentation;
 
   constructor(parseTree: ParseTree) {
     this.parseTree = parseTree;
