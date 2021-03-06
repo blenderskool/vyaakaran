@@ -14,6 +14,9 @@
         <Pane min-size="6.5">
           <ParseTableExplorer :compiled="store.value.compiled" />
         </Pane>
+        <Pane min-size="6.5" max-size="50">
+          <FirstFollowExplorer :compiled="store.value.compiled" />
+        </Pane>
       </Splitpanes>
     </div>
   </div>
@@ -27,6 +30,7 @@ import Editor from '../components/Editor.vue';
 import Console from '../components/Console.vue';
 import CompileButton from '../components/ui/CompileButton.vue';
 import ParseTableExplorer from '../components/explorers/ParseTable.vue';
+import FirstFollowExplorer from '../components/explorers/FirstFollow.vue';
 
 import { compile } from '../store/code';
 
@@ -39,6 +43,7 @@ export default defineComponent({
     Console,
     CompileButton,
     ParseTableExplorer,
+    FirstFollowExplorer,
   },
   inject: ['store'],
   setup() {
