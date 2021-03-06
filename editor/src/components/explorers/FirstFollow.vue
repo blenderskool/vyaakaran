@@ -61,7 +61,7 @@ export default defineComponent({
   table {
     margin: 1rem 20px 0 20px;
     overflow: auto;
-    max-width: 100%;
+    max-width: 95%;
     max-height: calc(100% - 5.5rem);
   }
 
