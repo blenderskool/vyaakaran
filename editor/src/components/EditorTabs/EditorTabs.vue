@@ -4,14 +4,15 @@
       v-for="(tab, i) in tabs"
       :key="i"
       :to="String(i)"
-      :name="tab"
+      :name="tab.name"
       :isActive="tabIdx === i"
       :showRemove="tabs.length > 1"
+      :lang="tab.lang"
       @rename="(name) => renameTab(i, name)"
       @remove="() => removeTab(i)"
     />
     <Tab class="new-tab">
-      <button @click="addTab" title="Add a new tab">
+      <button @click="() => $emit('new-playground')" title="Add a new tab">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
@@ -22,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getActiveStore, newPlayground, Playground } from '../../store/code';
+import { playgrounds, Playground, getActivePlayground } from '../../store/code';
 import Tab from './Tab.vue';
 
 export default defineComponent({
@@ -30,33 +31,32 @@ export default defineComponent({
   components: {
     Tab,
   },
+  emits: ['new-playground'],
   computed: {
     tabIdx() {
       const id = Number(this.$route.params.id);
       return id || 0;
     },
     tabs() {
-      const playgrounds = getActiveStore(true) as Playground[];
-      return playgrounds.map(p => p.name);
+      return playgrounds.map(p => ({ name: p.name, lang: p.type }));
     },
   },
   methods: {
     removeTab(i) {
       const mutate = () => {
-        const playgrounds = getActiveStore(true) as Playground[];
         playgrounds.splice(i, 1);
       };
 
-      this.$router.replace(`${i - 1 >= 0 ? i - 1 : i}`).then(mutate);
+      if (i <= this.tabIdx) {
+        this.$router.replace(`${this.tabIdx - 1 >= 0 ? this.tabIdx - 1 : this.tabIdx}`).then(mutate);
+      } else {
+        mutate();
+      }
     },
     renameTab(i, name) {
       // NOTE: This assumes that the tab being renamed is the active tab. Might change later
-      (getActiveStore() as Playground).name = name;
+      (getActivePlayground() as Playground).name = name;
     },
-    addTab() {
-      const playgrounds = getActiveStore(true) as Playground[];
-      playgrounds.push(newPlayground('New Tab'));
-    }
   },
 });
 </script>
@@ -64,7 +64,7 @@ export default defineComponent({
 <style scoped>
   .tabs {
     height: 40px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.15);
     position: relative;
     z-index: 15;
     display: flex;
@@ -83,7 +83,7 @@ export default defineComponent({
   .tabs .new-tab button {
     height: 100%;
     padding: 0 8px;
-    color: #586f89;
+    color: var(--blue-gray-500);
     outline: none;
   }
 </style>
