@@ -17,6 +17,8 @@ export default defineComponent({
     const editorRef = ref<HTMLElement>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
 
+    const getEditorValue = () => editor.getValue().replace(/\r\n/g, '\n');
+
     onMounted(() => {
       editor = monaco.editor.create(editorRef.value, {
         ...editorConfig,
@@ -24,12 +26,12 @@ export default defineComponent({
         value: store.value.program,
       });
       editor.onDidChangeModelContent(() => {
-        store.value.program = editor.getValue().replace(/\r\n/g, '\n');
+        store.value.program = getEditorValue();
       });
     });
 
-    watch(() => router.currentRoute.value, () => {
-      if (editor) {
+    watch(() => store.value.program, () => {
+      if (editor && getEditorValue() !== store.value.program) {
         editor.setValue(store.value.program);
       }
     });
