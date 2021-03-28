@@ -165,7 +165,15 @@ class ContextFreeGrammar extends CompilerClass {
       });
     });
 
-    this.result = { conflicts, parseTable };
+    const conclusions = [];
+    if (conflicts === 0) {
+      conclusions.push('This grammar is LL(1)');
+    } else {
+      conclusions.push('This grammar is not LL(1)');
+      conclusions.push(conflicts === 1 ? `There is a conflict` : `There are ${conflicts} conflicts`);
+    }
+
+    this.result = { conflicts, parseTable, conclusions };
 
     return this;
   }

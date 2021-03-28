@@ -28,10 +28,12 @@
           </tr>
         </tbody>
       </table>
-      <ul class="notes">
-        <li v-if="parser.conflicts">This grammar is not {{ tableType }}</li>
-        <li v-if="parser.conflicts">There are {{ parser.conflicts }} conflicts</li>
-      </ul>
+      <div class="notes">
+        <h4 v-if="parser.conclusions.length">Analysis</h4>
+        <ul>
+          <li v-for="conclusion in parser.conclusions" :key="conclusion">{{ conclusion }}</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -92,23 +94,36 @@ export default defineComponent({
     overflow: auto;
     max-width: 100%;
     max-height: 50vh;
+    font-size: 0.875rem;
   }
 
   td.conflict {
-    background-color: rgba(220, 38, 38, 0.216);
+    background-color: rgba(var(--red-500-rgb), 0.15);
   }
 
   .notes {
     margin-top: 2rem;
+    font-size: 0.875rem;
+  }
+
+  .notes ul {
     list-style-type: disc;
   }
-  .notes:not(:empty)::before {
-    content: 'Notes';
+
+  .notes li {
+    line-height: 1.75;
+  }
+
+  .notes li::marker {
+    color: var(--cool-gray-600);
+  }
+
+  .notes h4 {
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 600;
-    font-size: 0.85rem;
-    color: #586f89;
+    font-size: 0.75rem;
+    color: var(--cool-gray-500);
     margin-bottom: 0.25rem;
   }
 </style>
