@@ -31,6 +31,7 @@ monaco.editor.defineTheme('vyaakaran', {
   ],
   colors: {
     'editorLineNumber.foreground': '#444c55',
+    'editor.background': '#18181B',
   },
 });
 
