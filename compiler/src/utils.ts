@@ -45,7 +45,7 @@ class GrammarRule {
   }
 
   toString() {
-    return `${this.lhs} ${SymbolType.Follow} ${this.rhs.map((t) => t.value).join(SymbolType.Dot)}`;
+    return `${this.lhs} ${SymbolType.Follow} ${this.rhs.map((t) => t.value).join(' ')}${SymbolType.Dot}`;
   }
 }
 
