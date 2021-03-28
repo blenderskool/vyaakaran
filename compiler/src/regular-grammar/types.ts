@@ -46,8 +46,8 @@ abstract class CompilerClass {
     this.warnings = [];
   }
 
-  abstract parse();
-  abstract semanticAnalysis();
+  abstract parse(): CompilerClass;
+  abstract semanticAnalysis(): CompilerClass;
 };
 
 export { TokenType, Token, SymbolType, ParseTree, CompileError, CompilerClass };
