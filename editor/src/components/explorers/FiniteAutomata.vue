@@ -15,7 +15,7 @@ import { defineComponent, onMounted, onUnmounted, onUpdated, PropType, ref, watc
 import { Network } from 'vis-network/peer/esm/vis-network';
 import { DataSet } from 'vis-data/peer/esm/vis-data';
 
-import { FAGraph, RegularGrammar } from '../../../../compiler/src/regular-grammar/index';
+import { RegularGrammar } from '../../../../compiler/src/regular-grammar/index';
 import { edgeConfig, getNodeConfig } from '../../config/graph';
 import PaneHeader from '../ui/PaneHeader.vue';
 import RadioTabs from '../ui/RadioTabs.vue';
