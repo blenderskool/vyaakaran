@@ -10,14 +10,70 @@ interface ConsoleStream {
   message: string;
 };
 
-interface Playground {
+type PlaygroundType = 'RG' | 'CFG';
+
+abstract class Playground {
   name: string;
   program: string;
   errors: CompileError[];
   consoleStream: ConsoleStream[];
-  compiled?: CompilerClass;
+  compiled: CompilerClass;
   progKey: number;
+  abstract type: PlaygroundType;
+
+  constructor(name: string, program: string, compiledObj: CompilerClass) {
+    this.name = name;
+    this.program = program;
+    this.errors = [];
+    this.consoleStream = [];
+    this.compiled = compiledObj;
+    this.progKey = 0;
+  }
+
+  compile() {
+    const start = Date.now();
+    this.compiled.parse().semanticAnalysis();
+    const timeTaken = Date.now() - start;
+
+    this.errors = this.compiled.errors;
+    const errors = this.compiled.errors.map(err => ({ ...err, timestamp: new Date() }));
+    const warnings = this.compiled.warnings.map(err => ({ ...err, timestamp: new Date() }));
+
+    if (!errors.length) {
+      this.consoleStream = [ ...warnings, { type: 'Success', message: `Compiled successfully in ${timeTaken}ms`, timestamp: new Date() } ];
+    } else {
+      this.consoleStream = [ ...errors, ...warnings ];
+    }
+
+    this.progKey = Math.trunc(Math.random() * 10000 + 1);
+  };
 };
+
+class RegularGrammarPlayground extends Playground {
+  type: PlaygroundType;
+  constructor(name: string, program: string) {
+    super(name, program, new RegularGrammar(program));
+    this.type = 'RG';
+  }
+
+  compile() {
+    this.compiled = new RegularGrammar(this.program);
+    super.compile();
+  }
+}
+
+class ContextFreeGrammarPlayground extends Playground {
+  type: PlaygroundType;
+  constructor(name: string, program: string) {
+    super(name, program, new ContextFreeGrammar(program));
+    this.type = 'CFG';
+  }
+
+  compile() {
+    this.compiled = new ContextFreeGrammar(this.program);
+    super.compile();
+  }
+}
 
 const program =`// Type your regular grammar here
 
@@ -38,73 +94,30 @@ B -> a B | c B | ε.
 `;
 
 
-const newPlayground = (name: string): Playground => ({
-  name,
-  consoleStream: [],
-  errors: [],
-  progKey: 0,
-  program: '',
-});
+const newPlayground = (name: string, type: PlaygroundType, program: string = ''): Playground => {
+  switch(type) {
+    case 'RG':
+      return new RegularGrammarPlayground(name, program);
+    case 'CFG':
+      return new ContextFreeGrammarPlayground(name, program);
+  };
+};
 
-const codeStore = reactive<Record<string, Playground[]>>({
-  'regular-grammar': [
-    {
-      ...newPlayground('New Tab'),
-      program,
-    },
-  ],
-  'context-free-grammar': [
-    {
-      ...newPlayground('New Tab'),
-      program,
-    },
-  ],
-});
+const playgrounds = reactive<Playground[]>([
+  newPlayground('New Tab', 'RG', program),
+]);
 
-function getActiveStore(all: boolean = false): Playground | undefined | Playground[] {
+function getActivePlayground(): Playground | undefined {
   const { value:route } = router.currentRoute;
   const tabIdx = route.params.id ? Number(route.params.id) : 0;
 
-  if (!route.meta.storeId) return all ? [] : undefined;
-
-  const playgrounds = codeStore[route.meta.storeId];
-  return all ? playgrounds : playgrounds[tabIdx];
-}
-
-function compile() {
-  const storeId = router.currentRoute.value.meta.storeId;
-  const store = getActiveStore() as Playground;
-  const program = store.program;
-
-  const start = Date.now();
-  switch (storeId) {
-    case 'regular-grammar':
-      store.compiled = new RegularGrammar(program).parse().semanticAnalysis();
-      break;
-    case 'context-free-grammar':
-      store.compiled = new ContextFreeGrammar(program).parse().semanticAnalysis();
-      break;
-  }
-  const timeTaken = Date.now() - start;
-
-  store.errors = store.compiled!.errors;
-  const errors = store.compiled!.errors.map(err => ({ ...err, timestamp: new Date() }));
-  const warnings = store.compiled!.warnings.map(err => ({ ...err, timestamp: new Date() }));
-
-  if (!errors.length) {
-    store.consoleStream = [ ...warnings, { type: 'Success', message: `Compiled successfully in ${timeTaken}ms`, timestamp: new Date() } ];
-  } else {
-    store.consoleStream = [ ...errors, ...warnings ];
-  }
-
-  store.progKey = Math.trunc(Math.random() * 10000);
+  return playgrounds[tabIdx];
 }
 
 export {
-  codeStore,
+  playgrounds,
   ConsoleStream,
-  compile,
-  getActiveStore,
+  getActivePlayground,
   Playground,
   newPlayground,
 };

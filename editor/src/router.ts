@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { codeStore } from './store/code';
+import { playgrounds } from './store/code';
 
-import RegularGrammarPlayground from './routes/RegularGrammarPlayground.vue';
-import ContextFreeGrammarPlayground from './routes/ContextFreeGrammarPlayground.vue';
+import Playground from './routes/Playground.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -11,33 +10,21 @@ const router = createRouter({
     {
       name: 'Index',
       path: '/',
-      redirect: '/regular-grammar/0',
+      redirect: '/playground/0',
     },
     {
-      name: 'RegularGrammar',
-      path: '/regular-grammar/:id?',
-      meta: {
-        storeId: 'regular-grammar',
-      },
-      component: RegularGrammarPlayground,
-    },
-    {
-      name: 'ContextFreeGrammar',
-      path: '/context-free-grammar/:id?',
-      meta: {
-        storeId: 'context-free-grammar',
-      },
-      component: ContextFreeGrammarPlayground,
+      name: 'Playground',
+      path: '/playground/:id?',
+      component: Playground,
     },
   ],
 });
 router.beforeEach((to, from, next) => {
-  if (!to.meta.storeId) {
+  if (to.name !== 'Playground') {
     next();
     return;
   };
 
-  const playgrounds = codeStore[to.meta.storeId];
   if (!to.params.id || Number(to.params.id) >= playgrounds.length) {
     next({ ...to, params: { id: '0' } });
   } else {
