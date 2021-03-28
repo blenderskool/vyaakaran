@@ -28,15 +28,15 @@ export default defineComponent({
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border: 4px solid #1e1e1e;
+    border: 4px solid var(--gray-900);
     outline: none;
     cursor: pointer;
-    color: #1e1e1e;
-    background-color: #34febb;
+    color: var(--gray-900);
+    background-color: var(--emerald-350);
     transition: all 0.2s ease;
   }
   .run:hover {
-    background-color: #34D399;
+    background-color: var(--emerald-400);
     transform: scale(1.1) translateX(-45%);
   }
 </style>

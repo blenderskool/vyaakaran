@@ -1,5 +1,5 @@
 <template>
-  <Pane min-size="6.5" v-life:updated="scrollToBottom" size="6.5" max-size="50">
+  <Pane min-size="4" v-life:updated="scrollToBottom" max-size="50">
     <PaneHeader>
       <div class="header">
         <span>Console</span>
@@ -15,7 +15,7 @@
     </PaneHeader>
     <div class="console">
       <ul ref="consoleRef">
-        <li v-for="error in store.value.consoleStream" :key="error.message" :class="error.type.toLowerCase()">
+        <li v-for="error in store.value.consoleStream" :key="error.timestamp" :class="error.type.toLowerCase()">
           <svg v-if="error.type === 'Error'" class="icon" width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -92,22 +92,30 @@ export default defineComponent({
   }
 
   .errors-count, .warnings-count {
-    padding: 2px 15px;
+    display: inline-block;
+    padding: 2px 1rem;
     border-radius: 20px;
-    color: #18181B;
-    background-color: #EF4444;
-    font-size: 12px;
+    font-size: 0.75rem;
+    border: 1px solid black;
+  }
+
+  .errors-count {
+    background-color: rgba(var(--red-500-rgb), 0.1);
+    border-color: var(--red-500);
+    color: var(--red-500);
   }
 
   .warnings-count {
-    background-color: #FB923C;
-    margin-left: 10px;
+    background-color: rgba(var(--orange-400-rgb), 0.1);
+    border-color: var(--orange-400);
+    color: var(--orange-400);
+    margin-left: 0.625rem;
   }
 
   .console {
-    background-color: #18181B;
-    height: calc(100% - 50px);
-    font-family: 'Fira Code';
+    background-color: var(--gray-900);
+    height: calc(100% - 30px);
+    font-family: var(--font-family-code);
     font-weight: 500;
     position: relative;
   }
@@ -115,29 +123,30 @@ export default defineComponent({
   ul {
     list-style: none;
     overflow-y: auto;
-    max-height: calc(100% - 50px);
+    max-height: calc(100% - 30px);
   }
 
   li {
-    border-bottom: 1px solid #27272A;
-    padding: 0.8rem 20px;
+    border-bottom: 1px solid var(--gray-800);
+    padding: 0.8rem 1.25rem;
     display: flex;
     align-items: center;
+    font-size: 0.875rem;
   }
   li.error {
-    color: #EF4444;
+    color: var(--red-500);
   }
   li.warning {
-    color: #FB923C;
+    color: var(--orange-400);
   }
   li.success {
-    color: #34D399;
+    color: var(--emerald-400);
   }
 
   li .time {
     margin-left: 0.5rem;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75rem;
+    color: rgba(var(--white-rgb), 0.4);
     white-space: nowrap;
   }
 
@@ -150,24 +159,24 @@ export default defineComponent({
     width: 100%;
     bottom: 0;
     left: 0;
-    border-top: 1px solid #27272A;
-    padding: 15px 20px;
-    color: #586f89;
+    border-top: 1px solid var(--gray-800);
+    padding: 0.625rem 1.25rem;
+    color: var(--blue-gray-500);
   }
   .command-input, .command-input input {
-    background-color: black;
-    font-family: 'Fira Code';
-    font-size: 1rem;
+    background-color: var(--black);
+    font-family: var(--font-family-code);
+    font-size: 0.875rem;
     font-weight: 500;
   }
   .command-input input {
-    color: #d6e9ff;
+    color: var(--steel-blue-100);
     border: none;
     outline: none;
-    padding-right: 20px;
+    padding-right: 1.25rem;
     width: 95%;
   }
   .command-input input::placeholder {
-    color: #586f89;
+    color: var(--blue-gray-500);
   }
 </style>

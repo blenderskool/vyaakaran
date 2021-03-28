@@ -34,9 +34,10 @@ export default defineComponent({
 <style scoped>
   .regex-explorer p {
     font-weight: 500;
-    padding: 35px 20px;
-    color: #34febb;
-    font-family: 'Fira Code';
+    font-size: 0.875rem;
+    padding: 1.5rem 1.25rem;
+    color: var(--emerald-350);
+    font-family: var(--font-family-code);
     white-space: nowrap;
     max-width: 100%;
     overflow-x: auto;
@@ -44,21 +45,21 @@ export default defineComponent({
   }
 
   header .info {
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
   }
 </style>
 
 <style>
   .regex-explorer .closure,
   .regex-explorer .union {
-    color: #88b4e7;
+    color: var(--steel-blue-400);
   }
 
   .regex-explorer .concat {
-    color: #5d8cc0;
+    color: var(--steel-blue-500);
   }
 
   .regex-explorer .bracket {
-    color: #586f89;
+    color: var(--blue-gray-500);
   }
 </style>

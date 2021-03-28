@@ -23,7 +23,7 @@ export default defineComponent({
   .sidebar-container {
     position: relative;
     z-index: 20;
-    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 5px 0 30px rgba(var(--black-rgb), 0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,8 +34,8 @@ export default defineComponent({
     width: 3rem;
     height: 3rem;
     border-radius: 100%;
-    background-color: #18181B;
-    color: #586f89;
+    background-color: var(--gray-900);
+    color: var(--blue-gray-500);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,8 +48,8 @@ export default defineComponent({
 
   .link.router-link-active {
     border-radius: 35%;
-    color: #18181B;
-    background-color: #34febb;
+    color: var(--gray-900);
+    background-color: var(--emerald-350);
     opacity: 1;
   }
 </style>

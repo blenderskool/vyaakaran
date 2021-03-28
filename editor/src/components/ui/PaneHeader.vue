@@ -16,10 +16,11 @@ export default defineComponent({
 
 <style scoped>
   header {
-    padding: 10px 20px 20px;
+    padding: 0px 20px 12px;
     font-weight: 500;
     position: relative;
     z-index: 10;
-    background-color: #27272A;
+    font-size: 14px;
+    background-color: var(--gray-800);
   }
 </style>

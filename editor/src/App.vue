@@ -1,55 +1,14 @@
 <template>
-  <div class="playground">
-    <Sidebar class="sidebar" />
-
-    <div>
-      <EditorTabs />
-      <router-view class="view" />
-    </div>
-  </div>
+  <router-view />
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-
-import { getActiveStore } from './store/code';
-import Sidebar from './components/Sidebar.vue';
-import EditorTabs from './components/EditorTabs/EditorTabs.vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'App',
-  components: {
-    Sidebar,
-    EditorTabs,
-  },
-  provide() {
-    return {
-      store: computed(getActiveStore),
-    }
-  },
-  setup() {
-    return { getActiveStore };
-  }
 });
 </script>
-
-<style scoped>
-  .playground {
-    position: relative;
-    display: flex;
-  }
-
-  .sidebar {
-    width: 60px;
-  }
-
-  .view {
-    display: flex;
-    position: relative;
-    height: calc(100vh - 40px);
-    width: calc(100vw - 60px);
-  }
-</style>
 
 <style>
   * {
@@ -58,26 +17,62 @@ export default defineComponent({
     padding: 0;
   }
 
+  :root {
+    --white-rgb: 255, 255, 255;
+    --blue-gray-500: #586f89;
+    --cool-gray-500: #6B7280;
+    --cool-gray-600: #444c55;
+    --gray-800: #27272A;
+    --gray-900: #18181B;
+    --black: #000000;
+    --black-rgb: 0, 0, 0;
+
+
+    --emerald-350: #34febb;
+    --emerald-350-rgb: 52, 254, 187;
+    --emerald-400: #34D399;
+    --emerald-500: #32ae85;
+
+    --red-500: #EF4444;
+    --red-500-rgb: 239, 68, 68;
+
+    --orange-400: #FB923C;
+    --orange-400-rgb: 251, 146, 60;
+
+    --steel-blue-100: #d6e9ff;
+    --steel-blue-400: #88b4e7;
+    --steel-blue-500: #5d8cc0;
+
+    --font-family-sans: 'Inter', sans-serif;
+    --font-family-code: 'Fira Code', monospace;
+  }
+
   ul, ol {
     list-style: none;
   }
 
   body {
-    background-color: #27272A;
-    font-family: 'Poppins', sans-serif;
-    color: #d6e9ff;
+    background-color: var(--gray-800);
+    font-family: var(--font-family-sans);
+    color: var(--steel-blue-100);
     overflow: hidden;
   }
 
   button {
     border: none;
     color: inherit;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-family-sans);
     background-color: transparent;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.875rem;
+  }
+
+  input {
+    font-family: var(--font-family-sans);
+    font-weight: 500;
   }
 
   a {
@@ -95,22 +90,22 @@ export default defineComponent({
   }
   
   *::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(var(--white-rgb), 0.2);
   }
 
   table {
     border-collapse: separate;
     border-spacing: 0;
     table-layout: fixed;
-    font-family: 'Fira Code', monospace;
+    font-family: var(--font-family-code);
     display: inline-block;
     font-weight: 500;
     white-space: nowrap;
-    border: 1px solid #586f89;
+    border: 1px solid var(--blue-gray-500);
   }
 
   td, th {
-    border: 1px solid #586f89;
+    border: 1px solid var(--blue-gray-500);
     padding: 0.5rem 1rem;
   }
 
@@ -118,12 +113,12 @@ export default defineComponent({
     position: sticky;
     top: 0;
     z-index: 2;
-    background: #27272A;
+    background: var(--gray-800);
   }
   table tbody th {
     position: sticky;
     left: 0;
-    background: #27272A;
+    background: var(--gray-800);
     z-index: 1;
   }
   
@@ -138,24 +133,24 @@ export default defineComponent({
     top: 10px;
     right: 0;
     height: 1px;
-    background-color: #444c55;
+    background-color: var(--cool-gray-600);
   }
   .splitpanes__splitter:active::after {
-    background-color: #586f89;
+    background-color: var(--blue-gray-500);
   }
 
   .hljs-terminal {
-    color: #34febb;
+    color: var(--emerald-350);
     font-style: italic;
   }
   .hljs-separator {
-    color: #586f89;
+    color: var(--blue-gray-500);
   }
   .hljs-operator {
-    color: #5d8cc0;
+    color: var(--steel-blue-500);
   }
   .hljs-keyword {
-    color: #32ae85;
+    color: var(--emerald-500);
     font-weight: 600;
   }
 </style>

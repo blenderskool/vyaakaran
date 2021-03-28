@@ -62,7 +62,8 @@ export default defineComponent({
     margin: 1rem 20px 0 20px;
     overflow: auto;
     max-width: 95%;
-    max-height: calc(100% - 5.5rem);
+    max-height: calc(100% - 3.5rem);
+    font-size: 0.875rem;
   }
 
   .first-follow-explorer {
@@ -70,6 +71,6 @@ export default defineComponent({
   }
 
   .bracket {
-    color: #444c55;
+    color: var(--cool-gray-600);
   }
 </style>

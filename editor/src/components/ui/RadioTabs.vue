@@ -29,7 +29,7 @@ export default defineComponent({
   label {
     padding: 2px 15px;
     border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(var(--white-rgb), 0.1);
     font-size: 12px;
     margin-right: 10px;
     font-weight: 600;
@@ -40,7 +40,8 @@ export default defineComponent({
   }
 
   label.checked {
-    background-color: #34febb;
-    color: #1e1e1e;
+    border: 1px solid var(--emerald-350);
+    background-color: rgba(var(--emerald-350-rgb), 0.08);
+    color: var(--emerald-350);
   }
 </style>
