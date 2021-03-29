@@ -1,41 +1,20 @@
 import { SymbolType, ParseTree, Token } from './regular-grammar/types';
-import { GrammarRule, HashSet, SimplifiedGrammarRepresentation } from './utils';
+import { GrammarRule, HashSet, SimplifiedGrammarRepresentation, State } from './utils';
 
-class State {
-  nonterminal: string;
-  expression: Token[];
-  dot: number;
+class EarleyState extends State {
   origin: number;
 
   constructor(nonterminal, expression, dot = 0, origin = 0) {
-    this.nonterminal = nonterminal;
-    this.expression = expression;
-    this.dot = dot;
+    super(nonterminal, expression, dot);
     this.origin = origin;
   }
 
-  get finished() {
-    return this.dot >= this.expression.length;
-  }
-
-  get symbol() {
-    return this.finished ? null : this.expression[this.dot];
-  }
-
-  get symbol_is_nonterminal() {
-    return this.symbol && this.symbol.type[1] === SymbolType.State;
-  }
-
-  get symbol_is_null() {
-    return this.symbol && this.symbol.type[1] === SymbolType.Empty;
-  }
-
   get shift() {
-    return new State(this.nonterminal, this.expression, this.dot + 1, this.origin);
+    return new EarleyState(this.nonterminal, this.expression, this.dot + 1, this.origin);
   }
 
   hash() {
-    return `${this.origin} ${this.nonterminal} -> ${this.expression.slice(0, this.dot).map(t => t.value).join(' ')}.${this.expression.slice(this.dot).map(t => t.value).join(' ')}`;
+    return `${this.origin} ${super.hash()}`;
   }
 }
 
@@ -48,7 +27,7 @@ class State {
  * Reference: https://loup-vaillant.fr/tutorials/earley-parsing/
  */
 class EarleyParser {
-  states: HashSet[];
+  states: HashSet<EarleyState>[];
   grammar: SimplifiedGrammarRepresentation;
 
   constructor(parseTree: ParseTree) {
@@ -63,19 +42,20 @@ class EarleyParser {
     }
 
     text = text.replace(/ +/g, ' ');
-    this.states = [ new HashSet(), ...text.split(' ').map(() => new HashSet()) ];
+    this.states = [ new HashSet() ];
+    text.split(' ').forEach(() => this.states.push(new HashSet()));
 
     const gen = this.grammar.trav('S');
     let start = gen.next();
     while (!start.done) {
       const rule = start.value as  GrammarRule;
-      this.states[0].add(new State(rule.lhs, rule.rhs));
+      this.states[0].add(new EarleyState(rule.lhs, rule.rhs));
 
       start = gen.next();
     }
 
     text.concat(' \u0000').split(' ').forEach((token, k) => {
-      const extension: State[] = this.states[k].list();
+      const extension: EarleyState[] = this.states[k].list();
       this.states[k].clear();
 
       while(extension.length) {
@@ -103,16 +83,16 @@ class EarleyParser {
   isParsable(text: string): number {
     this.parse(text);
 
-    const lastState: State[] = this.states[this.states.length - 1].list();
+    const lastState: EarleyState[] = this.states[this.states.length - 1].list();
     return lastState.reduce((acc, state) => acc + Number(state.finished && state.origin === 0 && state.nonterminal === 'S'), 0);
   }
 
-  private predictor(state: State, origin, extension: State[]) {
+  private predictor(state: EarleyState, origin, extension: State[]) {
     const gen = this.grammar.trav(state.symbol.value);
     let it = gen.next();
     while(!it.done) {
       const rule = it.value as GrammarRule;
-      const predictedState = new State(rule.lhs, rule.rhs, 0, origin);
+      const predictedState = new EarleyState(rule.lhs, rule.rhs, 0, origin);
       extension.push(predictedState);
 
       if (predictedState.symbol && this.grammar.isNull(predictedState.symbol.value)) {
@@ -123,13 +103,13 @@ class EarleyParser {
     }
   }
 
-  private scanner(state: State, origin, token) {
+  private scanner(state: EarleyState, origin, token) {
     if (state.symbol.value === token) {
       this.states[origin + 1].add(state.shift);
     }
   }
   
-  private completer(state: State, extension: State[]) {
+  private completer(state: EarleyState, extension: State[]) {
     this.states[state.origin].list().forEach((reduce: State) => {
       if (state.nonterminal === reduce.symbol?.value) {
         extension.push(reduce.shift);

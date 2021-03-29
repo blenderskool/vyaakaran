@@ -11,18 +11,22 @@ function isUpperAlpha(char: string) {
   return charCode >= 65 && charCode <= 90;
 }
 
-class HashSet {
+interface HashSetElement {
+  hash: () => string;
+};
+
+class HashSet<T extends HashSetElement> {
   private obj: object;
   
   constructor() {
     this.obj = {};
   }
 
-  add(item: any) {
+  add(item: T) {
     this.obj[item.hash()] = item;
   }
   
-  list() {
+  list(): T[] {
     return Object.values(this.obj);
   }
 
@@ -30,8 +34,12 @@ class HashSet {
     this.obj = {};
   }
 
-  has(item: any) {
+  has(item: T): boolean {
     return this.obj[item.hash()] !== undefined;
+  }
+
+  toString(): string {
+    return this.list().map(item => item.hash()).sort().join('\n');
   }
 }
 
@@ -39,7 +47,7 @@ class GrammarRule {
   lhs: string;
   rhs: Token[];
 
-  constructor(lhs, rhs) {
+  constructor(lhs: string, rhs: Token[]) {
     this.lhs = lhs;
     this.rhs = rhs;
   }
@@ -59,19 +67,8 @@ class SimplifiedGrammarRepresentation {
 
   constructor(parseTree: ParseTree) {
     this.constructRules(parseTree);
-    this.nullNonTerminals = new Set();
-
-    let nullLength = 0;
-    do {
-      nullLength = this.nullNonTerminals.size;
-      this.rules.forEach(rule => {
-        if (rule.rhs[0].type[1] === SymbolType.Empty || rule.rhs.every((token) => this.nullNonTerminals.has(token.value))) {
-          this.nullNonTerminals.add(rule.lhs);
-        }
-      });
-    } while(nullLength !== this.nullNonTerminals.size);
+    this.computeNonTerminals();
   }
-
 
   private constructRules(parseTree: ParseTree) {
     this.rules = [];
@@ -117,8 +114,27 @@ class SimplifiedGrammarRepresentation {
     dfs(parseTree, null);
   }
 
+  private computeNonTerminals() {
+    this.nullNonTerminals = new Set();
+
+    let nullLength = 0;
+    do {
+      nullLength = this.nullNonTerminals.size;
+      this.rules.forEach(rule => {
+        if (rule.rhs[0].type[1] === SymbolType.Empty || rule.rhs.every((token) => this.nullNonTerminals.has(token.value))) {
+          this.nullNonTerminals.add(rule.lhs);
+        }
+      });
+    } while(nullLength !== this.nullNonTerminals.size);
+  }
+
   isNull(nonterminal: string) {
     return this.nullNonTerminals.has(nonterminal);
+  }
+
+  addRule(rule: GrammarRule) {
+    this.rules.push(rule);
+    this.computeNonTerminals();
   }
 
   *trav(nonterminal: string) {
@@ -138,4 +154,45 @@ class SimplifiedGrammarRepresentation {
   }
 }
 
-export { isUpperAlpha, HashSet, SimplifiedGrammarRepresentation, GrammarRule };
+
+class State {
+  nonterminal: string;
+  expression: Token[];
+  dot: number;
+
+  constructor(nonterminal, expression, dot = 0) {
+    this.nonterminal = nonterminal;
+    this.expression = expression;
+    this.dot = dot;
+  }
+
+  get finished() {
+    return this.dot >= this.expression.length;
+  }
+
+  get symbol() {
+    return this.finished ? null : this.expression[this.dot];
+  }
+
+  get symbol_is_nonterminal() {
+    return this.symbol && this.symbol.type[1] === SymbolType.State;
+  }
+
+  get symbol_is_null() {
+    return this.symbol && this.symbol.type[1] === SymbolType.Empty;
+  }
+
+  get shift() {
+    return new State(this.nonterminal, this.expression, this.dot + 1);
+  }
+
+  hash() {
+    return `${this.nonterminal} -> ${this.expression.slice(0, this.dot).map(t => t.value).join(' ')}.${this.expression.slice(this.dot).map(t => t.value).join(' ')}`;
+  }
+
+  toString() {
+    return this.hash();
+  }
+}
+
+export { isUpperAlpha, HashSet, SimplifiedGrammarRepresentation, GrammarRule, State };
