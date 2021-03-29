@@ -1,8 +1,9 @@
 import { readFile } from 'fs';
-import { RegularGrammarParser, RegularGrammarSemanticAnalyzer, RegularGrammar } from './regular-grammar';
+import { ContextFreeGrammar } from './context-free-grammar';
+// import { RegularGrammarParser, RegularGrammarSemanticAnalyzer, RegularGrammar } from './regular-grammar';
 
 readFile(process.argv[2], (err, data) => {
-  const output = new RegularGrammar(data.toString())
+  const output = new ContextFreeGrammar(data.toString())
     .parse()
     .semanticAnalysis();
 
@@ -10,8 +11,6 @@ readFile(process.argv[2], (err, data) => {
     return console.log('Error occurred', output.errors);
   }
   if (output.warnings.length) {
-    return console.log('Warnings', output.warnings);
+    console.log('Warnings', output.warnings);
   }
-
-  console.log(output.toFA().result);
 });
