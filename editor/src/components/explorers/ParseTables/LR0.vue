@@ -1,0 +1,72 @@
+<template>
+  <table class="parse-table">
+    <thead>
+      <tr>
+        <th />
+        <th :colspan="actionTable[0].length">Action</th>
+        <th :colspan="gotoTable[0].length">Goto</th>
+      </tr>
+      <tr>
+        <th>State</th>
+        <th v-for="symbol in actionTableColumns" :key="symbol" class="hljs-terminal">{{ symbol }}</th>
+        <th v-for="symbol in gotoTableColumns" :key="symbol" class="hljs-non-terminal">{{ symbol }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(row, i) in actionTable" :key="i">
+        <th>{{ i }}</th>
+        <td v-for="(rules, j) in row" :key="j" :class="{ conflict: rules.length > 1 }">
+          <div
+            v-for="rule in rules"
+            :key="rule.value"
+            v-html="computeCellValue(rule)"
+          />
+        </td>
+        <td v-for="(rules, j) in gotoTable[i]" :key="actionTable[0].length + j" :class="{ conflict: rules.length > 1 }">
+          <div
+            v-for="rule in rules"
+            :key="rule.value"
+          >
+            <span class="hljs-terminal">{{ rule.value }}</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</template>
+
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
+import { hljs } from '../../../config/editor';
+
+export default defineComponent({
+  name: 'LR0ParseTable',
+  props: {
+    actionTable: {
+      type: Array as PropType<any[][][]>,
+      required: true,
+    },
+    gotoTable: {
+      type: Array as PropType<any[][][]>,
+      required: true,
+    },
+    actionTableColumns: {
+      type: Object as PropType<Record<string, number>>,
+      required: true,
+    },
+    gotoTableColumns: {
+      type: Object as PropType<Record<string, number>>,
+      required: true,
+    },
+  },
+  setup() {
+    const computeCellValue = (rule) => {
+      if (rule.value === undefined) return rule.action;
+
+      return `${rule.action}(${hljs.highlight('vyaakaran', rule.value.toString()).value})`;
+    };
+
+    return { hljs, computeCellValue };
+  },
+});
+</script>
