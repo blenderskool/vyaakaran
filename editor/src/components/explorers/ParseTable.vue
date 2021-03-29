@@ -1,33 +1,20 @@
 <template>
-  <div class="parser-explorer">
+  <Pane class="parser-explorer" min-size="4.5" size="93">
     <PaneHeader>
       <div class="header">
         <span>Parsing table</span>
-        <RadioTabs name="FA-type" :options="['LL(1)', 'LR(1)']" v-model="tableType" />
+        <RadioTabs name="FA-type" :options="['LL(1)', 'LR(0)']" v-model="tableType" />
       </div>
     </PaneHeader>
-    <div class="output">
-      <table>
-        <thead>
-          <tr>
-            <th />
-            <th v-for="terminal in compiled.terminals" :key="terminal" class="hljs-terminal">{{ terminal }}</th>
-            <th class="hljs-terminal">$</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, i) in parser.parseTable" :key="i">
-            <th>{{ compiled.nonterminals[i] }}</th>
-            <td v-for="(rules, j) in row" :key="j" :class="{ conflict: rules.length > 1 }">
-              <div
-                v-for="rule in rules"
-                :key="rule"
-                v-html="hljs.highlight('vyaakaran', rule).value"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="output-container">
+      <LL1ParseTable v-if="tableType === 'LL(1)'" :compiled="store.value.compiled" :table="parser.parseTable" />
+      <LR0ParseTable
+        v-if="tableType === 'LR(0)'"
+        :actionTable="parser.actionTable"
+        :gotoTable="parser.gotoTable"
+        :actionTableColumns="parser.actionTableColumns"
+        :gotoTableColumns="parser.gotoTableColumns"
+      />
       <div class="notes">
         <h4 v-if="parser.conclusions.length">Analysis</h4>
         <ul>
@@ -35,26 +22,39 @@
         </ul>
       </div>
     </div>
-  </div>
+  </Pane>
+  <Pane min-size="3" size="3">
+    <PaneHeader>Parsing Automaton</PaneHeader>
+    <p v-if="tableType === 'LL(1)'" class="no-automata-message">
+      LL(1) parser has no automaton
+    </p>
+    <BottomUpAutomata v-else :graph="parser.FAGraph" :states="parser.FAStates" :key="`Bottom-up automata ${store.value.progKey}`" />
+  </Pane>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
+import { defineComponent } from 'vue';
+import { Splitpanes, Pane } from 'splitpanes';
+
+import LL1ParseTable from './ParseTables/LL1.vue';
+import LR0ParseTable from './ParseTables/LR0.vue';
 
 import PaneHeader from '../ui/PaneHeader.vue';
 import RadioTabs from '../ui/RadioTabs.vue';
-import { hljs } from '../../config/editor';
+import BottomUpAutomata from './BottomUpAutomata.vue';
 
 export default defineComponent({
   name: 'ParseTableExplorer',
   components: {
     PaneHeader,
     RadioTabs,
+    LL1ParseTable,
+    LR0ParseTable,
+    Splitpanes,
+    Pane,
+    BottomUpAutomata,
   },
-  props: {
-    compiled: { type: Object as PropType<ContextFreeGrammar> },
-  },
+  inject: ['store'],
   data() {
     return {
       tableType: 'LL(1)',
@@ -62,16 +62,19 @@ export default defineComponent({
   },
   computed: {
     parser() {
+      const compiled = this.store.value.compiled;
       switch (this.tableType) {
         case 'LL(1)':
-          return this.compiled.toLL1().result;
+          return compiled.toLL1().result;
+        case 'LR(0)':
+          return compiled.toLR0().result;
         default:
-          return this.compiled.toLL1().result;
+          return compiled.toLL1().result;
       }
     },
   },
-  setup() {
-    return { hljs };
+  mounted() {
+    this.$forceUpdate();
   },
 });
 </script>
@@ -86,19 +89,18 @@ export default defineComponent({
     padding-top: 10px;
   }
 
-  .output {
-    padding: 0 3rem;
-  }
-  table {
-    margin-top: 2rem;
-    overflow: auto;
-    max-width: 100%;
-    max-height: 50vh;
-    font-size: 0.875rem;
+  .output-container {
+    padding: 0 3rem 3rem;
+    max-height: 100%;
+    height: 100%;
+    overflow-y: auto;
   }
 
-  td.conflict {
-    background-color: rgba(var(--red-500-rgb), 0.15);
+  .no-automata-message {
+    margin-top: 1rem;
+    padding: 0 1.25rem;
+    color: var(--cool-gray-500);
+    font-weight: 500;
   }
 
   .notes {
@@ -125,5 +127,19 @@ export default defineComponent({
     font-size: 0.75rem;
     color: var(--cool-gray-500);
     margin-bottom: 0.25rem;
+  }
+</style>
+
+<style>
+  .parse-table {
+    margin-top: 1rem;
+    overflow: auto;
+    max-width: 100%;
+    max-height: calc(100% - 9rem);
+    font-size: 0.875rem;
+  }
+
+  .parse-table td.conflict {
+    background-color: rgba(var(--red-500-rgb), 0.15);
   }
 </style>

@@ -3,10 +3,8 @@
     <CompileButton @click="() => store.value.compile()" />
 
     <Splitpanes horizontal v-if="store.value.progKey && !store.value.compiled.errors.length" :dbl-click-splitter="false">
-      <Pane min-size="4">
-        <ParseTableExplorer :compiled="store.value.compiled" />
-      </Pane>
-      <Pane min-size="4" max-size="50">
+      <ParseTableExplorer />
+      <Pane min-size="4" max-size="50" size="4">
         <FirstFollowExplorer :compiled="store.value.compiled" />
       </Pane>
     </Splitpanes>
