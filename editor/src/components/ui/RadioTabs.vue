@@ -34,6 +34,7 @@ export default defineComponent({
     margin-right: 10px;
     font-weight: 600;
     cursor: pointer;
+    user-select: none;
   }
   label:last-child {
     margin-right: 0;

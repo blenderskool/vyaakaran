@@ -22,5 +22,6 @@ export default defineComponent({
     z-index: 10;
     font-size: 14px;
     background-color: var(--gray-800);
+    user-select: none;
   }
 </style>
