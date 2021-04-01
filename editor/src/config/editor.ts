@@ -3,8 +3,8 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import 'monaco-editor/esm/vs/editor/contrib/find/findController';
 import 'monaco-editor/esm/vs/editor/contrib/multicursor/multicursor';
 
-monaco.languages.register({ id: 'Vyaakaran Regular Grammar' });
-monaco.languages.setMonarchTokensProvider('Vyaakaran Regular Grammar', {
+monaco.languages.register({ id: 'Vyaakaran Grammar' });
+monaco.languages.setMonarchTokensProvider('Vyaakaran Grammar', {
   tokenizer: {
     root: [
       [/(->)|\||-/, 'operator'],
@@ -55,8 +55,8 @@ const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
   lineDecorationsWidth: 20,
 };
 
-hljs.registerLanguage('vyaakaran', () => ({
-  name: 'Vyaakaran',
+hljs.registerLanguage('vyaakaran grammar', () => ({
+  name: 'Vyaakaran Grammar',
   keywords: '# ε λ $',
   contains: [
     {

@@ -63,7 +63,7 @@ export default defineComponent({
     const computeCellValue = (rule) => {
       if (rule.value === undefined) return rule.action;
 
-      return `${rule.action}(${hljs.highlight('vyaakaran', rule.value.toString()).value})`;
+      return `${rule.action}(${hljs.highlight('vyaakaran grammar', rule.value.toString()).value})`;
     };
 
     return { hljs, computeCellValue };

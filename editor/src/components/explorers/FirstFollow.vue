@@ -14,12 +14,12 @@
           <td>{{ nonterminal }}</td>
           <td>
             <span class="bracket">{&nbsp;</span>
-            <span v-html="hljs.highlight('vyaakaran', [...firstSets[nonterminal]].join('. ')).value" />
+            <span v-html="hljs.highlight('vyaakaran grammar', [...firstSets[nonterminal]].join('. ')).value" />
             <span class="bracket">&nbsp;}</span>
           </td>
           <td>
             <span class="bracket">{&nbsp;</span>
-            <span v-html="hljs.highlight('vyaakaran', [...followSets[nonterminal]].join('. ')).value" />
+            <span v-html="hljs.highlight('vyaakaran grammar', [...followSets[nonterminal]].join('. ')).value" />
             <span class="bracket">&nbsp;}</span>
           </td>
         </tr>

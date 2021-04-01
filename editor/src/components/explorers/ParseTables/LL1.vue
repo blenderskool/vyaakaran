@@ -14,7 +14,7 @@
           <div
             v-for="rule in rules"
             :key="rule"
-            v-html="hljs.highlight('vyaakaran', rule).value"
+            v-html="hljs.highlight('vyaakaran grammar', rule).value"
           />
         </td>
       </tr>

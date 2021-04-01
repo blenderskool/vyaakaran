@@ -8,7 +8,6 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { editorConfig } from '../config/editor';
 import { Playground } from '../store/code';
-import router from '../router';
 
 export default defineComponent({
   name: 'Editor',
@@ -22,7 +21,7 @@ export default defineComponent({
     onMounted(() => {
       editor = monaco.editor.create(editorRef.value, {
         ...editorConfig,
-        language: 'Vyaakaran Regular Grammar',
+        language: 'Vyaakaran Grammar',
         value: store.value.program,
       });
       editor.onDidChangeModelContent(() => {
