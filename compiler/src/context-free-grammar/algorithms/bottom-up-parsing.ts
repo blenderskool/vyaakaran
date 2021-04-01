@@ -1,5 +1,5 @@
 import { ParseTree, SymbolType, TokenType } from '../../regular-grammar/types';
-import { GrammarRule, HashSet, SimplifiedGrammarRepresentation, State } from '../../utils';
+import { GrammarRule, OrderedHashSet, SimplifiedGrammarRepresentation, State } from '../../utils';
 import { findFollowSets } from './top-down-parsing';
 
 enum ActionType {
@@ -11,8 +11,8 @@ type Action = { action: ActionType, value?: string|number };
 type Goto = { action: 'goto', value: number };
 type FAGraph = Record<number, Record<string, number>>;
 
-function closureOp(set: HashSet<State>, grammar: SimplifiedGrammarRepresentation) {
-  const list = set.list();
+function closureOp(set: OrderedHashSet<State>, grammar: SimplifiedGrammarRepresentation) {
+  const list = set.unorderedList();
 
   for(let i=0; i < list.length; ++i) {
     if (!list[i].symbol_is_nonterminal) continue;
@@ -37,9 +37,9 @@ function closureOp(set: HashSet<State>, grammar: SimplifiedGrammarRepresentation
   }
 };
 
-function gotoOp(set: HashSet<State>, symbol: string, grammar: SimplifiedGrammarRepresentation) {
-  const result = new HashSet<State>();
-  const list = set.list();
+function gotoOp(set: OrderedHashSet<State>, symbol: string, grammar: SimplifiedGrammarRepresentation) {
+  const result = new OrderedHashSet<State>();
+  const list = set.unorderedList();
   list.forEach((state) => {
     if (state.finished) return;
     if (state.symbol.value !== symbol) return;
@@ -61,12 +61,12 @@ function findLR0CanonicalItems(parseTree: ParseTree) {
   augumentedGrammar.addRule(augumentRule);
 
   const graph: FAGraph = {};
-  const states: HashSet<State>[] = [ new HashSet<State>() ];
+  const states: OrderedHashSet<State>[] = [ new OrderedHashSet<State>() ];
   states[0].add(new State(augumentRule.lhs, augumentRule.rhs));
   closureOp(states[0], augumentedGrammar);
 
   for(let i=0; i < states.length; ++i) {
-    const symbols = new Set(states[i].list().filter((state) => !state.finished).map((state) => state.symbol.value));
+    const symbols = new Set(states[i].unorderedList().filter((state) => !state.finished).map((state) => state.symbol.value));
 
     symbols.forEach((symbol) => {
       const nextState = gotoOp(states[i], symbol, augumentedGrammar);

@@ -13,10 +13,11 @@ function isUpperAlpha(char: string) {
 
 interface HashSetElement {
   hash: () => string;
+  toString: () => string;
 };
 
 class HashSet<T extends HashSetElement> {
-  private obj: object;
+  protected obj: Record<string|number, T>;
   
   constructor() {
     this.obj = {};
@@ -39,7 +40,48 @@ class HashSet<T extends HashSetElement> {
   }
 
   toString(): string {
-    return this.list().map(item => item.hash()).sort().join('\n');
+    return this.list().map((item) => item.toString()).join('\n');
+  }
+}
+
+class OrderedHashSet<T extends HashSetElement> extends HashSet<T> {
+  private order: (string|number)[];
+  
+  constructor() {
+    super();
+    this.order = [];
+  }
+
+  add(item: T) {
+    const hash = item.hash();
+    if (this.obj[hash] !== undefined) return;
+
+    this.obj[hash] = item;
+    if (this.order.length === 0 || hash <= this.order[0]) {
+      this.order.unshift(hash);
+    } else if (this.order[this.order.length - 1] < hash) {
+      this.order.push(hash);
+    } else {
+      for(let i=0; i < this.order.length - 1; ++i) {
+        if (this.order[i] < hash && hash < this.order[i+1]) {
+          this.order.splice(i+1, 0, hash);
+          break;
+        }
+      }
+    }
+  }
+  
+  list(): T[] {
+    return this.order.map((hash) => this.obj[hash]);
+  }
+
+  unorderedList(): T[] {
+    return super.list();
+  }
+
+  clear() {
+    super.clear();
+    this.order = [];
   }
 }
 
@@ -195,4 +237,4 @@ class State {
   }
 }
 
-export { isUpperAlpha, HashSet, SimplifiedGrammarRepresentation, GrammarRule, State };
+export { isUpperAlpha, HashSet, OrderedHashSet, SimplifiedGrammarRepresentation, GrammarRule, State };

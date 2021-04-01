@@ -7,7 +7,7 @@ import { defineComponent, onMounted, onUnmounted, onUpdated, PropType, ref } fro
 import { Network } from 'vis-network/peer/esm/vis-network';
 import { DataSet } from 'vis-data/peer/esm/vis-data';
 
-import { State, HashSet } from '../../../../compiler/src/utils';
+import { State, OrderedHashSet } from '../../../../compiler/src/utils';
 import { edgeConfig, getNodeConfig } from '../../config/graph';
 
 export default defineComponent({
@@ -18,7 +18,7 @@ export default defineComponent({
       required: true,
     },
     states: {
-      type: Array as PropType<HashSet<State>[]>,
+      type: Array as PropType<OrderedHashSet<State>[]>,
       required: true,
     },
   },
@@ -33,7 +33,7 @@ export default defineComponent({
           id: i,
           shape: 'box',
           size: 150,
-          label: `S${i}:\n\n` + state.list().join('\n'),
+          label: `S${i}:\n\n` + state.unorderedList().join('\n'),
           font: {
             color: '#d6e9ff',
             face: 'Fira Code',
