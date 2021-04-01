@@ -38,5 +38,6 @@ export default defineComponent({
   .run:hover {
     background-color: var(--emerald-400);
     transform: scale(1.1) translateX(-45%);
+    box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
   }
 </style>

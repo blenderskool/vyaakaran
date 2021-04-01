@@ -87,6 +87,7 @@ export default defineComponent({
     margin: 0 0.25rem;
     background-color: var(--gray-900);
     opacity: 0.5;
+    box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
   }
 
   .tab:first-of-type {

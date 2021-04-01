@@ -58,6 +58,7 @@ export default defineComponent({
     transition: all 0.2s ease;
     display: block;
     outline: none;
+    box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
   }
 
   .language:hover,

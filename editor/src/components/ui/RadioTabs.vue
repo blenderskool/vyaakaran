@@ -28,16 +28,21 @@ export default defineComponent({
 <style scoped>
   label {
     padding: 2px 15px;
-    border-radius: 20px;
     background-color: rgba(var(--white-rgb), 0.1);
     font-size: 12px;
-    margin-right: 10px;
     font-weight: 600;
     cursor: pointer;
     user-select: none;
+    border: 1px solid var(--cool-gray-500);
+    box-shadow: 0 2px 4px rgba(var(--black-rgb), 0.15);
   }
-  label:last-child {
-    margin-right: 0;
+  label:first-of-type {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  label:last-of-type {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
   }
 
   label.checked {
