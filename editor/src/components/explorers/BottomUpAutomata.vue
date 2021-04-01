@@ -1,9 +1,13 @@
 <template>
-  <div class="output" ref="outputRef" />
+  <div v-if="isGraphHuge" class="huge-graph-warning">
+    <p>This automaton is large and might make the system unresponsive for sometime</p>
+    <button @click="() => isGraphHuge = false">Render Anyway?</button>
+  </div>
+  <div v-show="!isGraphHuge" class="output" ref="outputRef" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, onUpdated, PropType, ref } from 'vue';
+import { defineComponent, onMounted, onUnmounted, onUpdated, PropType, ref, watch } from 'vue';
 import { Network } from 'vis-network/peer/esm/vis-network';
 import { DataSet } from 'vis-data/peer/esm/vis-data';
 
@@ -24,6 +28,7 @@ export default defineComponent({
   },
   setup({ graph, states }) {
     const outputRef = ref<HTMLElement>(null);
+    const isGraphHuge = ref<boolean>(states.length > 50);
     let network: Network;
 
     const generateVisGraph = () => {
@@ -75,11 +80,18 @@ export default defineComponent({
       });
     };
 
-    onUpdated(generateVisGraph);
-    onMounted(generateVisGraph);
+    watch(() => states.length, () => {
+      isGraphHuge.value = states.length > 50;
+      if (isGraphHuge.value && network) {
+        network.destroy();
+      }
+    });
+
+    onUpdated(() => !isGraphHuge.value && generateVisGraph());
+    onMounted(() => !isGraphHuge.value && generateVisGraph());
     onUnmounted(() => network && network.destroy());
 
-    return { outputRef };
+    return { outputRef, isGraphHuge };
   }
 });
 </script>
@@ -88,5 +100,32 @@ export default defineComponent({
   .output {
     height: 100%;
     outline: none;
+  }
+
+  .huge-graph-warning {
+    margin-top: 3rem;
+    padding: 0 1.25rem;
+    color: var(--cool-gray-500);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .huge-graph-warning button {
+    margin-top: 1.5rem;
+
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    border: 1px solid var(--emerald-500);
+    box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
+    outline: none;
+    cursor: pointer;
+    color: var(--gray-900);
+    background-color: var(--emerald-350);
+    transition: all 0.2s ease;
+  }
+  .huge-graph-warning button:hover {
+    background-color: var(--emerald-400);
+    transform: scale(1.1);
   }
 </style>
