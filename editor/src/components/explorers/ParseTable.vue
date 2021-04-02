@@ -3,7 +3,7 @@
     <PaneHeader>
       <div class="header">
         <span>Parsing table</span>
-        <RadioTabs name="FA-type" :options="['LL(1)', 'LR(0)', 'SLR(1)']" v-model="tableType" />
+        <RadioTabs name="FA-type" :options="['LL(1)', 'LR(0)', 'SLR(1)', 'LR(1)']" v-model="tableType" />
       </div>
     </PaneHeader>
     <div class="output-container">
@@ -28,7 +28,7 @@
     <p v-if="tableType === 'LL(1)'" class="no-automata-message">
       LL(1) parser has no automaton
     </p>
-    <BottomUpAutomata v-else :graph="parser.graph" :states="parser.states" :key="`Bottom-up automata ${store.value.progKey}`" />
+    <BottomUpAutomata v-else :graph="parser.graph" :states="parser.states" :key="`Bottom-up automata ${tableType} ${store.value.progKey}`" />
   </Pane>
 </template>
 
@@ -70,6 +70,8 @@ export default defineComponent({
           return compiled.toLR0().result;
         case 'SLR(1)':
           return compiled.toSLR1().result;
+        case 'LR(1)':
+          return compiled.toLR1().result;
         default:
           return compiled.toLL1().result;
       }
