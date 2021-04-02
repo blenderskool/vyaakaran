@@ -122,4 +122,4 @@ function findLL1Table(grammar: SimplifiedGrammarRepresentation) {
   return { parseTable, columns };
 }
 
-export { findFirstSets, findFollowSets, findLL1Table };
+export { collectSet, findFirstSets, findFollowSets, findLL1Table, PredectiveSets };
