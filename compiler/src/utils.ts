@@ -229,7 +229,7 @@ class State {
   }
 
   hash() {
-    return `${this.nonterminal} -> ${this.expression.slice(0, this.dot).map(t => t.value).join(' ')}.${this.expression.slice(this.dot).map(t => t.value).join(' ')}`;
+    return `${this.nonterminal} ${SymbolType.Follow} ${this.expression.slice(0, this.dot).map(t => t.value).join(' ')}.${this.expression.slice(this.dot).map(t => t.value).join(' ')}`;
   }
 
   toString() {
