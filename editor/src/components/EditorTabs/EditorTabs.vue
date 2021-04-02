@@ -70,7 +70,7 @@ export default defineComponent({
     display: flex;
     overflow-y: hidden;
     overflow-x: auto;
-    max-width: 100vw;
+    max-width: calc(100vw - 60px);
     padding-top: 6px;
   }
   .tabs::-webkit-scrollbar {
