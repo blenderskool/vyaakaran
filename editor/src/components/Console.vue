@@ -123,7 +123,7 @@ export default defineComponent({
   ul {
     list-style: none;
     overflow-y: auto;
-    max-height: calc(100% - 30px);
+    max-height: calc(100% - 28px);
   }
 
   li {
@@ -157,7 +157,7 @@ export default defineComponent({
   .command-input {
     position: absolute;
     width: 100%;
-    bottom: 0;
+    bottom: -2px;
     left: 0;
     border-top: 1px solid var(--gray-800);
     padding: 0.625rem 1.25rem;
