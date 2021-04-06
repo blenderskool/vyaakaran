@@ -28,7 +28,7 @@ export default defineComponent({
 <style scoped>
   label {
     padding: 2px 15px;
-    background-color: rgba(var(--white-rgb), 0.1);
+    background-color: rgba(var(--white-rgb), 0.05);
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
