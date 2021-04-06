@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CompileButton @click="() => store.value.compile()" />
+    <CompileButton @triggerCompile="() => store.value.compile()" />
 
     <Splitpanes horizontal v-if="store.value.progKey && !store.value.compiled.errors.length" :dbl-click-splitter="false">
       <ParseTableExplorer />

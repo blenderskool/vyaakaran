@@ -1,5 +1,5 @@
 <template>
-  <button class="run" title="Compile the program" @click="(e) => $emit('click', e)">
+  <button class="run" title="Compile the program [Alt + Enter]" @click="(e) => $emit('triggerCompile', e)">
     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M7 4v16l13 -8z" />
@@ -8,10 +8,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, onUnmounted } from 'vue';
 
 export default defineComponent({
   name: 'CompileButton',
+  emits: [ 'triggerCompile' ],
+  setup(_, { emit }) {
+
+    const handleCompileKeybind = (e: KeyboardEvent) => {
+      if (e.altKey && e.code === 'Enter') {
+        e.preventDefault();
+        emit('triggerCompile');
+      }
+    };
+
+    onMounted(() => {
+      window.addEventListener('keydown', handleCompileKeybind);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('keydown', handleCompileKeybind);
+    });
+  },
 });
 </script>
 
