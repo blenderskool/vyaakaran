@@ -22,7 +22,7 @@ export default defineComponent({
     border-radius: 100%;
     position: absolute;
     top: 50px;
-    left: 50%;
+    left: 45%;
     transform: translateX(-50%);
     z-index: 20;
     display: inline-flex;
