@@ -3,7 +3,7 @@ import ContextFreeGrammarParser from './parser';
 import ContextFreeGrammarSemanticAnalyzer from './semantic';
 import { CompilerClass } from '../regular-grammar/types';
 import { SimplifiedGrammarRepresentation } from '../utils';
-import { findFirstSets, findFollowSets, findLL1Table, findLR0Table, findLR1Table, findSLR1Table } from './algorithms';
+import { findFirstSets, findFollowSets, findLALR1Table, findLL1Table, findLR0Table, findLR1Table, findSLR1Table } from './algorithms';
 
 class ContextFreeGrammar extends CompilerClass {
   private grammar: SimplifiedGrammarRepresentation;
@@ -124,6 +124,14 @@ class ContextFreeGrammar extends CompilerClass {
   toLR1() {
     const { actionTable, ...rest } = findLR1Table(this.parseTree, this.grammar);
     const conclusions = this.findBottomUpConclusions(actionTable, 'LR(1)');
+
+    this.result = { actionTable, ...rest, conclusions };
+    return this;
+  }
+
+  toLALR1() {
+    const { actionTable, ...rest } = findLALR1Table(this.parseTree, this.grammar);
+    const conclusions = this.findBottomUpConclusions(actionTable, 'LALR(1)');
 
     this.result = { actionTable, ...rest, conclusions };
     return this;

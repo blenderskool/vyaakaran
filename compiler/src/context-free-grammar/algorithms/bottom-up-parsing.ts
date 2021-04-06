@@ -32,6 +32,10 @@ class LookAheadState extends State {
     return [...this.expression.slice(this.dot + 1), this.lookahead];
   }
 
+  nonLookaheadHash() {
+    return super.hash();
+  }
+
   hash() {
     return `[${super.hash()}, ${this.lookahead.value}]`;
   }
@@ -147,7 +151,13 @@ function gotoOp<T extends State>(set: OrderedHashSet<T>, symbol: string, grammar
  * @param closureOp Callable for performing Closure operation on a set of States.
  * @returns List of automata states in the parse table and the graph representing the transitions between the states.
  */
-function findCanonicalItems<T extends State>(parseTree: ParseTree, StateContainer: new (lhs: string, rhs: Token[]) => T, closureOp: Function) {
+function findCanonicalItems<T extends State>(
+  parseTree: ParseTree,
+  StateContainer: new (lhs: string, rhs: Token[]) => T,
+  closureOp: (s: OrderedHashSet<T>, g: SimplifiedGrammarRepresentation) => void,
+  hashOp: (s: OrderedHashSet<T>) => string = (state: OrderedHashSet<T>) => state.toString(),
+  mergeOp: (s: OrderedHashSet<T>, n: OrderedHashSet<T>) => void = () => {},
+) {
 
   // Augumenting the grammar
   const augumentedGrammar = new SimplifiedGrammarRepresentation(parseTree);
@@ -174,7 +184,7 @@ function findCanonicalItems<T extends State>(parseTree: ParseTree, StateContaine
       const nextState = gotoOp(states[i], symbol, augumentedGrammar, closureOp);
       if (nextState.list().length === 0) return;
 
-      const nextStateStr = nextState.toString();
+      const nextStateStr = hashOp(nextState);
       if (!graph[i]) {
         graph[i] = {};
       }
@@ -186,11 +196,12 @@ function findCanonicalItems<T extends State>(parseTree: ParseTree, StateContaine
        * Otherwise
        *    update the transition to the existing state index
        */
-      const idx = states.findIndex((state) => state.toString() === nextStateStr);
+      const idx = states.findIndex((state) => hashOp(state) === nextStateStr);
 
       if (idx === -1) {
         graph[i][symbol] = states.push(nextState) - 1;
       } else {
+        mergeOp(states[idx], nextState);
         graph[i][symbol] = idx;
       }
     });
@@ -301,13 +312,7 @@ function findSLR1Table(parseTree: ParseTree, grammar: SimplifiedGrammarRepresent
   };
 }
 
-
-function findLR1Table(parseTree: ParseTree, grammar: SimplifiedGrammarRepresentation) {
-  const firstSets = findFirstSets(grammar);
-  const closureOp = (set: OrderedHashSet<LookAheadState>, grammar: SimplifiedGrammarRepresentation) => closureLookaheadOp(set, grammar, firstSets);
-
-  const { graph, states } = findCanonicalItems(parseTree, LookAheadState, closureOp);
-
+function buildLR1Table(grammar: SimplifiedGrammarRepresentation, states: OrderedHashSet<LookAheadState>[], graph: FAGraph) {
   const actionTableColumns = Object.fromEntries([...grammar.terminals, SymbolType.Dollar].map((term, i) => [term, i]));
   const gotoTableColumns = Object.fromEntries(grammar.nonterminals.map((term, i) => [term, i]));
   const actionTable: Action[][][] = states.map(() => Object.keys(actionTableColumns).map(() => []));
@@ -343,8 +348,6 @@ function findLR1Table(parseTree: ParseTree, grammar: SimplifiedGrammarRepresenta
   });
 
   return {
-    graph,
-    states,
     actionTable,
     gotoTable,
     actionTableColumns: Object.keys(actionTableColumns),
@@ -352,4 +355,36 @@ function findLR1Table(parseTree: ParseTree, grammar: SimplifiedGrammarRepresenta
   };
 }
 
-export { findLR0Table, findSLR1Table, findLR1Table };
+
+function findLR1Table(parseTree: ParseTree, grammar: SimplifiedGrammarRepresentation) {
+  const firstSets = findFirstSets(grammar);
+  const closureOp = (state: OrderedHashSet<LookAheadState>, grammar: SimplifiedGrammarRepresentation) => closureLookaheadOp(state, grammar, firstSets);
+
+  const { graph, states } = findCanonicalItems(parseTree, LookAheadState, closureOp);
+
+  return {
+    graph,
+    states,
+    ...buildLR1Table(grammar, states, graph),
+  };
+}
+
+
+function findLALR1Table(parseTree: ParseTree, grammar: SimplifiedGrammarRepresentation) {
+  const firstSets = findFirstSets(grammar);
+  const hashOp = (state: OrderedHashSet<LookAheadState>) => [...new Set(state.list().map(item => item.nonLookaheadHash()))].join('\n');
+  const closureOp = (state: OrderedHashSet<LookAheadState>, grammar: SimplifiedGrammarRepresentation) => closureLookaheadOp(state, grammar, firstSets);
+  const mergeOp = (state: OrderedHashSet<LookAheadState>, nextState: OrderedHashSet<LookAheadState>) => {
+    nextState.list().forEach((rule) => state.add(rule));
+  };
+
+  const { states, graph } = findCanonicalItems(parseTree, LookAheadState, closureOp, hashOp, mergeOp);
+
+  return {
+    graph,
+    states,
+    ...buildLR1Table(grammar, states, graph),
+  };
+}
+
+export { findLR0Table, findSLR1Table, findLR1Table, findLALR1Table };

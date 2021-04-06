@@ -3,7 +3,7 @@
     <PaneHeader>
       <div class="header">
         <span>Parsing table</span>
-        <RadioTabs name="FA-type" :options="['LL(1)', 'LR(0)', 'SLR(1)', 'LR(1)']" v-model="tableType" />
+        <RadioTabs name="FA-type" :options="['LL(1)', 'LR(0)', 'SLR(1)', 'LR(1)', 'LALR(1)']" v-model="tableType" />
       </div>
     </PaneHeader>
     <div class="output-container">
@@ -72,6 +72,8 @@ export default defineComponent({
           return compiled.toSLR1().result;
         case 'LR(1)':
           return compiled.toLR1().result;
+        case 'LALR(1)':
+          return compiled.toLALR1().result;
         default:
           return compiled.toLL1().result;
       }
