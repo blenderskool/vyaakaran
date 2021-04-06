@@ -40,6 +40,7 @@ export default defineComponent({
     --orange-400-rgb: 251, 146, 60;
 
     --steel-blue-100: #d6e9ff;
+    --steel-blue-100-rgb: 214, 233, 255;
     --steel-blue-400: #88b4e7;
     --steel-blue-500: #5d8cc0;
 
@@ -90,7 +91,7 @@ export default defineComponent({
   }
   
   *::-webkit-scrollbar-thumb {
-    background-color: rgba(var(--white-rgb), 0.2);
+    background-color: rgba(var(--steel-blue-100-rgb), 0.2);
   }
 
   table {
@@ -134,8 +135,10 @@ export default defineComponent({
     right: 0;
     height: 1px;
     background-color: var(--cool-gray-600);
+    transition: box-shadow 0.2s ease;
   }
   .splitpanes__splitter:active::after {
+    box-shadow: 0 0 5px rgba(var(--black-rgb), 0.9);
     background-color: var(--blue-gray-500);
   }
 
