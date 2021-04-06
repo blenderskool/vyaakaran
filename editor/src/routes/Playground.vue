@@ -14,6 +14,16 @@
     </div>
     <NewPlaygroundModal v-if="showNewPlaygroundModal" @close="() => showNewPlaygroundModal = false" />
   </div>
+  <footer>
+    <span>
+      © 2021 - present
+      {{ ' ' }}
+      <a href="https://akashhamirwasia.com">Akash Hamirwasia</a>
+    </span>
+    <span>
+      Vyaakaran v{{ pkg.version }}
+    </span>
+  </footer>
 </template>
 
 <script lang="ts">
@@ -21,6 +31,7 @@ import { computed, defineComponent, onMounted, onUnmounted, provide, ref } from 
 import { Splitpanes, Pane } from 'splitpanes';
 
 import { getActivePlayground } from '../store/code';
+import pkg from '../../package.json';
 
 import NewPlaygroundModal from '../components/NewPlaygroundModal.vue';
 import Editor from '../components/Editor.vue';
@@ -70,7 +81,7 @@ export default defineComponent({
       window.removeEventListener('keydown', handleNewPlaygroundKeybind);
     });
 
-    return { playground, getView, showNewPlaygroundModal };
+    return { playground, getView, showNewPlaygroundModal, pkg };
   }
 });
 </script>
@@ -86,11 +97,37 @@ export default defineComponent({
   .view {
     display: flex;
     position: relative;
-    height: calc(100vh - 40px);
+    height: calc(100vh - 40px - 25px);
     width: 100vw;
   }
 
-  .editor-container, .output-container {
-    width: 50%;
+  .editor-container {
+    width: 45%;
+  }
+
+  .output-container {
+    width: 55%;
+  }
+
+  footer {
+    height: 25px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
+    background-color: var(--gray-900);
+    color: var(--cool-gray-500);
+    border-top: 1px solid var(--gray-800);
+    font-weight: 600;
+    justify-content: flex-end;
+  }
+
+  footer span {
+    margin: 0 0.5rem;
+  }
+
+  footer a {
+    color: var(--emerald-350);
+    font-weight: 400;
   }
 </style>
