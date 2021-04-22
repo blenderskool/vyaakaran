@@ -75,24 +75,6 @@ class ContextFreeGrammarPlayground extends Playground {
   }
 }
 
-const program =`// Type your regular grammar here
-
-// Syntax cheat-sheet:
-//    * Start symbol                 S
-//    * Follow (->):                 ->
-//    * ε or λ:                      ε or λ or #
-//    * Or (|):                      |
-//    * End each rule:               .
-//    * Comments:                    // comment
-//    * Non-terminals:               start with uppercase character
-//    * Terminals:                   start with any other character
-
-S -> ε | a B | a C | b A | b C | c A | c B.
-A -> b A | c A | ε.
-C -> a C | b C | ε.
-B -> a B | c B | ε.
-`;
-
 
 const newPlayground = (name: string, type: PlaygroundType, program: string = ''): Playground => {
   switch(type) {
@@ -100,12 +82,12 @@ const newPlayground = (name: string, type: PlaygroundType, program: string = '')
       return new RegularGrammarPlayground(name, program);
     case 'CFG':
       return new ContextFreeGrammarPlayground(name, program);
+    default:
+      throw new Error("Invalid playground type");
   };
 };
 
-const playgrounds = reactive<Playground[]>([
-  newPlayground('New Tab', 'RG', program),
-]);
+const playgrounds = reactive<Playground[]>([]);
 
 function getActivePlayground(): Playground | undefined {
   const { value:route } = router.currentRoute;
@@ -120,4 +102,5 @@ export {
   getActivePlayground,
   Playground,
   newPlayground,
+  PlaygroundType,
 };
