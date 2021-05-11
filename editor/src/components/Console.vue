@@ -16,20 +16,20 @@
     <div class="console">
       <ul ref="consoleRef">
         <li v-for="error in store.value.consoleStream" :key="error.timestamp" :class="error.type.toLowerCase()">
-          <svg v-if="error.type === 'Error'" class="icon" width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg v-if="error.type === 'Error'" class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <svg v-else-if="error.type === 'Warning'" class="icon" width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg v-else-if="error.type === 'Warning'" class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
-          <svg v-else-if="error.type === 'Success'" class="icon" width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg v-else-if="error.type === 'Success'" class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
           <div class="time">
             {{ error.timestamp.toLocaleTimeString() }}
           </div>
           <div class="message">
-            {{ error.type }}: <span v-html="error.message" />
+            <span v-html="error.message" />
           </div>
         </li>
       </ul>
@@ -93,23 +93,16 @@ export default defineComponent({
 
   .errors-count, .warnings-count {
     display: inline-block;
-    padding: 2px 1rem;
-    border-radius: 20px;
     font-size: 0.75rem;
-    border: 1px solid black;
   }
 
   .errors-count {
-    background-color: rgba(var(--red-500-rgb), 0.1);
-    border-color: var(--red-500);
     color: var(--red-500);
   }
 
   .warnings-count {
-    background-color: rgba(var(--orange-400-rgb), 0.1);
-    border-color: var(--orange-400);
     color: var(--orange-400);
-    margin-left: 0.625rem;
+    margin-left: 1rem;
   }
 
   .console {
@@ -143,6 +136,10 @@ export default defineComponent({
     color: var(--emerald-400);
   }
 
+  li .icon {
+    flex-shrink: 0;
+  }
+
   li .time {
     margin-left: 0.5rem;
     font-size: 0.75rem;
@@ -151,7 +148,7 @@ export default defineComponent({
   }
 
   li .message {
-    margin-left: 1.5rem;
+    margin-left: 1rem;
   }
 
   .command-input {
