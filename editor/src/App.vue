@@ -70,6 +70,17 @@ export default defineComponent({
     justify-content: center;
     font-size: 0.875rem;
   }
+  .secondary-btn {
+    padding: 2px 15px;
+    background-color: rgba(var(--white-rgb), 0.05);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid var(--cool-gray-500);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(var(--black-rgb), 0.15);
+  }
 
   input {
     font-family: var(--font-family-sans);
