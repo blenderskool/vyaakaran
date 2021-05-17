@@ -1,4 +1,15 @@
 <template>
+  <PaneHeader>
+    <div class="header">
+      Parsing Automaton
+      <a :download="`${name} - parsing automaton`" v-if="automataExists && !isGraphHuge" class="secondary-btn" @click="saveFigure">
+        Save figure
+      </a>
+    </div>
+  </PaneHeader>
+  <p v-if="!automataExists" class="no-automata-message">
+    LL(1) parser has no automaton
+  </p>
   <div v-if="isGraphHuge" class="huge-graph-warning">
     <p>This automaton is large and might make the system unresponsive for sometime</p>
     <button @click="() => isGraphHuge = false">Render Anyway?</button>
@@ -12,22 +23,35 @@ import { Network } from 'vis-network/peer/esm/vis-network';
 import { DataSet } from 'vis-data/peer/esm/vis-data';
 
 import { State, OrderedHashSet } from '../../../../compiler/src/utils';
+import { exportToImg, fillBg } from '../../utils/canvas';
 import { edgeConfig, getNodeConfig } from '../../config/graph';
+import PaneHeader from '../ui/PaneHeader.vue';
 
 export default defineComponent({
   name: 'BottomUpAutomata',
   props: {
     graph: {
       type: Object as PropType<Record<number, Record<string, number>>>,
-      required: true,
+      default: {},
     },
     states: {
       type: Array as PropType<OrderedHashSet<State>[]>,
-      required: true,
+      default: [],
     },
+    automataExists: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
+    name: {
+      type: String as PropType<string>,
+    },
+  },
+  components: {
+    PaneHeader,
   },
   setup({ graph, states }) {
     const outputRef = ref<HTMLElement>(null);
+    const canvasRef = ref<HTMLCanvasElement>(null);
     const isGraphHuge = ref<boolean>(states.length > 50);
     let network: Network;
 
@@ -78,7 +102,17 @@ export default defineComponent({
           },
         }
       });
+
+      network.on('beforeDrawing', (ctx: CanvasRenderingContext2D) => {
+        canvasRef.value = ctx.canvas;
+        fillBg(ctx);
+      });
     };
+
+    const saveFigure = (e) => {
+      if (!network || !canvasRef.value) return;
+      e.target.href = exportToImg(canvasRef.value);
+    }
 
     watch(() => states.length, () => {
       isGraphHuge.value = states.length > 50;
@@ -91,7 +125,7 @@ export default defineComponent({
     onMounted(() => !isGraphHuge.value && generateVisGraph());
     onUnmounted(() => network && network.destroy());
 
-    return { outputRef, isGraphHuge };
+    return { outputRef, isGraphHuge, saveFigure };
   }
 });
 </script>
@@ -100,6 +134,11 @@ export default defineComponent({
   .output {
     height: 100%;
     outline: none;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
   }
 
   .huge-graph-warning {
@@ -127,5 +166,12 @@ export default defineComponent({
   .huge-graph-warning button:hover {
     background-color: var(--emerald-400);
     transform: scale(1.1);
+  }
+
+  .no-automata-message {
+    margin-top: 1rem;
+    padding: 0 1.25rem;
+    color: var(--cool-gray-500);
+    font-weight: 500;
   }
 </style>

@@ -24,11 +24,13 @@
     </div>
   </Pane>
   <Pane min-size="3" size="3">
-    <PaneHeader>Parsing Automaton</PaneHeader>
-    <p v-if="tableType === 'LL(1)'" class="no-automata-message">
-      LL(1) parser has no automaton
-    </p>
-    <BottomUpAutomata v-else :graph="parser.graph" :states="parser.states" :key="`Bottom-up automata ${tableType} ${store.value.progKey}`" />
+    <BottomUpAutomata
+      :key="`Bottom-up automata ${tableType} ${store.value.progKey}`"
+      :graph="parser.graph"
+      :states="parser.states"
+      :automataExists="tableType !== 'LL(1)'"
+      :name="`${store.value.name} - ${tableType}`"
+    />
   </Pane>
 </template>
 
@@ -100,13 +102,6 @@ export default defineComponent({
     max-height: 100%;
     height: 100%;
     overflow-y: auto;
-  }
-
-  .no-automata-message {
-    margin-top: 1rem;
-    padding: 0 1.25rem;
-    color: var(--cool-gray-500);
-    font-weight: 500;
   }
 
   .notes {

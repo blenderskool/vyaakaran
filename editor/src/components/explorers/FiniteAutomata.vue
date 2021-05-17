@@ -2,8 +2,13 @@
   <div class="fa-explorer">
     <PaneHeader>
       <div class="header">
-        <span>Finite Automata</span>
-        <RadioTabs name="FA-type" :options="['ε-NFA', 'NFA']" v-model="faType" />
+        <span>Finite Automaton</span>
+        <div class="controls">
+          <RadioTabs name="FA-type" :options="['ε-NFA', 'NFA']" v-model="faType" />
+          <a :download="`${name} - finite automaton`" class="secondary-btn save-figure" @click="saveFigure">
+            Save figure
+          </a>
+        </div>
       </div>
     </PaneHeader>
     <div class="output" ref="outputRef" />
@@ -17,14 +22,17 @@ import { DataSet } from 'vis-data/peer/esm/vis-data';
 
 import { RegularGrammar } from '../../../../compiler/src/regular-grammar/index';
 import { edgeConfig, getNodeConfig } from '../../config/graph';
+import { SymbolType } from '../../../../compiler/src/regular-grammar/types';
+import { exportToImg, fillBg } from '../../utils/canvas';
+
 import PaneHeader from '../ui/PaneHeader.vue';
 import RadioTabs from '../ui/RadioTabs.vue';
-import { SymbolType } from '../../../../compiler/src/regular-grammar/types';
 
 export default defineComponent({
   name: 'FiniteAutomataExplorer',
   props: {
     compiled: { type: Object as PropType<RegularGrammar> },
+    name: { type: String as PropType<string> },
   },
   components: {
     PaneHeader,
@@ -33,6 +41,7 @@ export default defineComponent({
   setup({ compiled }) {
     const faType = ref<'ε-NFA' | 'NFA'>('ε-NFA');
     const outputRef = ref<HTMLElement>(null);
+    const canvasRef = ref<HTMLCanvasElement>(null);
     let network: Network;
 
     const generateVisGraph = () => {
@@ -81,15 +90,23 @@ export default defineComponent({
         nodes: new DataSet(nodes),
         edges: new DataSet(edges),
       }, {});
+      network.on('beforeDrawing', (ctx: CanvasRenderingContext2D) => {
+        canvasRef.value = ctx.canvas;
+        fillBg(ctx);
+      });
     };
 
+    const saveFigure = (e) => {
+      if (!network || !canvasRef.value) return;
+      e.target.href = exportToImg(canvasRef.value);
+    };
 
     onUpdated(generateVisGraph);
     onMounted(generateVisGraph);
     watch(() => faType.value, generateVisGraph);
     onUnmounted(() => network && network.destroy());
 
-    return { outputRef, faType };
+    return { outputRef, faType, saveFigure };
   }
 });
 </script>
@@ -103,6 +120,12 @@ export default defineComponent({
   .header {
     display: flex;
     justify-content: space-between;
+  }
+  .header .controls {
+    display: flex;
+  }
+  .header .controls .save-figure {
+    margin-left: 8px;
   }
 
   .output {
