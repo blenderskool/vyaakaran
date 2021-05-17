@@ -7,7 +7,7 @@ type Command = (_: string) => ConsoleStream;
 const COMMANDS: Record<string, Command> = {
   'help': () => ({
     type: 'Output',
-    message: '<br>' + [
+    message: [
       `> clear - Clear the console.`,
       `> compile - Compile the program.`,
       `> help - List of all supported commands.`,
