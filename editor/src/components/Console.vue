@@ -29,14 +29,14 @@
             {{ error.timestamp.toLocaleTimeString() }}
           </div>
           <div class="message">
-            <span v-html="error.message" />
+            <span v-html="error.message.replaceAll('\n', '<br>')" />
           </div>
         </li>
       </ul>
 
       <div class="command-input">
         >
-        <input v-model="inputCommand" placeholder="Type help for list of commands" @keydown.enter="submitCommand" />
+        <input v-model="inputCommand" placeholder="Type help for list of commands" @keydown="consoleKeyHandler" />
       </div>
     </div>
   </Pane>
@@ -61,11 +61,19 @@ export default defineComponent({
       const command = this.inputCommand.trim().split(' ')[0];
 
       if (COMMANDS[command]) {
-        this.store.value.consoleStream.push(COMMANDS[command](this.inputCommand));
+        this.store.value.consoleStream.push(...COMMANDS[command](this.inputCommand));
       } else {
         this.store.value.consoleStream.push({ type: 'Error', message: `Command '${command}' was not found. Type 'help' for list of supported commands`, timestamp: new Date() });
       }
       this.inputCommand = '';
+    },
+    consoleKeyHandler(e: KeyboardEvent) {
+      if (e.code === 'Enter') {
+        this.submitCommand(e);
+      } else if (e.code === 'KeyL' && e.ctrlKey) {
+        e.preventDefault();
+        COMMANDS['clear']('');
+      }
     }
   },
   setup() {
