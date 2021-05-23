@@ -1,5 +1,5 @@
 <template>
-  <Pane class="parser-explorer" min-size="4.5" size="93">
+  <Pane class="parser-explorer" min-size="5" size="93">
     <PaneHeader>
       <div class="header">
         <span>Parsing table</span>
@@ -23,7 +23,7 @@
       </div>
     </div>
   </Pane>
-  <Pane min-size="3" size="3">
+  <Pane min-size="4" size="4">
     <BottomUpAutomata
       :key="`Bottom-up automata ${tableType} ${store.value.progKey}`"
       :graph="parser.graph"
