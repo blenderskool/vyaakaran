@@ -48,7 +48,8 @@ export default defineComponent({
   .editor {
     text-align: left;
     overflow: hidden;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
   }
 </style>
 

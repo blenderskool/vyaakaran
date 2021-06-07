@@ -2,16 +2,21 @@
   <div class="playground">
     <EditorTabs @new-playground="() => showNewPlaygroundModal = true" />
 
-    <div class="view">
-      <Splitpanes class="editor-container" horizontal :dbl-click-splitter="false">
-        <Pane>
-          <Editor />
-        </Pane>
-        <Console />
-      </Splitpanes>
+    <Splitpanes class="view" :dbl-clicl-splitter="false">
+      <Pane class="editor-wrapper" min-size="25" size="45">
+        <Splitpanes class="editor-container" horizontal :dbl-click-splitter="false">
+          <Pane>
+            <Editor />
+          </Pane>
+          <Console />
+        </Splitpanes>
+        <CompileButton />
+      </Pane>
 
-      <component :is="getView()" class="output-container" />
-    </div>
+      <Pane min-size="45">
+        <component :is="getView()" class="output-container" />
+      </Pane>
+    </Splitpanes>
     <NewPlaygroundModal v-if="showNewPlaygroundModal" @close="() => showNewPlaygroundModal = false" />
   </div>
   <footer>
@@ -34,6 +39,7 @@ import { getActivePlayground } from '../store/code';
 import pkg from '../../package.json';
 
 import NewPlaygroundModal from '../components/NewPlaygroundModal.vue';
+import CompileButton from '../components/ui/CompileButton.vue';
 import Editor from '../components/Editor.vue';
 import Console from '../components/Console.vue';
 import EditorTabs from '../components/EditorTabs/EditorTabs.vue';
@@ -46,6 +52,7 @@ export default defineComponent({
     RegularGrammarPlayground,
     ContextFreeGrammarPlayground,
     NewPlaygroundModal,
+    CompileButton,
     EditorTabs,
     Splitpanes,
     Pane,
@@ -101,12 +108,14 @@ export default defineComponent({
     width: 100vw;
   }
 
-  .editor-container {
-    width: 45%;
+  .editor-wrapper {
+    position: relative;
+    overflow: visible;
   }
 
+  .editor-container,
   .output-container {
-    width: 55%;
+    height: 100%;
   }
 
   footer {

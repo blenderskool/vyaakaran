@@ -1,14 +1,10 @@
 <template>
-  <div>
-    <CompileButton @triggerCompile="() => store.value.compile()" />
-
-    <Splitpanes horizontal v-if="store.value.progKey && !store.value.compiled.errors.length" :dbl-click-splitter="false">
-      <ParseTableExplorer />
-      <Pane min-size="4" max-size="50" size="4">
-        <FirstFollowExplorer :compiled="store.value.compiled" />
-      </Pane>
-    </Splitpanes>
-  </div>
+  <Splitpanes horizontal v-if="store.value.progKey && !store.value.compiled.errors.length" :dbl-click-splitter="false">
+    <ParseTableExplorer />
+    <Pane min-size="4" max-size="50" size="4">
+      <FirstFollowExplorer :compiled="store.value.compiled" />
+    </Pane>
+  </Splitpanes>
 </template>
 
 <script lang="ts">
@@ -17,7 +13,6 @@ import { Splitpanes, Pane } from 'splitpanes';
 
 import Editor from '../Editor.vue';
 import Console from '../Console.vue';
-import CompileButton from '../ui/CompileButton.vue';
 import ParseTableExplorer from '../explorers/ParseTable.vue';
 import FirstFollowExplorer from '../explorers/FirstFollow.vue';
 
@@ -28,7 +23,6 @@ export default defineComponent({
     Pane,
     Editor,
     Console,
-    CompileButton,
     ParseTableExplorer,
     FirstFollowExplorer,
   },

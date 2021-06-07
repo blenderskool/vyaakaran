@@ -46,6 +46,7 @@ const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
   },
   scrollbar: {
     verticalScrollbarSize: 6,
+    horizontalScrollbarSize: 6,
   },
   lightbulb: {
     enabled: false,
@@ -53,6 +54,7 @@ const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
   folding: false,
   lineNumbersMinChars: 4,
   lineDecorationsWidth: 20,
+  automaticLayout: true,
 };
 
 hljs.registerLanguage('vyaakaran grammar', () => ({

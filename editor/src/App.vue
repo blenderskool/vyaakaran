@@ -133,12 +133,21 @@ export default defineComponent({
     background: var(--gray-800);
     z-index: 1;
   }
-  
-  .splitpanes__splitter {
+
+  .splitpanes__splitter:active::after {
+    box-shadow: 0 0 5px rgba(var(--black-rgb), 0.9);
+    background-color: var(--blue-gray-500);
+  }
+
+  .splitpanes--vertical > .splitpanes__splitter {
+    min-width: 11px !important;
+  }
+
+  .splitpanes--horizontal > .splitpanes__splitter {
     min-height: 21px !important;
     position: relative;
   }
-  .splitpanes__splitter::after {
+  .splitpanes--horizontal > .splitpanes__splitter::after {
     content: '';
     position: absolute;
     left: 0;
@@ -147,10 +156,6 @@ export default defineComponent({
     height: 1px;
     background-color: var(--cool-gray-600);
     transition: box-shadow 0.2s ease;
-  }
-  .splitpanes__splitter:active::after {
-    box-shadow: 0 0 5px rgba(var(--black-rgb), 0.9);
-    background-color: var(--blue-gray-500);
   }
 
   .hljs-terminal {

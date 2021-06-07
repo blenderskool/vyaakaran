@@ -1,5 +1,5 @@
 <template>
-  <button class="run" title="Compile the program [Alt + Enter]" @click="(e) => $emit('triggerCompile', e)">
+  <button class="run" title="Compile the program [Alt + Enter]" @click="compile">
     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M7 4v16l13 -8z" />
@@ -8,17 +8,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted } from 'vue';
+import { ComputedRef, defineComponent, inject, onMounted, onUnmounted } from 'vue';
+import { Playground } from '../../store/code';
 
 export default defineComponent({
   name: 'CompileButton',
-  emits: [ 'triggerCompile' ],
+  emits: [ 'triggeredCompile' ],
   setup(_, { emit }) {
+    const store = inject<ComputedRef<Playground>>('store');
+
+    const compile = () => {
+      store.value.compile();
+      emit('triggeredCompile');
+    };
 
     const handleCompileKeybind = (e: KeyboardEvent) => {
       if (e.altKey && e.code === 'Enter') {
         e.preventDefault();
-        emit('triggerCompile');
+        compile();
       }
     };
 
@@ -29,6 +36,8 @@ export default defineComponent({
     onUnmounted(() => {
       window.removeEventListener('keydown', handleCompileKeybind);
     });
+
+    return { compile };
   },
 });
 </script>
@@ -40,7 +49,7 @@ export default defineComponent({
     border-radius: 100%;
     position: absolute;
     top: 50px;
-    left: 45%;
+    right: -65px;
     transform: translateX(-50%);
     z-index: 20;
     display: inline-flex;
