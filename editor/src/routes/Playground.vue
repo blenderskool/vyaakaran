@@ -140,3 +140,32 @@ export default defineComponent({
     font-weight: 400;
   }
 </style>
+
+<style>
+  .automata-large-message {
+    margin-top: 3rem;
+    padding: 0 1.25rem;
+    color: var(--cool-gray-500);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .automata-large-message button {
+    margin-top: 1.5rem;
+
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    border: 1px solid var(--emerald-500);
+    box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
+    outline: none;
+    cursor: pointer;
+    color: var(--gray-900);
+    background-color: var(--emerald-350);
+    transition: all 0.2s ease;
+  }
+  .automata-large-message button:hover {
+    background-color: var(--emerald-400);
+    transform: scale(1.1);
+  }
+</style>

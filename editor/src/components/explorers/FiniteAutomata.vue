@@ -11,17 +11,18 @@
         </div>
       </div>
     </PaneHeader>
-    <div class="output" ref="outputRef" />
+    <div v-if="isVisLoading" class="automata-large-message">
+      Loading visualization...
+    </div>
+    <div v-show="!isVisLoading" class="output" ref="outputRef" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, onUpdated, PropType, ref, watch } from 'vue';
-import { Network } from 'vis-network/peer/esm/vis-network';
-import { DataSet } from 'vis-data/peer/esm/vis-data';
+import { defineComponent, onUnmounted, onUpdated, PropType, ref, watch } from 'vue';
 
 import { RegularGrammar } from '../../../../compiler/src/regular-grammar/index';
-import { edgeConfig, getNodeConfig } from '../../config/graph';
+import { edgeConfig, getNodeConfig, useVisNetwork } from '../../config/graph';
 import { SymbolType } from '../../../../compiler/src/regular-grammar/types';
 import { exportToImg, fillBg } from '../../utils/canvas';
 
@@ -42,9 +43,12 @@ export default defineComponent({
     const faType = ref<'ε-NFA' | 'NFA'>('ε-NFA');
     const outputRef = ref<HTMLElement>(null);
     const canvasRef = ref<HTMLCanvasElement>(null);
-    let network: Network;
+    const [isVisLoading, networkLib, dataLib] = useVisNetwork();
+    let network;
 
     const generateVisGraph = () => {
+      if (isVisLoading.value) return;
+
       let graph;
 
       switch (faType.value) {
@@ -86,9 +90,9 @@ export default defineComponent({
         network.destroy();
       }
 
-      network = new Network(outputRef.value, {
-        nodes: new DataSet(nodes),
-        edges: new DataSet(edges),
+      network = new networkLib.value.Network(outputRef.value, {
+        nodes: new dataLib.value.DataSet(nodes),
+        edges: new dataLib.value.DataSet(edges),
       }, {});
       network.on('beforeDrawing', (ctx: CanvasRenderingContext2D) => {
         canvasRef.value = ctx.canvas;
@@ -102,11 +106,11 @@ export default defineComponent({
     };
 
     onUpdated(generateVisGraph);
-    onMounted(generateVisGraph);
     watch(() => faType.value, generateVisGraph);
+    watch(() => isVisLoading, generateVisGraph);
     onUnmounted(() => network && network.destroy());
 
-    return { outputRef, faType, saveFigure };
+    return { outputRef, faType, saveFigure, isVisLoading };
   }
 });
 </script>

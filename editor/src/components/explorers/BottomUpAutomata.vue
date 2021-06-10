@@ -10,21 +10,22 @@
   <p v-if="!automataExists" class="no-automata-message">
     LL(1) parser has no automaton
   </p>
-  <div v-if="isGraphHuge" class="huge-graph-warning">
+  <div v-if="isGraphHuge" class="automata-large-message">
     <p>This automaton is large and might make the system unresponsive for sometime</p>
     <button @click="() => isGraphHuge = false">Render Anyway?</button>
   </div>
-  <div v-show="!isGraphHuge" class="output" ref="outputRef" />
+  <div v-else-if="isVisLoading" class="automata-large-message">
+    Loading visualization...
+  </div>
+  <div v-show="!isGraphHuge || !isVisLoading" class="output" ref="outputRef" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, onUpdated, PropType, ref, watch } from 'vue';
-import { Network } from 'vis-network/peer/esm/vis-network';
-import { DataSet } from 'vis-data/peer/esm/vis-data';
+import { defineComponent, onUnmounted, onUpdated, PropType, ref, watch } from 'vue';
 
 import { State, OrderedHashSet } from '../../../../compiler/src/utils';
 import { exportToImg, fillBg } from '../../utils/canvas';
-import { edgeConfig, getNodeConfig } from '../../config/graph';
+import { edgeConfig, getNodeConfig, useVisNetwork } from '../../config/graph';
 import PaneHeader from '../ui/PaneHeader.vue';
 
 export default defineComponent({
@@ -53,9 +54,12 @@ export default defineComponent({
     const outputRef = ref<HTMLElement>(null);
     const canvasRef = ref<HTMLCanvasElement>(null);
     const isGraphHuge = ref<boolean>(states.length > 50);
-    let network: Network;
+    const [isVisLoading, networkLib, dataLib] = useVisNetwork();
+    let network;
 
     const generateVisGraph = () => {
+      if (isVisLoading.value) return;
+
       const nodes: object[] = states.map((state, i) => {
         return ({
           ...getNodeConfig('', false),
@@ -91,9 +95,9 @@ export default defineComponent({
         network.destroy();
       }
 
-      network = new Network(outputRef.value, {
-        nodes: new DataSet(nodes),
-        edges: new DataSet(edges),
+      network = new networkLib.value.Network(outputRef.value, {
+        nodes: new dataLib.value.DataSet(nodes),
+        edges: new dataLib.value.DataSet(edges),
       }, {
         physics: {
           barnesHut: {
@@ -122,10 +126,10 @@ export default defineComponent({
     });
 
     onUpdated(() => !isGraphHuge.value && generateVisGraph());
-    onMounted(() => !isGraphHuge.value && generateVisGraph());
+    watch(() => isVisLoading, generateVisGraph);
     onUnmounted(() => network && network.destroy());
 
-    return { outputRef, isGraphHuge, saveFigure };
+    return { outputRef, isGraphHuge, saveFigure, isVisLoading };
   }
 });
 </script>
@@ -139,33 +143,6 @@ export default defineComponent({
   .header {
     display: flex;
     justify-content: space-between;
-  }
-
-  .huge-graph-warning {
-    margin-top: 3rem;
-    padding: 0 1.25rem;
-    color: var(--cool-gray-500);
-    font-weight: 500;
-    text-align: center;
-  }
-
-  .huge-graph-warning button {
-    margin-top: 1.5rem;
-
-    padding: 0.5rem 0.75rem;
-    font-weight: 600;
-    border-radius: 4px;
-    border: 1px solid var(--emerald-500);
-    box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
-    outline: none;
-    cursor: pointer;
-    color: var(--gray-900);
-    background-color: var(--emerald-350);
-    transition: all 0.2s ease;
-  }
-  .huge-graph-warning button:hover {
-    background-color: var(--emerald-400);
-    transform: scale(1.1);
   }
 
   .no-automata-message {
