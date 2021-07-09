@@ -7,7 +7,7 @@ export function fillBg(ctx: CanvasRenderingContext2D, color: string = '#27272A')
   ctx.save();
   // Reset to default transformation
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.fillStyle = '#27272A';
+  ctx.fillStyle = color;
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.restore();
 };
