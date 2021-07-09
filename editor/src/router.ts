@@ -23,13 +23,13 @@ B -> a B | c B | ε.
 `;
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/playground/'),
   routes: [
     // TODO: Remove redirect once index page is ready
     {
       name: 'Index',
       path: '/',
-      redirect: '/playground/0',
+      redirect: '/tab/0',
     },
     {
       name: 'NewPlayground',
@@ -37,7 +37,7 @@ const router = createRouter({
       component: Playground,
       beforeEnter(to, _, next) {
         try {
-          playgrounds.push(newPlayground('New Tab', to.params.type as PlaygroundType, sampleProgram));
+          playgrounds.push(newPlayground('New Tab', (to.params.type as string).toUpperCase() as PlaygroundType, sampleProgram));
           return next({ name: 'Playground', params: { id: 0 } });
         } catch(err) {
           return next({ name: '404' });
@@ -46,7 +46,7 @@ const router = createRouter({
     },
     {
       name: 'Playground',
-      path: '/playground/:id?',
+      path: '/tab/:id?',
       component: Playground,
       beforeEnter(to, _, next) {
         if (!to.params.id || Number(to.params.id) >= playgrounds.length) {
