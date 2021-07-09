@@ -1,6 +1,7 @@
 {
   "name": "editor",
   "version": "0.1.0",
+  "author": "Akash Hamirwasia",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -1,6 +1,7 @@
 {
   "name": "vyaakaran-site",
   "version": "0.0.1",
+  "author": "Akash Hamirwasia",
   "scripts": {
     "dev": "svelte-kit dev --port 3001",
     "build": "svelte-kit build",
