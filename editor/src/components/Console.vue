@@ -141,7 +141,7 @@ export default defineComponent({
     color: var(--orange-400);
   }
   li.success {
-    color: var(--emerald-400);
+    color: var(--green-400);
   }
 
   li .icon {

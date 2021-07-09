@@ -63,7 +63,7 @@ export default defineComponent({
 
 <style scoped>
   .tabs {
-    height: 40px;
+    height: 30px;
     box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.15);
     position: relative;
     z-index: 15;
@@ -71,7 +71,6 @@ export default defineComponent({
     overflow-y: hidden;
     overflow-x: auto;
     max-width: 100%;
-    padding-top: 6px;
   }
   .tabs::-webkit-scrollbar {
     height: 3px;

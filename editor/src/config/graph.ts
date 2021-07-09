@@ -25,27 +25,39 @@ const useVisNetwork = (): [Ref<boolean>, Ref<VisNetworkLib>, Ref<VisDataLib>] =>
   return [loading, networkLib, dataLib];
 };
 
-const getNodeConfig = (node: string, final: boolean) => ({
-  id: node,
-  label: node,
-  shape: 'circle',
-  color: {
-    border: '#5d8cc0',
-    background: '#27272A',
-    highlight: {
-      background: '#444c55',
-      border: '#88b4e7',
+const getNodeConfig = (node: string, final: boolean) => {
+  const nodeConfig = {
+    id: node,
+    label: node,
+    shape: 'circle',
+    color: {
+      border: '#64748B',
+      background: '#27272A',
+      highlight: {
+        background: '#444c55',
+        border: '#88b4e7',
+      },
     },
-  },
-  font: {
-    color: '#d6e9ff',
-    face: 'Fira Code',
-  },
-  ...(final ? {
-    borderWidth: 4,
-    borderWidthSelected: 4,
-  } : {}),
-});
+    font: {
+      color: '#d6e9ff',
+      face: 'Fira Code',
+    },
+  };
+
+  if (final) {
+    return {
+      ...nodeConfig,
+      borderWidth: 4,
+      borderWidthSelected: 4,
+      color: {
+        ...nodeConfig.color,
+        border: '#0D9488',
+      }
+    }
+  }
+
+  return nodeConfig;
+};
 
 const edgeConfig = {
   arrows: {
@@ -54,11 +66,11 @@ const edgeConfig = {
       scaleFactor: 0.3,
     },
   },
-  color: '#586f89',
+  color: '#475569',
   font: {
     multi: 'md',
     strokeWidth: 0,
-    color: '#34febb',
+    color: '#67E8F9',
     face: 'Fira Code',
     background: '#27272A',
   },

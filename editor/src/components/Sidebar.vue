@@ -49,7 +49,7 @@ export default defineComponent({
   .link.router-link-active {
     border-radius: 35%;
     color: var(--gray-900);
-    background-color: var(--emerald-350);
+    background-color: var(--cyan-300);
     opacity: 1;
   }
 </style>

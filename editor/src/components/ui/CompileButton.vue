@@ -59,11 +59,11 @@ export default defineComponent({
     outline: none;
     cursor: pointer;
     color: var(--gray-900);
-    background-color: var(--emerald-350);
+    background-color: var(--cyan-300);
     transition: all 0.2s ease;
   }
   .run:hover {
-    background-color: var(--emerald-400);
+    background-color: var(--cyan-400);
     transform: scale(1.1) translateX(-45%);
     box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
   }

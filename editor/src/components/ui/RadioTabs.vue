@@ -39,9 +39,9 @@ export default defineComponent({
   }
 
   label.checked {
-    border: 1px solid var(--emerald-350);
-    background-color: rgba(var(--emerald-350-rgb), 0.08);
-    color: var(--emerald-350);
+    border: 1px solid var(--cyan-300);
+    background-color: rgba(var(--cyan-300-rgb), 0.08);
+    color: var(--cyan-300);
   }
 
   .radio-tabs {

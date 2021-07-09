@@ -94,9 +94,9 @@ export default defineComponent({
 
   .language:hover,
   .language:focus {
-    color: var(--emerald-350);
-    border-color: var(--emerald-500);
-    background-color: rgba(var(--emerald-350-rgb), 0.08);
+    color: var(--cyan-300);
+    border-color: var(--cyan-500);
+    background-color: rgba(var(--cyan-300-rgb), 0.08);
   }
 
   .language .icon {
@@ -111,7 +111,7 @@ export default defineComponent({
 
   .language:hover .label,
   .language:focus .label {
-    color: var(--emerald-500);
+    color: var(--cyan-500);
   }
 
   footer {

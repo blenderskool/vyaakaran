@@ -19,7 +19,7 @@ export default defineComponent({
 
   :root {
     --white-rgb: 255, 255, 255;
-    --blue-gray-500: #586f89;
+    --blue-gray-500: #475569;
     --cool-gray-500: #6B7280;
     --cool-gray-600: #444c55;
     --gray-800: #27272A;
@@ -27,11 +27,13 @@ export default defineComponent({
     --black: #000000;
     --black-rgb: 0, 0, 0;
 
+    --green-400: #34D399;
 
-    --emerald-350: #34febb;
-    --emerald-350-rgb: 52, 254, 187;
-    --emerald-400: #34D399;
-    --emerald-500: #32ae85;
+    --cyan-300: #67E8F9;
+    --cyan-300-rgb: 56, 189, 248;
+    --cyan-400: #22D3EE;
+    --cyan-500: #06B6D4;
+    --cyan-600: #0891B2;
 
     --red-500: #EF4444;
     --red-500-rgb: 239, 68, 68;
@@ -42,7 +44,7 @@ export default defineComponent({
     --steel-blue-100: #d6e9ff;
     --steel-blue-100-rgb: 214, 233, 255;
     --steel-blue-400: #88b4e7;
-    --steel-blue-500: #5d8cc0;
+    --steel-blue-500: #64748B;
 
     --font-family-sans: 'Inter', sans-serif;
     --font-family-code: 'Fira Code', monospace;
@@ -159,7 +161,7 @@ export default defineComponent({
   }
 
   .hljs-terminal {
-    color: var(--emerald-350);
+    color: var(--cyan-300);
     font-style: italic;
   }
   .hljs-separator {
@@ -169,7 +171,7 @@ export default defineComponent({
     color: var(--steel-blue-500);
   }
   .hljs-keyword {
-    color: var(--emerald-500);
+    color: var(--cyan-600);
     font-weight: 600;
   }
 </style>

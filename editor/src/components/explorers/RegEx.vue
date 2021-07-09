@@ -36,7 +36,7 @@ export default defineComponent({
     font-weight: 500;
     font-size: 0.875rem;
     padding: 1.5rem 1.25rem;
-    color: var(--emerald-350);
+    color: var(--cyan-300);
     font-family: var(--font-family-code);
     white-space: nowrap;
     max-width: 100%;

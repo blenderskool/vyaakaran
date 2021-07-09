@@ -84,7 +84,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
     border-top: 2px solid transparent;
-    margin: 0 0.25rem;
+    margin: 0 0.2rem;
     background-color: var(--gray-900);
     opacity: 0.5;
     box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
@@ -99,7 +99,7 @@ export default defineComponent({
 
   .tab.selected {
     opacity: 1;
-    border-top-color: var(--emerald-350);
+    border-top-color: var(--cyan-300);
   }
 
   .tab .icon {
@@ -108,10 +108,14 @@ export default defineComponent({
     color: var(--blue-gray-500);
   }
 
+  .tab.selected .icon {
+    color: var(--cyan-300);
+  }
+
   .tab .tab-link {
     display: flex;
     align-items: center;
-    height: 40px;
+    height: 30px;
     padding: 0 1rem;
     font-size: 0.75rem;
     white-space: nowrap;

@@ -104,7 +104,7 @@ export default defineComponent({
   .view {
     display: flex;
     position: relative;
-    height: calc(100vh - 40px - 25px);
+    height: calc(100vh - 30px - 25px);
     width: 100vw;
   }
 
@@ -136,8 +136,7 @@ export default defineComponent({
   }
 
   footer a {
-    color: var(--emerald-350);
-    font-weight: 400;
+    color: var(--cyan-300);
   }
 </style>
 
@@ -156,16 +155,16 @@ export default defineComponent({
     padding: 0.5rem 0.75rem;
     font-weight: 600;
     border-radius: 4px;
-    border: 1px solid var(--emerald-500);
+    border: 1px solid var(--cyan-500);
     box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
     outline: none;
     cursor: pointer;
     color: var(--gray-900);
-    background-color: var(--emerald-350);
+    background-color: var(--cyan-300);
     transition: all 0.2s ease;
   }
   .automata-large-message button:hover {
-    background-color: var(--emerald-400);
+    background-color: var(--cyan-400);
     transform: scale(1.1);
   }
 </style>
