@@ -107,3 +107,7 @@ dist
 .DS_Store
 dist-ssr
 *.local
+
+.vercel/
+.svelte-kit/
+build/
