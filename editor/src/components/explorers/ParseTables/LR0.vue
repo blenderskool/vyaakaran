@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { hljs } from '../../../config/editor';
+import { hljs } from '../../../config/highlight';
 
 export default defineComponent({
   name: 'LR0ParseTable',

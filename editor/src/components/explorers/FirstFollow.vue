@@ -33,7 +33,7 @@ import { defineComponent, PropType } from 'vue';
 import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
 import PaneHeader from '../ui/PaneHeader.vue';
 
-import { hljs } from '../../config/editor';
+import { hljs } from '../../config/highlight';
 
 export default defineComponent({
   name: 'FirstFollowExplorer',

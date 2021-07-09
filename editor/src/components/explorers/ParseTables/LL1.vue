@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { hljs } from '../../../config/editor';
+import { hljs } from '../../../config/highlight';
 import { ContextFreeGrammar } from '../../../../../compiler/src/context-free-grammar';
 
 export default defineComponent({
