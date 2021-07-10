@@ -48,18 +48,18 @@
       in a beautiful editor right on the browser.
     </p>
     <div class="mt-14 flex flex-col space-y-6 md:(space-x-6 space-y-0 flex-row) justify-center">
-      <Button>
+      <Button as="a" href="/playground/" rel="external">
         Launch Editor
         <svg xmlns="http://www.w3.org/2000/svg" class="-mt-0.5 inline h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
         </svg>
       </Button>
-      <Button variant="secondary">
+      <!-- <Button variant="secondary">
         For Teachers
         <svg xmlns="http://www.w3.org/2000/svg" class="-mt-1 inline h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
         </svg>
-      </Button>
+      </Button> -->
     </div>
   </div>
 
@@ -128,7 +128,7 @@
               Vyaakaran makes it easy to learn, develop and test regular languages. It supports right linear grammar that gets converted
               to equivalent automata and regular expression. Both Epsilon and Epsilon-free NFAs are generated in the editor.
             </p>
-            <LinkCta href="#" class="mt-10">Try regular languages</LinkCta>
+            <LinkCta href="/playground/new/rg" rel="external" class="mt-10">Try regular languages</LinkCta>
           </div>
           <div class={`lg:w-3/5 relative transform transition duration-500 ${!intersecting ? 'opacity-0 lg:translate-x-10' : ''}`}>
             <div class="w-56 h-56 bg-cyan-500 rounded-full absolute top-4 left-2 filter blur-2xl opacity-80" />
@@ -145,7 +145,7 @@
               Context free languages are at the heart of parsers. Vyaakaran makes it possible to generate and visualize parse tables
               and automata from CFGs. All the common parser types &mdash; LL(1), LR(0), SLR(1), LALR(1), LR(1) are supported.
             </p>
-            <LinkCta href="#" class="mt-10">Try context free languages</LinkCta>
+            <LinkCta href="/playground/new/cfg" rel="external" class="mt-10">Try context free languages</LinkCta>
           </div>
           <div class={`lg:w-3/5 relative transform transition duration-500 ${!intersecting ? 'opacity-0 lg:-translate-x-10' : ''}`}>
             <div class="w-56 h-56 sm:(w-80 h-80) bg-cyan-500 rounded-full absolute top-2 left-1/7 filter blur-2xl opacity-50" />
@@ -162,7 +162,7 @@
               Testing grammars are crucial when writing them. Vyaakaran can check whether a string gets accepted by a grammar,
               generate a set of example strings from the grammar and perform a bunch of other checks like left-recursion, unreachability, etc.
             </p>
-            <LinkCta href="#" class="mt-10">Try Vyaakaran console</LinkCta>
+            <LinkCta href="/playground/" class="mt-10">Try Vyaakaran console</LinkCta>
           </div>
           <div class={`lg:w-3/5 relative transform transition duration-500 ${!intersecting ? 'opacity-0 lg:translate-x-10' : ''}`}>
             <div class="w-56 h-56 bg-cyan-500 rounded-full absolute top-4 left-40 filter blur-2xl opacity-80" />
@@ -186,7 +186,7 @@
               Automata visualizations created in Vyaakaran can be exported as high resolution PNG images that can be easily embedded in slides and documents.
             </p>
           </div>
-          <LinkCta href="#" class="mt-8">Try the editor</LinkCta>
+          <LinkCta href="/playground/" rel="external" class="mt-8">Try the editor</LinkCta>
         </div>
 
         <div class="flex flex-col justify-between bg-blue-gray-800 py-8 px-8 rounded-2xl shadow-lg text-shadow-md">
@@ -203,7 +203,7 @@
             </p>
           </div>
 
-          <LinkCta href="#" class="mt-8">See how it works</LinkCta>
+          <LinkCta href="/docs/how-it-works" class="mt-8">See how it works</LinkCta>
         </div>
 
         <div class="flex flex-col justify-between bg-blue-gray-800 py-8 px-8 rounded-2xl shadow-lg text-shadow-md">
@@ -220,7 +220,7 @@
             </p>
           </div>
 
-          <LinkCta href="#" class="mt-8">Learn the syntax</LinkCta>
+          <LinkCta href="/docs/syntax" class="mt-8">Learn the syntax</LinkCta>
         </div>
       </div>
     </section>
@@ -233,40 +233,17 @@
   </h2>
   <p class="mt-4 text-blue-gray-400">Vyaakaran is free for students and teachers</p>
   <div class="mt-12 flex flex-col space-y-6 md:(space-x-6 space-y-0 flex-row) justify-center">
-    <Button>
+    <Button as="a" href="/playground/" rel="external">
       Launch Editor
       <svg xmlns="http://www.w3.org/2000/svg" class="-mt-0.5 inline h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
       </svg>
     </Button>
-    <Button variant="secondary">
+    <!-- <Button variant="secondary">
       For Teachers
       <svg xmlns="http://www.w3.org/2000/svg" class="-mt-1 inline h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
       </svg>
-    </Button>
+    </Button> -->
   </div>
 </section>
-
-<style global>
-  .hljs-terminal {
-    color: #67e8f9;
-    font-style: italic;
-    font-weight: 600;
-  }
-  .hljs-separator {
-    color: #64748b;
-  }
-  .hljs-operator {
-    color: #64748b;
-  }
-  .hljs-keyword {
-    color: #0891b2;
-    font-weight: 600;
-  }
-
-  .bg-pattern {
-    background-color: #0f172a;
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%23334155' fill-opacity='0.41' fill-rule='evenodd'/%3E%3C/svg%3E");
-  }
-</style>
