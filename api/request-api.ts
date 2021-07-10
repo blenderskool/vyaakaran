@@ -15,7 +15,7 @@ interface FormRecord {
 };
 
 export default async function(request: VercelRequest, response: VercelResponse) {
-  const data: Payload = JSON.parse(request.body);
+  const data: Payload = request.body;
 
   try {
     const { success } = await verify(process.env.HCAPTCHA_SECRET, data.hcaptcha);

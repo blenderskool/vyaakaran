@@ -19,6 +19,9 @@
         status = 'LOADING';
         await fetch('/api/request-api', {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             request,
             hcaptcha: window.hcaptcha.getResponse(),
@@ -51,7 +54,7 @@
     <form on:submit|preventDefault class="mt-16 mx-auto flex flex-col relative justify-center space-y-6 md:w-3/5 lg:items-start">
       <textarea
         class="w-full p-4 resize-none rounded-md bg-dark-900 border border-blue-gray-800 shadow-3xl focus:outline-none focus:ring-2 ring-cyan-600 placeholder-blue-gray-400"
-        placeholder="Enter the request"
+        placeholder="Enter the request..."
         rows="6"
         bind:value={request}
         required
