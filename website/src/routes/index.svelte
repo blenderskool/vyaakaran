@@ -48,7 +48,7 @@
       in a beautiful editor right on the browser.
     </p>
     <div class="mt-14 flex flex-col space-y-6 md:(space-x-6 space-y-0 flex-row) justify-center">
-      <Button as="a" href="/playground/" rel="external">
+      <Button as="a" href="https://vyaakaran.vercel.app/playground/" rel="external">
         Launch Editor
         <svg xmlns="http://www.w3.org/2000/svg" class="-mt-0.5 inline h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
@@ -128,7 +128,7 @@
               Vyaakaran makes it easy to learn, develop and test regular languages. It supports right linear grammar that gets converted
               to equivalent automata and regular expression. Both Epsilon and Epsilon-free NFAs are generated in the editor.
             </p>
-            <LinkCta href="/playground/new/rg" rel="external" class="mt-10">Try regular languages</LinkCta>
+            <LinkCta href="https://vyaakaran.vercel.app/playground/new/rg" rel="external" class="mt-10">Try regular languages</LinkCta>
           </div>
           <div class={`lg:w-3/5 relative transform transition duration-500 ${!intersecting ? 'opacity-0 lg:translate-x-10' : ''}`}>
             <div class="w-56 h-56 bg-cyan-500 rounded-full absolute top-4 left-2 filter blur-2xl opacity-80" />
@@ -145,7 +145,7 @@
               Context free languages are at the heart of parsers. Vyaakaran makes it possible to generate and visualize parse tables
               and automata from CFGs. All the common parser types &mdash; LL(1), LR(0), SLR(1), LALR(1), LR(1) are supported.
             </p>
-            <LinkCta href="/playground/new/cfg" rel="external" class="mt-10">Try context free languages</LinkCta>
+            <LinkCta href="https://vyaakaran.vercel.app/playground/new/cfg" rel="external" class="mt-10">Try context free languages</LinkCta>
           </div>
           <div class={`lg:w-3/5 relative transform transition duration-500 ${!intersecting ? 'opacity-0 lg:-translate-x-10' : ''}`}>
             <div class="w-56 h-56 sm:(w-80 h-80) bg-cyan-500 rounded-full absolute top-2 left-1/7 filter blur-2xl opacity-50" />
@@ -162,7 +162,7 @@
               Testing grammars are crucial when writing them. Vyaakaran can check whether a string gets accepted by a grammar,
               generate a set of example strings from the grammar and perform a bunch of other checks like left-recursion, unreachability, etc.
             </p>
-            <LinkCta href="/playground/" class="mt-10">Try Vyaakaran console</LinkCta>
+            <LinkCta href="https://vyaakaran.vercel.app/playground/" rel="external" class="mt-10">Try Vyaakaran console</LinkCta>
           </div>
           <div class={`lg:w-3/5 relative transform transition duration-500 ${!intersecting ? 'opacity-0 lg:translate-x-10' : ''}`}>
             <div class="w-56 h-56 bg-cyan-500 rounded-full absolute top-4 left-40 filter blur-2xl opacity-80" />
@@ -186,7 +186,7 @@
               Automata visualizations created in Vyaakaran can be exported as high resolution PNG images that can be easily embedded in slides and documents.
             </p>
           </div>
-          <LinkCta href="/playground/" rel="external" class="mt-8">Try the editor</LinkCta>
+          <LinkCta href="https://vyaakaran.vercel.app/playground/" rel="external" class="mt-8">Try the editor</LinkCta>
         </div>
 
         <div class="flex flex-col justify-between bg-blue-gray-800 py-8 px-8 rounded-2xl shadow-lg text-shadow-md">
@@ -233,7 +233,7 @@
   </h2>
   <p class="mt-4 text-blue-gray-400">Vyaakaran is free for students and teachers</p>
   <div class="mt-12 flex flex-col space-y-6 md:(space-x-6 space-y-0 flex-row) justify-center">
-    <Button as="a" href="/playground/" rel="external">
+    <Button as="a" href="https://vyaakaran.vercel.app/playground/" rel="external">
       Launch Editor
       <svg xmlns="http://www.w3.org/2000/svg" class="-mt-0.5 inline h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
