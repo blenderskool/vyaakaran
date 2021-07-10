@@ -24,6 +24,10 @@ hljs.registerLanguage('vyaakaran grammar', () => ({
       className: 'separator',
       match: /\./,
     },
+    {
+      className: 'comment', 
+      match: /\/\/.*/,
+    },
   ],
 }));
 
