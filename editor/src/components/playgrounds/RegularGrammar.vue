@@ -7,6 +7,7 @@
       <RegExExplorer :compiled="store.value.compiled" :key="`RegEx ${store.value.progKey}`" />
     </Pane>
   </Splitpanes>
+  <Empty v-else />
 </template>
 
 <script lang="ts">
@@ -15,6 +16,7 @@ import { Pane, Splitpanes } from 'splitpanes';
 
 import Console from '../Console.vue';
 import Editor from '../Editor.vue';
+import Empty from './Empty.vue';
 import FiniteAutomataExplorer from '../explorers/FiniteAutomata.vue';
 import RegExExplorer from '../explorers/RegEx.vue';
 
@@ -25,6 +27,7 @@ export default defineComponent({
     Splitpanes,
     Console,
     Editor,
+    Empty,
     FiniteAutomataExplorer,
     RegExExplorer,
   },

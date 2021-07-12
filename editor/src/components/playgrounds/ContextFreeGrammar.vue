@@ -5,6 +5,7 @@
       <FirstFollowExplorer :compiled="store.value.compiled" />
     </Pane>
   </Splitpanes>
+  <Empty v-else />
 </template>
 
 <script lang="ts">
@@ -13,6 +14,7 @@ import { Splitpanes, Pane } from 'splitpanes';
 
 import Editor from '../Editor.vue';
 import Console from '../Console.vue';
+import Empty from './Empty.vue';
 import ParseTableExplorer from '../explorers/ParseTable.vue';
 import FirstFollowExplorer from '../explorers/FirstFollow.vue';
 
@@ -23,6 +25,7 @@ export default defineComponent({
     Pane,
     Editor,
     Console,
+    Empty,
     ParseTableExplorer,
     FirstFollowExplorer,
   },
