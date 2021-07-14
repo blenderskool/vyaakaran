@@ -48,7 +48,6 @@ export default defineConfig({
             },
             code: {
               color: colors.cyan[600],
-              backticks: false,
               fontFamily: '"Fira Code", monospace',
             },
             'code::before': {
