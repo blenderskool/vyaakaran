@@ -203,7 +203,7 @@
             </p>
           </div>
 
-          <LinkCta href="/docs/how-it-works" class="mt-8">See how it works</LinkCta>
+          <LinkCta href="https://akashhamirwasia.com/projects/vyaakaran" rel="external" target="_blank" class="mt-8">See how it works</LinkCta>
         </div>
 
         <div class="flex flex-col justify-between bg-blue-gray-800 py-8 px-8 rounded-2xl shadow-lg text-shadow-md">

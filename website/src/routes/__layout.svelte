@@ -16,7 +16,7 @@
     </a>
     <nav class="hidden space-x-4 items-center justify-between flex-1 ml-10 font-medium md:flex">
       <div>
-        <a class="px-4 py-3 hover:text-cyan-300" href="/docs/how-it-works">
+        <a class="px-4 py-3 hover:text-cyan-300" href="https://akashhamirwasia.com/projects/vyaakaran" target="_blank" rel="external">
           How it works
         </a>
         <a class="px-4 py-3 hover:text-cyan-300" href="/request-api">
