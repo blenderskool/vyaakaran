@@ -17,7 +17,7 @@
   let timeIdx = 0;
 
   let codeIdx = 0;
-  const finalCode = 'S -> a S | b A | A.NA -> c A | #.'
+  const finalCode = 'S -> a I | F.NI -> a I | b F.NF -> #.'
 
   $: timeIdx === 5 && setInterval(() => {
       if (codeIdx < finalCode.length) { 
@@ -89,7 +89,7 @@
         </svg>
       </div>
       <div class="flex flex-col border-l w-3/5 border-blue-gray-800">
-        {#if timeIdx > 40 &&  timeIdx < 44}
+        {#if timeIdx > 45 &&  timeIdx < 49}
           <div class="flex justify-center items-center h-full text-blue-gray-300 text-sm">
             <svg class="animate-spin mr-2 h-5 w-5 text-cyan-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -97,7 +97,7 @@
             </svg>
             Loading
           </div>
-        {:else if timeIdx >= 44}
+        {:else if timeIdx >= 49}
           <div class="pt-4 px-5 flex-1" transition:fade>
             <div class="text-xs text-blue-gray-300">Finite Automaton</div>
             <img src="automata.png" alt="Generated Finite Automaton" class="mt-4 select-none">
@@ -116,8 +116,8 @@
 
 </section>
 
-<div class="bg-pattern">
-  <div class="bg-gradient-to-b from-blue-gray-900 via-transparent to-blue-gray-900">
+<div id="features" class="bg-pattern pt-14 -mt-14">
+  <div class="bg-gradient-to-b from-blue-gray-900 via-transparent to-blue-gray-900 pt-14 -mt-14">
 
     <section class="container mx-auto px-8 mt-20 pt-14 space-y-36 lg:space-y-56 xl:px-36">
       <IntersectionObserver let:intersecting element={sectionRG} rootMargin="-100px">
@@ -132,7 +132,7 @@
           </div>
           <div class={`lg:w-3/5 relative transform transition duration-500 ${!intersecting ? 'opacity-0 lg:translate-x-10' : ''}`}>
             <div class="w-56 h-56 bg-cyan-500 rounded-full absolute top-4 left-2 filter blur-2xl opacity-80" />
-            <img src="regular-grammar.jpg" class="rounded shadow-3xl border border-blue-gray-800 relative opacity-90" />
+            <img src="regular-grammar.jpg" class="rounded shadow-3xl border border-blue-gray-800 relative opacity-90" alt="Regular grammar in Vyaakaran" />
           </div>
         </div>
       </IntersectionObserver>
@@ -149,7 +149,7 @@
           </div>
           <div class={`lg:w-3/5 relative transform transition duration-500 ${!intersecting ? 'opacity-0 lg:-translate-x-10' : ''}`}>
             <div class="w-56 h-56 sm:(w-80 h-80) bg-cyan-500 rounded-full absolute top-2 left-1/7 filter blur-2xl opacity-50" />
-            <img src="context-free-grammar.jpg" class="rounded shadow-3xl border border-blue-gray-800 relative opacity-90" />
+            <img src="context-free-grammar.jpg" class="rounded shadow-3xl border border-blue-gray-800 relative opacity-90" alt="Context free grammar in Vyaakaran" />
           </div>
         </div>
       </IntersectionObserver>
@@ -166,7 +166,7 @@
           </div>
           <div class={`lg:w-3/5 relative transform transition duration-500 ${!intersecting ? 'opacity-0 lg:translate-x-10' : ''}`}>
             <div class="w-56 h-56 bg-cyan-500 rounded-full absolute top-4 left-40 filter blur-2xl opacity-80" />
-            <img src="console.jpg" class="max-h-lg rounded shadow-3xl border border-blue-gray-800 relative opacity-90 mx-auto" />
+            <img src="console.jpg" class="max-h-lg rounded shadow-3xl border border-blue-gray-800 relative opacity-90 mx-auto" alt="Vyaakaran Console" />
           </div>
         </div>
       </IntersectionObserver>
