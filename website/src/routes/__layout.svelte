@@ -1,10 +1,24 @@
 <script lang="ts">
-  import Button from "../components/Button.svelte";
-  import "virtual:windi.css"
+  import Button from '../components/Button.svelte';
+  import 'virtual:windi.css';
 
   // if you want to enable windi devtools
-  import { browser } from "$app/env";
-  if (browser) import("virtual:windi-devtools");
+  import { browser } from '$app/env';
+  import { page } from '$app/stores';
+
+  if (browser) import('virtual:windi-devtools');
+
+  let mobileMenuOpen = false;
+
+  function handleMobileOpen() {
+    mobileMenuOpen = !mobileMenuOpen;
+  }
+
+  if (browser) {
+    page.subscribe(() => {
+      mobileMenuOpen = false;
+    });
+  }
 </script>
 
 
@@ -16,14 +30,17 @@
     </a>
     <nav class="hidden space-x-4 items-center justify-between flex-1 ml-10 font-medium md:flex">
       <div>
-        <a class="px-4 py-3 hover:text-cyan-300" href="https://akashhamirwasia.com/projects/vyaakaran" target="_blank" rel="external">
-          How it works
+        <a class="px-4 py-3 hover:text-cyan-300" href="/#features">
+          Features
         </a>
         <a class="px-4 py-3 hover:text-cyan-300" href="/request-api">
           API
         </a>
-        <a class="px-4 py-3 pr-6 hover:text-cyan-300" href="#">
-          About
+        <a class="px-4 py-3 hover:text-cyan-300" href="/docs/syntax">
+          Syntax
+        </a>
+        <a class="px-4 py-3 hover:text-cyan-300" href="https://akashhamirwasia.com/projects/vyaakaran" target="_blank" rel="external">
+          How it works
         </a>
       </div>
       <Button as="a" href="https://vyaakaran.vercel.app/playground/" rel="external">
@@ -33,6 +50,41 @@
         </svg>
       </Button>
     </nav>
+    <button class="ml-auto p-2 -mr-4 focus:ring-2 focus:outline-none rounded focus:ring-cyan-600 md:hidden" on:click={handleMobileOpen}>
+      {#if mobileMenuOpen}
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      {:else}
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      {/if}
+    </button>
+    {#if mobileMenuOpen}
+      <nav class="absolute top-24 left-4 right-4 bg-20 flex flex-col px-8 py-12 rounded-lg bg-blue-gray-800 border border-blue-gray-700 bg-opacity-80 backdrop-filter backdrop-blur-md shadow-2xl space-y-3 md:hidden">
+        <a class="pb-3 hover:text-cyan-300" href="/#features">
+          Features
+        </a>
+        <a class="py-3 hover:text-cyan-300" href="/request-api">
+          API
+        </a>
+        <a class="py-3 hover:text-cyan-300" href="/docs/syntax">
+          Syntax
+        </a>
+        <a class="py-3 hover:text-cyan-300" href="https://akashhamirwasia.com/projects/vyaakaran" target="_blank" rel="external">
+          How it works
+        </a>
+        <div class="pt-6">
+          <Button as="a" href="https://vyaakaran.vercel.app/playground/" rel="external">
+            Launch Editor
+            <svg xmlns="http://www.w3.org/2000/svg" class="-mt-0.5 inline h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+            </svg>
+          </Button>
+        </div>
+      </nav>
+    {/if}
   </header>
 
   <main class="pt-40 lg:pt-36 relative overflow-x-hidden">
