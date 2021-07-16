@@ -1,24 +1,33 @@
 <template>
-  <ul class="tabs">
-    <Tab
-      v-for="(tab, i) in tabs"
-      :key="i"
-      :to="String(i)"
-      :name="tab.name"
-      :isActive="tabIdx === i"
-      :showRemove="tabs.length > 1"
-      :lang="tab.lang"
-      @rename="(name) => renameTab(i, name)"
-      @remove="() => removeTab(i)"
-    />
-    <Tab class="new-tab">
-      <button @click="() => $emit('new-playground')" title="Add a new tab [Shift + N]">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
-      </button>
-    </Tab>
-  </ul>
+  <header>
+    <ul class="tabs">
+      <Tab
+        v-for="(tab, i) in tabs"
+        :key="i"
+        :to="String(i)"
+        :name="tab.name"
+        :isActive="tabIdx === i"
+        :showRemove="tabs.length > 1"
+        :lang="tab.lang"
+        @rename="(name) => renameTab(i, name)"
+        @remove="() => removeTab(i)"
+      />
+      <Tab class="new-tab">
+        <button @click="() => $emit('new-playground')" title="Add a new tab [Shift + N]">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </button>
+      </Tab>
+    </ul>
+
+
+    <nav>
+      <a href="https://vyaakaran.vercel.app/docs/syntax" target="_blank">
+        Learn Syntax
+      </a>
+    </nav>
+  </header>
 </template>
 
 <script lang="ts">
@@ -64,11 +73,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .tabs {
+  header {
     height: 30px;
     box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.15);
     position: relative;
     z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tabs {
+    height: 100%;
     display: flex;
     overflow-y: hidden;
     overflow-x: auto;
@@ -86,5 +102,15 @@ export default defineComponent({
     padding: 0 8px;
     color: var(--blue-gray-500);
     outline: none;
+  }
+
+  nav {
+    margin: 0 1.25rem;
+    flex-shrink: 0;
+  }
+  nav a {
+    font-size: 0.75rem;
+    color: var(--cyan-300);
+    font-weight: 500;
   }
 </style>
