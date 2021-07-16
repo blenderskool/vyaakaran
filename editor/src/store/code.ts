@@ -28,6 +28,10 @@ abstract class Playground {
     this.consoleStream = [];
     this.compiled = compiledObj;
     this.progKey = 0;
+
+    if (this.program.length) {
+      this.compile();
+    }
   }
 
   compile() {
