@@ -50,7 +50,7 @@ export default defineComponent({
 <style scoped>
   .modal-wrapper {
     position: fixed;
-    z-index: 50;
+    z-index: 100;
     top: 0;
     right: 0;
     left: 0;

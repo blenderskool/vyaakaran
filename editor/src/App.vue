@@ -146,14 +146,14 @@ export default defineComponent({
   }
 
   .splitpanes--horizontal > .splitpanes__splitter {
-    min-height: 21px !important;
+    min-height: 11px !important;
     position: relative;
   }
   .splitpanes--horizontal > .splitpanes__splitter::after {
     content: '';
     position: absolute;
     left: 0;
-    top: 10px;
+    top: 5px;
     right: 0;
     height: 1px;
     background-color: var(--cool-gray-600);
