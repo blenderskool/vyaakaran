@@ -38,6 +38,10 @@
   });
 </script>
 
+<svelte:head>
+  <title>Request API | Vyaakaran</title>
+</svelte:head>
+
 
 <div class="absolute bg-cyan-500 w-96 h-96 rounded-full filter blur-3xl opacity-[0.07] top-10 left-20" />
 <div class="absolute bg-green-500 w-80 h-80 rounded-full filter blur-3xl opacity-[0.07] top-100 right-20 hidden md:block" />
