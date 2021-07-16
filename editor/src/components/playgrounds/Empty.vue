@@ -1,12 +1,13 @@
 <template>
   <div class="container">
     <img class="illustration" src="../../assets/empty-playground.svg" />
-    <h2>
+    <p>
       Write the grammar and click
       <span class="highlight">
-        Play!
+        Play
       </span>
-    </h2>
+      for some magic 🪄
+    </p>
   </div>
 </template>
 
@@ -31,11 +32,13 @@ export default defineComponent({
     width: 14rem;
   }
 
-  h2 {
+  p {
     margin-top: 2rem;
     font-weight: 500;
     font-size: 1.25rem;
     color: var(--cool-gray-500);
+    text-align: center;
+    line-height: 1.75;
   }
 
   .highlight {
