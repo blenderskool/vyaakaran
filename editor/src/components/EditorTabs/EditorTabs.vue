@@ -54,6 +54,8 @@ export default defineComponent({
       }
     },
     renameTab(i, name) {
+      if (!name) return;
+
       // NOTE: This assumes that the tab being renamed is the active tab. Might change later
       (getActivePlayground() as Playground).name = name;
     },

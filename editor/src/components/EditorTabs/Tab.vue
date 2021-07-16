@@ -15,7 +15,7 @@
           ref="inputRef"
           class="rename"
           :value="name"
-          @change="(e) => $emit('rename', e.target.value)"
+          @change="(e) => $emit('rename', e.target.value.trim())"
           @blur="() => setEditing(false)"
           @keydown.enter="() => setEditing(false)"
         />
