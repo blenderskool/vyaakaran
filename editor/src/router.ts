@@ -4,7 +4,7 @@ import { newPlayground, playgrounds, PlaygroundType } from './store/code';
 import Playground from './routes/Playground.vue';
 
 const sampleProgram = `
-// Type your regular grammar here
+// Type your grammar here...
 
 // Syntax cheat-sheet:
 //    * Start symbol                 S
@@ -16,10 +16,8 @@ const sampleProgram = `
 //    * Non-terminals:               start with uppercase character
 //    * Terminals:                   start with any other character
 
-S -> ε | a B | a C | b A | b C | c A | c B.
-A -> b A | c A | ε.
-C -> a C | b C | ε.
-B -> a B | c B | ε.
+S -> 0 1 S | 1 0 S | A.
+A -> 0 1 A | 1 0 A | #.
 `;
 
 const router = createRouter({
