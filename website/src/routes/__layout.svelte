@@ -24,11 +24,15 @@
 
 <div class="text-blue-gray-200 bg-blue-gray-900">
 
-  <header class="flex container mx-auto px-8 xl:px-36 pt-8 fixed inset-0 bottom-auto items-center z-50 bg-gradient-to-b from-blue-gray-900 to-transparent text-shadow-md">
-    <a class="font-fira tracking-widest font-semibold text-2xl" href="/">
-      व<span class="text-cyan-300">y</span>
+  <header class="flex container mx-auto px-8 xl:px-36 pt-8 fixed inset-0 bottom-auto items-center z-50 bg-gradient-to-b from-blue-gray-900 via-blue-gray-900/75 to-transparent text-shadow-md">
+    <a href="/">
+      <svg fill="none" class="h-10 text-blue-gray-200 hover:text-cyan-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274 64">
+        <path d="M79.594 18.546h-6.15l9.039 26.182h7.133l9.026-26.182h-6.136l-6.341 19.892h-.243l-6.328-19.892zm25.459 33.545c4.053 0 6.2-2.07 7.313-5.241l7.632-21.733-5.766-.026-4.104 14.42h-.204l-4.066-14.42h-5.727l7.044 20.2-.319.83c-.716 1.841-2.084 1.93-4.002 1.342l-1.227 4.066c.78.332 2.045.562 3.426.562zm22.769-6.993c2.902 0 4.781-1.265 5.74-3.093h.153v2.723h5.165V31.483c0-4.679-3.963-6.647-8.335-6.647-4.705 0-7.799 2.25-8.553 5.83l5.037.408c.371-1.304 1.534-2.263 3.49-2.263 1.854 0 2.915.934 2.915 2.544v.077c0 1.266-1.343 1.432-4.756 1.764-3.886.358-7.376 1.662-7.376 6.047 0 3.887 2.774 5.855 6.52 5.855zm1.559-3.758c-1.675 0-2.876-.78-2.876-2.276 0-1.534 1.265-2.288 3.183-2.557 1.189-.166 3.132-.447 3.784-.882v2.084c0 2.058-1.7 3.63-4.091 3.63zm19.323 3.758c2.902 0 4.782-1.265 5.74-3.093h.154v2.723h5.165V31.483c0-4.679-3.963-6.647-8.336-6.647-4.704 0-7.798 2.25-8.552 5.83l5.037.408c.37-1.304 1.534-2.263 3.49-2.263 1.854 0 2.915.934 2.915 2.544v.077c0 1.266-1.343 1.432-4.756 1.764-3.886.358-7.377 1.662-7.377 6.047 0 3.887 2.775 5.855 6.52 5.855zm1.56-3.758c-1.675 0-2.876-.78-2.876-2.276 0-1.534 1.265-2.288 3.183-2.557 1.189-.166 3.132-.447 3.784-.882v2.084c0 2.058-1.7 3.63-4.091 3.63zm13.724 3.388h5.446v-6.239l1.47-1.675 5.356 7.914h6.38l-7.658-11.135 7.287-8.502h-6.251l-6.29 7.453h-.294V18.546h-5.446v26.182zm26.552.37c2.902 0 4.782-1.265 5.74-3.093h.154v2.723h5.165V31.483c0-4.679-3.964-6.647-8.336-6.647-4.704 0-7.798 2.25-8.552 5.83l5.037.408c.37-1.304 1.534-2.263 3.49-2.263 1.853 0 2.915.934 2.915 2.544v.077c0 1.266-1.343 1.432-4.756 1.764-3.887.358-7.377 1.662-7.377 6.047 0 3.887 2.775 5.855 6.52 5.855zm1.56-3.758c-1.675 0-2.876-.78-2.876-2.276 0-1.534 1.265-2.288 3.183-2.557 1.189-.166 3.132-.447 3.784-.882v2.084c0 2.058-1.7 3.63-4.091 3.63zm13.724 3.388h5.446v-11.11c0-2.416 1.764-4.078 4.167-4.078.755 0 1.79.128 2.301.294v-4.832a8.169 8.169 0 00-1.713-.192c-2.198 0-4.001 1.278-4.717 3.707h-.204v-3.426h-5.28v19.637zm19.767.37c2.902 0 4.781-1.265 5.74-3.093h.154v2.723h5.164V31.483c0-4.679-3.963-6.647-8.335-6.647-4.704 0-7.798 2.25-8.552 5.83l5.036.408c.371-1.304 1.535-2.263 3.491-2.263 1.853 0 2.914.934 2.914 2.544v.077c0 1.266-1.342 1.432-4.755 1.764-3.887.358-7.377 1.662-7.377 6.047 0 3.887 2.774 5.855 6.52 5.855zm1.56-3.758c-1.675 0-2.877-.78-2.877-2.276 0-1.534 1.266-2.288 3.184-2.557 1.188-.166 3.132-.447 3.784-.882v2.084c0 2.058-1.701 3.63-4.091 3.63zm19.169-7.965c.013-2.53 1.522-4.014 3.721-4.014 2.186 0 3.503 1.432 3.49 3.835v11.532h5.446V32.225c0-4.577-2.685-7.39-6.776-7.39-2.915 0-5.024 1.432-5.906 3.72h-.23v-3.464h-5.191v19.637h5.446V33.375z" fill="currentColor"/>
+        <path d="M38.928 47.1c3.602 0 5.511-1.84 6.5-4.659l6.784-19.318-5.125-.023-3.648 12.818h-.182L39.644 23.1h-5.091l6.261 17.955-.284.738c-.636 1.637-1.852 1.716-3.557 1.194l-1.09 3.613c.692.296 1.817.5 3.045.5z" fill="#67E8F9"/>
+        <path d="M55.699 16.9v4.032h-27.13v20.124h-5.111v-4.86c-1.32 1.176-2.988 1.764-5.004 1.764-2.208 0-4.068-.66-5.58-1.98-1.488-1.32-2.232-3.132-2.232-5.436 0-2.208.732-4.032 2.196-5.472 1.488-1.464 3.432-2.196 5.832-2.196.96 0 1.8.096 2.52.288v4.392c-.816-.216-1.524-.324-2.124-.324-.936 0-1.716.288-2.34.864-.624.576-.936 1.344-.936 2.304 0 1.128.312 2.004.936 2.628.648.6 1.572.9 2.772.9.96 0 1.86-.312 2.7-.936.84-.648 1.26-1.452 1.26-2.412v-9.648H8.302V16.9h47.397z" fill="currentColor"/>
+      </svg>
     </a>
-    <nav class="hidden space-x-4 items-center justify-between flex-1 ml-10 font-medium md:flex">
+    <nav class="hidden space-x-4 items-center justify-between flex-1 ml-6 font-medium lg:flex">
       <div>
         <a class="px-4 py-3 hover:text-cyan-300" href="/#features">
           Features
@@ -50,7 +54,7 @@
         </svg>
       </Button>
     </nav>
-    <button class="ml-auto p-2 -mr-4 focus:ring-2 focus:outline-none rounded focus:ring-cyan-600 md:hidden" on:click={handleMobileOpen}>
+    <button class="ml-auto p-2 -mr-4 focus:ring-2 focus:outline-none rounded focus:ring-cyan-600 lg:hidden" on:click={handleMobileOpen}>
       {#if mobileMenuOpen}
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -62,7 +66,7 @@
       {/if}
     </button>
     {#if mobileMenuOpen}
-      <nav class="absolute top-24 left-4 right-4 bg-20 flex flex-col px-8 py-12 rounded-lg bg-blue-gray-800 border border-blue-gray-700 bg-opacity-80 backdrop-filter backdrop-blur-md shadow-2xl space-y-3 md:hidden">
+      <nav class="absolute top-24 left-4 right-4 bg-20 flex flex-col px-8 py-12 rounded-lg bg-blue-gray-800 border border-blue-gray-700 bg-opacity-80 backdrop-filter backdrop-blur-md shadow-2xl space-y-3 lg:hidden">
         <a class="pb-3 hover:text-cyan-300" href="/#features">
           Features
         </a>
@@ -91,13 +95,13 @@
     <slot />
   </main>
 
-  <footer class="container mx-auto px-8 xl:px-36 pb-10 flex flex-col items-center justify-between md:flex-row">
+  <footer class="container mx-auto px-8 xl:px-36 pb-10 flex flex-col items-center justify-between text-center md:flex-row">
     <div>
-      Vyaakaran
+      <img src="vyaakaran-icon.png" class="h-10 filter drop-shadow-lg" alt="Vyaakaran icon" />
     </div>
 
-    <div class="mt-6 md:mt-0">
-      A project by
+    <div class="text-sm mt-6 md:mt-0">
+      Designed & Developed in 🇮🇳 by
       <a href="https://akashhamirwasia.com" target="_blank" class="text-cyan-300 font-medium">
         Akash Hamirwasia
       </a>
