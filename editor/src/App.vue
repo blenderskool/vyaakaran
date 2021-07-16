@@ -7,6 +7,21 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'App',
+  setup() {
+    // Configure Google Analytics
+    if (import.meta.env.PROD && typeof window !== undefined) {
+      const script = document.createElement('script');
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=UA-82138003-6';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function() {window.dataLayer.push(arguments);}
+      window.gtag('js', new Date());
+      window.gtag('config', 'UA-82138003-6');
+    }
+  }
 });
 </script>
 

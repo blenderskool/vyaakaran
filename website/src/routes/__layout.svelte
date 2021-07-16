@@ -1,12 +1,11 @@
 <script lang="ts">
+  import { browser, dev } from '$app/env';
+  import { page } from '$app/stores';
   import Button from '../components/Button.svelte';
   import 'virtual:windi.css';
-
-  // if you want to enable windi devtools
-  import { browser } from '$app/env';
-  import { page } from '$app/stores';
-
-  if (browser) import('virtual:windi-devtools');
+  
+  // enable windi devtools while in development
+  if (browser && dev) import('virtual:windi-devtools');
 
   let mobileMenuOpen = false;
 
@@ -14,13 +13,34 @@
     mobileMenuOpen = !mobileMenuOpen;
   }
 
+  // Configure Google Analytics
+  if (browser && typeof window !== undefined) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function() {window.dataLayer.push(arguments);}
+    window.gtag('js', new Date());
+    window.gtag('config', 'UA-82138003-6');
+  }
+
   if (browser) {
-    page.subscribe(() => {
+    page.subscribe((value) => {
       mobileMenuOpen = false;
+
+      // Send updated page path to Google analytics
+      if (window.gtag !== undefined) {
+        window.gtag('config', 'UA-82138003-6', {
+          page_path: value.path,
+        });
+      }
     });
   }
 </script>
 
+
+<svelte:head>
+  {#if !dev}
+    <script async defer src="https://www.googletagmanager.com/gtag/js?id=UA-82138003-6"></script>
+  {/if}
+</svelte:head>
 
 <div class="text-blue-gray-200 bg-blue-gray-900">
 

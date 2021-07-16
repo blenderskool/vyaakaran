@@ -57,4 +57,13 @@ const router = createRouter({
   ],
 });
 
+router.afterEach((to) => {
+  // Send updated page path to Google analytics
+  if (window.gtag !== undefined && import.meta.env.PROD) {
+    window.gtag('config', 'UA-82138003-6', {
+      page_path: to.path,
+    });
+  }
+});
+
 export default router;

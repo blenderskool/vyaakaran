@@ -4,5 +4,7 @@ declare global {
   interface Window {
     hcaptcha: any;
     submitRequest: any;
+    dataLayer: any;
+    gtag: any;
   }
 }
