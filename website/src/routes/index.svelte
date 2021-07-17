@@ -238,7 +238,7 @@
   <h2 class="text-3xl sm:text-4xl font-semibold">
     Try <span class="text-cyan-300">Vyaakaran</span> today
   </h2>
-  <p class="mt-4 text-blue-gray-400">Vyaakaran is free for students and teachers</p>
+  <p class="mt-4 text-blue-gray-400">Vyaakaran is free to use</p>
   <div class="mt-12 flex flex-col space-y-6 md:(space-x-6 space-y-0 flex-row) justify-center">
     <Button as="a" href="https://vyaakaran.vercel.app/playground/" rel="external">
       Launch Editor
