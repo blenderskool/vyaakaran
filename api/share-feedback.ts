@@ -1,18 +1,7 @@
 import { verify } from 'hcaptcha';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import fetch from 'node-fetch';
-
-export interface Payload {
-  request: string;
-  hcaptcha: string;
-};
-
-export interface FormRecord {
-  method: 'POST',
-  sheet: string,
-  key: string,
-  payload: Record<string, string>,
-};
+import { FormRecord, Payload } from './request-api';
 
 export default async function(request: VercelRequest, response: VercelResponse) {
   const data: Payload = request.body;
@@ -24,9 +13,9 @@ export default async function(request: VercelRequest, response: VercelResponse) 
     const record: FormRecord = {
       method: 'POST',
       key: '',
-      sheet: 'requests',
+      sheet: 'feedback',
       payload: {
-        request: data.request,
+        feedback: data.request,
       },
     };
 

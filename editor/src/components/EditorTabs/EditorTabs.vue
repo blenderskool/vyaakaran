@@ -21,10 +21,12 @@
       </Tab>
     </ul>
 
-
     <nav>
       <a href="https://vyaakaran.vercel.app/docs/syntax" target="_blank">
         Learn Syntax
+      </a>
+      <a href="https://vyaakaran.vercel.app/feedback" target="_blank">
+        Feedback
       </a>
     </nav>
   </header>
@@ -105,10 +107,11 @@ export default defineComponent({
   }
 
   nav {
-    margin: 0 1.25rem;
+    margin: 0 0.5rem;
     flex-shrink: 0;
   }
   nav a {
+    margin: 0 0.75rem;
     font-size: 0.75rem;
     color: var(--cyan-300);
     font-weight: 500;
