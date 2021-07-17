@@ -52,7 +52,7 @@
       Share your feedback.
     </h1>
     <p class="mt-8 text-blue-gray-400 text-lg sm:mt-6">
-      Vyaakaran is a small project. Feel free share to any feature requests or general feedback with me that can
+      Vyaakaran is a small project. Feel free to share any feature requests or general feedback with me that can
       help me in improving Vyaakaran 😇
     </p>
     <form on:submit|preventDefault class="mt-16 mx-auto flex flex-col relative justify-center space-y-6 md:w-3/5 lg:items-start">
