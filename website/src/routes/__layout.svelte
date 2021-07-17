@@ -117,7 +117,7 @@
 
   <footer class="container mx-auto px-8 xl:px-36 pb-10 flex flex-col items-center justify-between text-center md:flex-row">
     <div>
-      <img src="vyaakaran-icon.png" class="h-10 filter drop-shadow-lg" alt="Vyaakaran icon" />
+      <img src="/vyaakaran-icon.png" class="h-10 filter drop-shadow-lg" alt="Vyaakaran icon" />
     </div>
 
     <div class="text-sm mt-6 md:mt-0">
