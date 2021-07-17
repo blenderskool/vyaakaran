@@ -12,6 +12,9 @@
 
 <svelte:head>
   <title>Syntax cheatsheet | Vyaakaran</title>
+  <meta name="title" content="Syntax cheatsheet | Vyaakaran">
+  <meta property="og:title" content="Syntax cheatsheet | Vyaakaran">
+  <meta property="twitter:title" content="Syntax cheatsheet | Vyaakaran">
 </svelte:head>
 
 <div class="fixed bg-cyan-500 w-96 h-96 rounded-full filter blur-3xl opacity-[0.07] top-10 left-20" />

@@ -40,6 +40,9 @@
 
 <svelte:head>
   <title>Request API | Vyaakaran</title>
+  <meta name="title" content="Request API | Vyaakaran">
+  <meta property="og:title" content="Request API | Vyaakaran">
+  <meta property="twitter:title" content="Request API | Vyaakaran">
 </svelte:head>
 
 

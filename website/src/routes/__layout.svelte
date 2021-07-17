@@ -37,6 +37,21 @@
 
 
 <svelte:head>
+  <!-- Primary Meta Tags -->
+  <meta name="description" content="Visualize automata, parsers and formal languages right on the browser in an easy to use interface with Vyaakaran.">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vyaakaran.vercel.app/">
+  <meta property="og:description" content="Visualize automata, parsers and formal languages right on the browser in an easy to use interface with Vyaakaran.">
+  <meta property="og:image" content="https://vyaakaran.vercel.app/site-preview.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://vyaakaran.vercel.app/">
+  <meta property="twitter:description" content="Visualize automata, parsers and formal languages right on the browser in an easy to use interface with Vyaakaran.">
+  <meta property="twitter:image" content="https://vyaakaran.vercel.app/site-preview.jpg">
+
   {#if !dev}
     <script async defer src="https://www.googletagmanager.com/gtag/js?id=UA-82138003-6"></script>
   {/if}

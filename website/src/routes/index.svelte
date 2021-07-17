@@ -34,7 +34,10 @@
 </script>
 
 <svelte:head>
-  <title>Vyaakaran</title>
+  <title>Vyaakaran - Visualize automata, parsers, grammars for free</title>
+  <meta name="title" content="Vyaakaran - Visualize automata, parsers, grammars for free">
+  <meta property="og:title" content="Vyaakaran - Visualize automata, parsers, grammars for free">
+  <meta property="twitter:title" content="Vyaakaran - Visualize automata, parsers, grammars for free">
 
   <link rel="preload" href="automata.png" as="image" type="image/png">
 </svelte:head>

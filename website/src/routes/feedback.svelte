@@ -40,6 +40,9 @@
 
 <svelte:head>
   <title>Share Feedback | Vyaakaran</title>
+  <meta name="title" content="Share Feedback | Vyaakaran">
+  <meta property="og:title" content="Share Feedback | Vyaakaran">
+  <meta property="twitter:title" content="Share Feedback | Vyaakaran">
 </svelte:head>
 
 
