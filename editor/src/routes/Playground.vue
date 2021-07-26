@@ -21,7 +21,7 @@
   </div>
   <footer>
     <span>
-      © 2021 - present
+      Designed & Developed in 🇮🇳 by
       {{ ' ' }}
       <a href="https://akashhamirwasia.com">Akash Hamirwasia</a>
     </span>
