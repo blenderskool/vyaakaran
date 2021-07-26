@@ -4,6 +4,9 @@ import { newPlayground, playgrounds, PlaygroundType } from './store/code';
 import Playground from './routes/Playground.vue';
 
 const sampleProgram = `
+S -> 0 1 S | 1 0 S | A.
+A -> 0 1 A | 1 0 A | #.
+
 // Type your grammar here...
 
 // Syntax cheat-sheet:
@@ -15,9 +18,6 @@ const sampleProgram = `
 //    * Comments:                    // comment
 //    * Non-terminals:               start with uppercase character
 //    * Terminals:                   start with any other character
-
-S -> 0 1 S | 1 0 S | A.
-A -> 0 1 A | 1 0 A | #.
 `;
 
 const router = createRouter({
