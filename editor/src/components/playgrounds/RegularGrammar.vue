@@ -1,7 +1,7 @@
 <template>
   <Splitpanes horizontal v-if="store.value.progKey && !store.value.compiled.errors.length" :dbl-click-splitter="false">
     <Pane min-size="6.5">
-      <FiniteAutomataExplorer :compiled="store.value.compiled" :key="`FA ${store.value.progKey}`" :name="store.value.name" />
+      <FiniteAutomataExplorer :getGraph="getAutomataGraph" :key="`FA ${store.value.progKey}`" :name="store.value.name" />
     </Pane>
     <Pane min-size="4" max-size="16" size="16">
       <RegExExplorer :compiled="store.value.compiled" :key="`RegEx ${store.value.progKey}`" />
@@ -32,5 +32,15 @@ export default defineComponent({
     RegExExplorer,
   },
   inject: ['store'],
+  methods: {
+    getAutomataGraph(faType: string) {
+      switch (faType) {
+        case 'ε-NFA':
+          return this.store.value.compiled.toFA().optimizeFA().result;
+        case 'NFA':
+          return this.store.value.compiled.toEpsilonFreeFA().optimizeFA().result;
+      }
+    },
+  },
 });
 </script>

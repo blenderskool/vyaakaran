@@ -1,4 +1,4 @@
-import { SymbolType, ParseTree, Token } from './regular-grammar/types';
+import { SymbolType, ParseTree } from './regular-grammar/types';
 import { GrammarRule, HashSet, SimplifiedGrammarRepresentation, State } from './utils';
 
 class EarleyState extends State {

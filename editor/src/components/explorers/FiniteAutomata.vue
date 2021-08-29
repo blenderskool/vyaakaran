@@ -4,7 +4,7 @@
       <div class="header">
         <span>Finite Automaton</span>
         <div class="controls">
-          <RadioTabs name="FA-type" :options="['ε-NFA', 'NFA']" v-model="faType" />
+          <RadioTabs name="FA-type" :options="['ε-NFA', 'NFA']" v-model="faType" v-if="showTypeSelector" />
           <a :download="`${name} - finite automaton`" class="secondary-btn save-figure" @click="saveFigure">
             Save figure
           </a>
@@ -21,7 +21,6 @@
 <script lang="ts">
 import { defineComponent, onUnmounted, onUpdated, PropType, ref, watch } from 'vue';
 
-import { RegularGrammar } from '../../../../compiler/src/regular-grammar/index';
 import { edgeConfig, getNodeConfig, useVisNetwork } from '../../config/graph';
 import { SymbolType } from '../../../../compiler/src/regular-grammar/types';
 import { exportToImg, fillBg } from '../../utils/canvas';
@@ -32,14 +31,15 @@ import RadioTabs from '../ui/RadioTabs.vue';
 export default defineComponent({
   name: 'FiniteAutomataExplorer',
   props: {
-    compiled: { type: Object as PropType<RegularGrammar> },
     name: { type: String as PropType<string> },
+    getGraph: { type: Function as PropType<Function>, required: true },
+    showTypeSelector: { type: Boolean as PropType<boolean>, default: true },
   },
   components: {
     PaneHeader,
     RadioTabs,
   },
-  setup({ compiled }) {
+  setup({ getGraph, showTypeSelector }) {
     const faType = ref<'ε-NFA' | 'NFA'>('ε-NFA');
     const outputRef = ref<HTMLElement>(null);
     const canvasRef = ref<HTMLCanvasElement>(null);
@@ -49,17 +49,7 @@ export default defineComponent({
     const generateVisGraph = () => {
       if (isVisLoading.value) return;
 
-      let graph;
-
-      switch (faType.value) {
-        case 'ε-NFA':
-          graph = compiled.toFA().optimizeFA().result;
-          break;
-        case 'NFA':
-          graph = compiled.toEpsilonFreeFA().optimizeFA().result;
-          break;
-      }
-
+      const graph = getGraph(showTypeSelector ? faType.value : undefined);
       const nodes: any[] = [
         { id: '_START', opacity: 0 },
         ...Object.keys(graph).map(node => getNodeConfig(node, graph[node].final)),

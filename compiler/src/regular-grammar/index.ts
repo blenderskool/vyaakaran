@@ -2,7 +2,7 @@ import RegularGrammarLexer from './lexer';
 import RegularGrammarParser from './parser';
 import RegularGrammarSemanticAnalyzer from './semantic';
 import { ParseTree, Token, SymbolType, CompilerClass } from './types';
-import { SimplifiedGrammarRepresentation } from '../utils';
+import { getGeneratorReturn, SimplifiedGrammarRepresentation } from '../utils';
 
 type FAGraph = Record<string, { nodes: Record<string, Set<string>>, final: boolean}>;
 
@@ -57,7 +57,7 @@ class RegularGrammar extends CompilerClass {
    *        4. If the production is of the form Vi -> Vj, then
    *          a ∈ transition from Vi to Vj is added in the graph
    */
-  toFA() {
+  *toFAGenerator(explain = true) {
     if (this.errors.length) return this;
 
     const graph: FAGraph = {};
@@ -78,8 +78,11 @@ class RegularGrammar extends CompilerClass {
       graph[from].nodes[via].add(to);
     }
 
-    new SimplifiedGrammarRepresentation(this.parseTree).rules.forEach((rule) => {
+    const rules = new SimplifiedGrammarRepresentation(this.parseTree).rules;
+
+    for (const rule of rules) {
       const { lhs: context, rhs: termsStack } = rule;
+      const ruleString = rule.toString();
 
       // Add intermediate states and transitions. Required for Rule 1, 2
       let start = context;
@@ -92,16 +95,30 @@ class RegularGrammar extends CompilerClass {
 
         const toState = termsStack[i+1].type[1] === SymbolType.State ? termsStack[i+1].value : `_S-${++midStateCnt}`;
         addToGraph(start, term.value, toState);
-        start = toState;
-
-        if (!graph[start]) {
-          graph[start] = { nodes: {}, final: false };
+        
+        if (!graph[toState]) {
+          graph[toState] = { nodes: {}, final: false };
         }
+        
+        if (explain) {
+          yield { graph, step: `Add transition from ${start} via ${term.value} to ${toState}`, rule: ruleString };
+        }
+
+        start = toState;
       }
 
       // Rule 4
       if (termsStack.length === 1 && termsStack[0].type[1] === SymbolType.State) {
-        addToGraph(context, '#', termsStack[0].value);
+        const toState = termsStack[0].value;
+        addToGraph(context, '#', toState);
+
+        if (!graph[toState]) {
+          graph[toState] = { nodes: {}, final: false };
+        }
+
+        if (explain) {
+          yield { graph, step: `Production is of form Vi -> Vj, add ε transition from state ${context} to ${toState} in graph`, rule: ruleString };
+        }
       }
 
       switch(termsStack[termsStack.length-1].type[1]) {
@@ -112,6 +129,9 @@ class RegularGrammar extends CompilerClass {
           }
           const { value } = termsStack[termsStack.length-1];
           addToGraph(start, value, '_FIN');
+          if (explain) {
+            yield { graph, step: `Production ends at a terminal, add transition to FINAL state`, rule: ruleString };
+          }
           break;
 
         // Rule 3
@@ -120,11 +140,18 @@ class RegularGrammar extends CompilerClass {
             graph[context] = { nodes: {}, final: false };
           }
           graph[context].final = true;
+          if (explain) {
+            yield { graph, step: `Production derives to ε, mark ${context} as final state`, rule: ruleString };
+          }
       }
-    });
+    }
 
     this.result = graph;
     return this;
+  }
+
+  toFA() {
+    return getGeneratorReturn(this.toFAGenerator(false));
   }
 
   /**

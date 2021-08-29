@@ -36,7 +36,7 @@ const router = createRouter({
       beforeEnter(to, _, next) {
         try {
           playgrounds.push(newPlayground('New Tab', (to.params.type as string).toUpperCase() as PlaygroundType, sampleProgram));
-          return next({ name: 'Playground', params: { id: 0 } });
+          return next({ name: 'Playground', params: { id: 0 }, query: to.query });
         } catch(err) {
           return next({ name: '404' });
         }
@@ -48,7 +48,7 @@ const router = createRouter({
       component: Playground,
       beforeEnter(to, _, next) {
         if (!to.params.id || Number(to.params.id) >= playgrounds.length) {
-          return next({ name: 'NewPlayground', params: { type: 'RG' } });
+          return next({ name: 'NewPlayground', params: { type: 'RG' }, query: to.query });
         } else {
           return next();
         }

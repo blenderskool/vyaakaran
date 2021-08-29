@@ -1,3 +1,4 @@
+import clone from 'just-clone';
 import { ParseTree, SymbolType, Token } from './regular-grammar/types';
 
 /**
@@ -237,4 +238,46 @@ class State {
   }
 }
 
-export { isUpperAlpha, HashSet, OrderedHashSet, SimplifiedGrammarRepresentation, GrammarRule, State };
+function getGeneratorReturn<T, TReturn, TNext>(generator: Generator<T, TReturn, TNext>) {
+  let currentValue = generator.next();
+  while(!currentValue.done) {
+    currentValue = generator.next(); 
+  }
+
+  return currentValue.value;
+}
+
+class IterateGenerator<T, TReturn, TNext> {
+  private generator: Generator<T, TReturn, TNext>;
+  private history: IteratorResult<T, TReturn>[];
+  private position: number;
+
+  constructor(generator: Generator<T, TReturn, TNext>) {
+    this.generator = generator;
+    this.history = [];
+    this.position = -1;
+  }
+
+  next() {
+    if (this.position === this.history.length - 1) {
+      const currentValue = this.generator.next();
+      if (currentValue.done) return undefined;
+
+      this.history.push(clone(currentValue));
+    }
+
+    ++this.position;
+    return this.history[this.position];
+  }
+
+  prev(): IteratorResult<T, TReturn> | undefined {
+    --this.position;
+    if (this.position < 0) {
+      return undefined;
+    }
+
+    return this.history[this.position];
+  }
+}
+
+export { isUpperAlpha, HashSet, OrderedHashSet, SimplifiedGrammarRepresentation, GrammarRule, State, IterateGenerator, getGeneratorReturn };

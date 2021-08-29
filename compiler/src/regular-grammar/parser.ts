@@ -4,7 +4,7 @@ import Lexer from './lexer';
 class Parser {
   private program: string;
   /**
-   * Parse table for this right linear grammar iteration 2
+   * Parse table for this right linear grammar iteration 3
    */
   protected static readonly parseTable = {
     'Statement': {

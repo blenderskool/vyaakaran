@@ -1,8 +1,14 @@
 <template>
-  <div class="playground">
+  <div class="playground" v-if="getView().type !== 'default'">
+    <EditorTabs @new-playground="() => showNewPlaygroundModal = true" />
+    <Splitpanes class="view" :dbl-click-splitter="false">
+      <component :is="getView().view" />
+    </Splitpanes>
+  </div>
+  <div class="playground" v-else>
     <EditorTabs @new-playground="() => showNewPlaygroundModal = true" />
 
-    <Splitpanes class="view" :dbl-clicl-splitter="false">
+    <Splitpanes class="view" :dbl-click-splitter="false">
       <Pane class="editor-wrapper" min-size="25" size="45">
         <Splitpanes class="editor-container" horizontal :dbl-click-splitter="false">
           <Pane>
@@ -14,7 +20,7 @@
       </Pane>
 
       <Pane min-size="45">
-        <component :is="getView()" class="output-container" />
+        <component :is="getView().view" class="output-container" />
       </Pane>
     </Splitpanes>
     <NewPlaygroundModal v-if="showNewPlaygroundModal" @close="() => showNewPlaygroundModal = false" />
@@ -32,8 +38,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, onUnmounted, provide, ref } from 'vue';
+import { computed, DefineComponent, defineComponent, onMounted, onUnmounted, provide, ref } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
+import { useRoute } from 'vue-router';
 
 import { getActivePlayground } from '../store/code';
 import pkg from '../../package.json';
@@ -46,11 +53,35 @@ import EditorTabs from '../components/EditorTabs/EditorTabs.vue';
 import RegularGrammarPlayground from '../components/playgrounds/RegularGrammar.vue';
 import ContextFreeGrammarPlayground from '../components/playgrounds/ContextFreeGrammar.vue';
 
+import RegularGrammarAutomataExplainer from '../components/explainers/RegularGrammarAutomata.vue';
+
+const views = {
+  RG: {
+    nfa: {
+      params: [],
+      view: RegularGrammarAutomataExplainer,
+    },
+    'ε-nfa': {
+      params: [],
+      view: RegularGrammarAutomataExplainer,
+    },
+    default: {
+      view: RegularGrammarPlayground,
+    },
+  },
+  CFG: {
+    default: {
+      view: ContextFreeGrammarPlayground,
+    },
+  },
+};
+
 export default defineComponent({
   name: 'Playground',
   components: {
     RegularGrammarPlayground,
     ContextFreeGrammarPlayground,
+    RegularGrammarAutomataExplainer,
     NewPlaygroundModal,
     CompileButton,
     EditorTabs,
@@ -62,15 +93,25 @@ export default defineComponent({
   setup() {
     const playground = computed(getActivePlayground);
     const showNewPlaygroundModal = ref(false);
+    const route = useRoute();
     provide('store', playground);
 
     const getView = () => {
-      switch(playground.value.type) {
-        case 'RG':
-          return RegularGrammarPlayground;
-        case 'CFG':
-          return ContextFreeGrammarPlayground;
+      const explain = route.query['explain'] ?? 'default';
+
+      if (explain === 'default') {
+        return { type: 'default', view: views[playground.value.type].default.view };
       }
+
+      const params = views[playground.value.type][explain].params;
+
+      for(const param of params) {
+        if (route.query[param] === undefined) {
+          return { type: 'default', view: views[playground.value.type].default.view };
+        }
+      }
+
+      return { type: explain, view: views[playground.value.type][explain].view };
     };
 
     const handleNewPlaygroundKeybind = (e: KeyboardEvent) => {
@@ -129,6 +170,7 @@ export default defineComponent({
     border-top: 1px solid var(--gray-800);
     font-weight: 600;
     justify-content: flex-end;
+    position: relative;
   }
 
   footer span {
