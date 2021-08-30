@@ -1,10 +1,9 @@
 <template>
   <div class="flex flex-col items-center justify-center">
-    <img class="opacity-80 w-56" src="../../assets/empty-playground.svg" />
-    <p class="mt-8 font-medium text-xl text-cool-gray-500 text-center">
-      Write some grammar and click
+    <p class="font-medium text-lg leading-8 font-fira text-cool-gray-500 text-center">
+      Write some grammar and click<br />
       <span class="text-cyan-300">
-        Play
+        Play button
       </span>
       for some magic 🪄
     </p>
