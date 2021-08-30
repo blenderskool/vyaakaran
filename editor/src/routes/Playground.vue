@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { computed, DefineComponent, defineComponent, onMounted, onUnmounted, provide, ref } from 'vue';
+import { computed, defineComponent, provide, ref } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 import { useRoute } from 'vue-router';
 
@@ -54,6 +54,7 @@ import RegularGrammarPlayground from '../components/playgrounds/RegularGrammar.v
 import ContextFreeGrammarPlayground from '../components/playgrounds/ContextFreeGrammar.vue';
 
 import RegularGrammarAutomataExplainer from '../components/explainers/RegularGrammarAutomata.vue';
+import useKeyShortcut from '../utils/useKeyShortcut';
 
 const views = {
   RG: {
@@ -114,19 +115,9 @@ export default defineComponent({
       return { type: explain, view: views[playground.value.type][explain].view };
     };
 
-    const handleNewPlaygroundKeybind = (e: KeyboardEvent) => {
-      if (e.shiftKey && e.code === 'KeyN') {
-        e.preventDefault();
-        showNewPlaygroundModal.value = true;
-      }
-    };
-
-    onMounted(() => {
-      window.addEventListener('keydown', handleNewPlaygroundKeybind);
-    });
-
-    onUnmounted(() => {
-      window.removeEventListener('keydown', handleNewPlaygroundKeybind);
+    // New playground hotkey
+    useKeyShortcut((e) => e.shiftKey && e.code === 'KeyN', () => {
+      showNewPlaygroundModal.value = true;
     });
 
     return { playground, getView, showNewPlaygroundModal, pkg };
