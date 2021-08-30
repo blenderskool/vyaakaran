@@ -1,11 +1,14 @@
 <template>
-  <div class="fa-explorer">
+  <div class="fa-explorer h-screen pt-3">
     <PaneHeader>
-      <div class="header">
+      <div class="flex justify-between">
         <span>Finite Automaton</span>
-        <div class="controls">
+        <div class="flex space-x-2">
           <RadioTabs name="FA-type" :options="['ε-NFA', 'NFA']" v-model="faType" v-if="showTypeSelector" />
-          <a :download="`${name} - finite automaton`" class="secondary-btn save-figure" @click="saveFigure">
+          <button class="secondary-btn" @click="explainConversion" v-if="showExplainationOption">
+            Explain conversion
+          </button>
+          <a :download="`${name} - finite automaton`" class="secondary-btn" @click="saveFigure">
             Save figure
           </a>
         </div>
@@ -14,16 +17,18 @@
     <div v-if="isVisLoading" class="automata-large-message">
       Loading visualization...
     </div>
-    <div v-show="!isVisLoading" class="output" ref="outputRef" />
+    <div v-show="!isVisLoading" class="h-full" ref="outputRef" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onUnmounted, onUpdated, PropType, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
-import { edgeConfig, getNodeConfig, useVisNetwork } from '../../config/graph';
+import { edgeConfig, getNodeConfig } from '../../config/graph';
 import { SymbolType } from '../../../../compiler/src/regular-grammar/types';
 import { exportToImg, fillBg } from '../../utils/canvas';
+import useVisNetwork from '../../utils/useVisNetwork';
 
 import PaneHeader from '../ui/PaneHeader.vue';
 import RadioTabs from '../ui/RadioTabs.vue';
@@ -34,6 +39,7 @@ export default defineComponent({
     name: { type: String as PropType<string> },
     getGraph: { type: Function as PropType<Function>, required: true },
     showTypeSelector: { type: Boolean as PropType<boolean>, default: true },
+    showExplainationOption: { type: Boolean as PropType<boolean>, default: true },
   },
   components: {
     PaneHeader,
@@ -44,6 +50,7 @@ export default defineComponent({
     const outputRef = ref<HTMLElement>(null);
     const canvasRef = ref<HTMLCanvasElement>(null);
     const [isVisLoading, networkLib, dataLib] = useVisNetwork();
+    const router = useRouter();
     let network;
 
     const generateVisGraph = () => {
@@ -95,40 +102,22 @@ export default defineComponent({
       e.target.href = exportToImg(canvasRef.value);
     };
 
+    const explainConversion = () => {
+      router.push({ ...router.currentRoute.value, query: { explain: faType.value.toLowerCase() } });
+    };
+
     onUpdated(generateVisGraph);
     watch(() => faType.value, generateVisGraph);
     watch(() => isVisLoading, generateVisGraph);
     onUnmounted(() => network && network.destroy());
 
-    return { outputRef, faType, saveFigure, isVisLoading };
+    return { outputRef, faType, saveFigure, isVisLoading, explainConversion };
   }
 });
 </script>
 
-<style scoped>
-  .fa-explorer {
-    height: 100vh;
-    padding-top: 10px;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-  }
-  .header .controls {
-    display: flex;
-  }
-  .header .controls .save-figure {
-    margin-left: 8px;
-  }
-
-  .output {
-    height: 100%;
-  }
-</style>
-
 <style>
   .fa-explorer .vis-network:focus {
-    outline: none !important;
+    @apply !outline-none;
   }
 </style>

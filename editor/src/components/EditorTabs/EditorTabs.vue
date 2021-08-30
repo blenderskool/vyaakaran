@@ -1,6 +1,6 @@
 <template>
-  <header>
-    <ul class="tabs">
+  <header class="h-7 relative z-20 flex items-center justify-between bg-gray-850 border-b border-gray-900">
+    <ul class="h-full flex overflow-y-hidden overflow-x-auto max-w-full space-x-1.5 tabs">
       <Tab
         v-for="(tab, i) in tabs"
         :key="i"
@@ -12,8 +12,8 @@
         @rename="(name) => renameTab(i, name)"
         @remove="() => removeTab(i)"
       />
-      <Tab class="new-tab">
-        <button @click="() => $emit('new-playground')" title="Add a new tab [Shift + N]">
+      <Tab class="!opacity-100">
+        <button class="h-full px-2 text-blue-gray-600 focus:outline-none" @click="() => $emit('new-playground')" title="Add a new tab [Shift + N]">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
@@ -21,11 +21,11 @@
       </Tab>
     </ul>
 
-    <nav>
+    <nav class="mx-2 flex-shrink-0 text-xs text-cyan-300 font-medium">
       <a href="https://vyaakaran.vercel.app/docs/syntax" target="_blank">
         Learn Syntax
       </a>
-      <a href="https://vyaakaran.vercel.app/feedback" target="_blank">
+      <a class="mx-3" href="https://vyaakaran.vercel.app/feedback" target="_blank">
         Feedback
       </a>
     </nav>
@@ -75,45 +75,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  header {
-    height: 30px;
-    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.15);
-    position: relative;
-    z-index: 15;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .tabs {
-    height: 100%;
-    display: flex;
-    overflow-y: hidden;
-    overflow-x: auto;
-    max-width: 100%;
-  }
   .tabs::-webkit-scrollbar {
     height: 3px;
-  }
-
-  .tabs .new-tab {
-    opacity: 1;
-  }
-  .tabs .new-tab button {
-    height: 100%;
-    padding: 0 8px;
-    color: var(--blue-gray-500);
-    outline: none;
-  }
-
-  nav {
-    margin: 0 0.5rem;
-    flex-shrink: 0;
-  }
-  nav a {
-    margin: 0 0.75rem;
-    font-size: 0.75rem;
-    color: var(--cyan-300);
-    font-weight: 500;
   }
 </style>

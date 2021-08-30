@@ -1,7 +1,10 @@
 <template>
   <section class="regex-explorer">
-    <PaneHeader>Regular Expression</PaneHeader>
-    <p v-html="regexHTML" />
+    <PaneHeader class="py-2 px-5">Regular Expression</PaneHeader>
+    <p
+      class="font-medium text-sm py-6 px-5 text-cyan-300 font-fira whitespace-nowrap w-full overflow-x-auto regex"
+      v-html="regexHTML"
+    />
   </section>
 </template>
 
@@ -33,33 +36,21 @@ export default defineComponent({
 
 <style scoped>
   .regex-explorer p {
-    font-weight: 500;
-    font-size: 0.875rem;
-    padding: 1.5rem 1.25rem;
-    color: var(--cyan-300);
-    font-family: var(--font-family-code);
-    white-space: nowrap;
-    max-width: 100%;
-    overflow-x: auto;
     font-variant-ligatures: none;
-  }
-
-  header .info {
-    padding: 0.625rem 1.25rem;
   }
 </style>
 
 <style>
   .regex-explorer .closure,
   .regex-explorer .union {
-    color: var(--steel-blue-400);
+    @apply text-steel-blue-400;
   }
 
   .regex-explorer .concat {
-    color: var(--steel-blue-500);
+    @apply text-steel-blue-500;
   }
 
   .regex-explorer .bracket {
-    color: var(--blue-gray-500);
+    @apply text-blue-gray-600;
   }
 </style>

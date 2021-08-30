@@ -1,6 +1,6 @@
 <template>
-  <Modal title="New Playground" @close="() => $emit('close')">
-    <div class="languages">
+  <Modal :show="show" title="New Playground" @close="() => $emit('close')">
+    <div class="grid grid-cols-2 text-center gap-4">
       <button class="language" @click="() => addNewPlayground('RG')">
         <svg class="icon" width="32" height="32" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 11"><path d="M.516 9.208l.732-.108V4.588L.54 4.372v-.936l1.992-.264h.036l.336.252v.288l-.036.996h.036c.056-.184.184-.396.384-.636.2-.248.452-.46.756-.636a1.95 1.95 0 011.008-.276c.208 0 .368.028.48.084v2.088a1.642 1.642 0 00-.42-.228 1.582 1.582 0 00-.564-.084c-.288 0-.548.04-.78.12a1.983 1.983 0 00-.552.252V9.1l1.32.12V10H.516v-.792zM6.788 10.056a.6.6 0 01-.42-.168.55.55 0 01-.175-.413c0-.187.067-.338.203-.455a.727.727 0 01.504-.182.583.583 0 01.609.588c0 .196-.066.35-.196.462-.13.112-.306.168-.525.168zM12.548 10.132c-.896 0-1.664-.196-2.304-.588a3.765 3.765 0 01-1.452-1.608C8.464 7.256 8.3 6.484 8.3 5.62c0-.992.188-1.836.564-2.532a3.677 3.677 0 011.608-1.572c.704-.36 1.536-.54 2.496-.54.552 0 1.1.04 1.644.12.544.08 1.004.164 1.38.252l-.144 2.316h-1.44l-.336-1.584c-.072-.08-.204-.148-.396-.204-.184-.064-.436-.096-.756-.096-.712 0-1.264.316-1.656.948-.392.624-.588 1.532-.588 2.724 0 1.184.164 2.124.492 2.82.336.688.856 1.032 1.56 1.032.288 0 .548-.036.78-.108.24-.08.42-.18.54-.3V6.388l-1.116-.12v-.876h3.744v.876l-.6.096V9.52c-.136.008-.452.072-.948.192-.488.128-.928.228-1.32.3-.392.08-.812.12-1.26.12z" fill="currentColor"/></svg>
         <div class="label">
@@ -16,14 +16,14 @@
         </div>
       </button>
     </div>
-    <footer>
+    <footer class="text-xs font-medium text-center mt-6 text-cool-gray-500">
       Tip: Use <KeyboardKey>Shift</KeyboardKey> + <KeyboardKey>N</KeyboardKey> to quickly create a new playground
     </footer>
   </Modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, onUnmounted } from 'vue';
+import { defineComponent, nextTick, onMounted, onUnmounted, PropType, watchEffect } from 'vue';
 import router from '../router';
 import { newPlayground, playgrounds } from '../store/code';
 
@@ -32,12 +32,15 @@ import KeyboardKey from '../components/ui/KeyboardKey.vue';
 
 export default defineComponent({
   name: 'NewPlaygroundModal',
+  props: {
+    show: { type: Boolean as PropType<boolean>, required: true },
+  },
   emits: ['close'],
   components: {
     Modal,
     KeyboardKey,
   },
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const addNewPlayground = async (type) => {
       playgrounds.push(newPlayground('New Tab', type));
       await nextTick();
@@ -45,27 +48,29 @@ export default defineComponent({
       emit('close');
     };
 
-    const handleKeybinds = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.shiftKey || e.altKey) return;
- 
-      e.preventDefault();
-      switch (e.code) {
-        case 'KeyC':
-          addNewPlayground('CFG');
-          break;
-        case 'KeyR':
-          addNewPlayground('RG');
-          break;
+    watchEffect((onInvalidate) => {
+      const handleKeybinds = (e: KeyboardEvent) => {
+        if (!props.show) return;
+        if (e.ctrlKey || e.shiftKey || e.altKey) return;
+  
+        e.preventDefault();
+        switch (e.code) {
+          case 'KeyC':
+            addNewPlayground('CFG');
+            break;
+          case 'KeyR':
+            addNewPlayground('RG');
+            break;
+        };
       };
-    };
 
-    onMounted(() => {
+      onInvalidate(() => {
+        window.removeEventListener('keydown', handleKeybinds);
+      });
+
       window.addEventListener('keydown', handleKeybinds);
     });
 
-    onUnmounted(() => {
-      window.removeEventListener('keydown', handleKeybinds);
-    });
 
     return { addNewPlayground };
   },
@@ -73,52 +78,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .languages {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    text-align: center;
-    gap: 1rem;
-  }
-
   .language {
-    padding: 1rem;
-    border-radius: 4px;
-    border: 2px solid var(--cool-gray-600);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: block;
-    outline: none;
-    box-shadow: 0 3px 8px rgba(var(--black-rgb), 0.3);
-  }
-
-  .language:hover,
-  .language:focus {
-    color: var(--cyan-300);
-    border-color: var(--cyan-500);
-    background-color: rgba(var(--cyan-300-rgb), 0.08);
+    @apply p-4 rounded border-2 border-solid border-gray-700 font-medium cursor-pointer transition block shadow-md focus:outline-none hover:(border-cyan-500 text-cyan-300 bg-cyan-500 bg-opacity-10);
   }
 
   .language .icon {
-    display: inline-block;
-    margin-bottom: 1rem;
+    @apply inline-block mb-4;
   }
 
   .language .label {
-    color: var(--cool-gray-500);
-    transition: color 0.2s ease;
+    @apply text-cool-gray-500 transition text-sm;
   }
-
-  .language:hover .label,
-  .language:focus .label {
-    color: var(--cyan-500);
-  }
-
-  footer {
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-align: center;
-    margin-top: 1.5rem;
-    color: var(--cool-gray-500);
+  .language:hover .label {
+    @apply text-cyan-500;
   }
 </style>

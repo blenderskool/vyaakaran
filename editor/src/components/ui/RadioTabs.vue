@@ -1,6 +1,11 @@
 <template>
-  <div class="radio-tabs">
-    <label class="secondary-btn" :class="{ checked: opt === modelValue }" v-for="opt in options" :key="opt">
+  <div class="flex">
+    <label
+      class="secondary-btn rounded-none first-of-type:rounded-l last-of-type:rounded-r"
+      :class="{ 'border-1 border-solid border-cyan-300 bg-cyan-500 bg-opacity-10 text-cyan-300': opt === modelValue }"
+      v-for="opt in options"
+      :key="opt"
+    >
       {{ opt }}
       <input type="radio" :name="name" @change="onChange" :checked="opt === modelValue" :value="opt" hidden />
     </label>
@@ -24,27 +29,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-  label {
-    border-radius: 0;
-  }
-  label:first-of-type {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-  }
-  label:last-of-type {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-  }
-
-  label.checked {
-    border: 1px solid var(--cyan-300);
-    background-color: rgba(var(--cyan-300-rgb), 0.08);
-    color: var(--cyan-300);
-  }
-
-  .radio-tabs {
-    display: flex;
-  }
-</style>

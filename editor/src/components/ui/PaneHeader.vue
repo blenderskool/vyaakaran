@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="pt-0.5 px-5 pb-2 font-medium relative z-10 text-xs bg-gray-800 select-none">
     <div class="info">
       <slot />
     </div>
@@ -13,15 +13,3 @@ export default defineComponent({
   name: 'PaneHeader',
 });
 </script>
-
-<style scoped>
-  header {
-    padding: 3px 20px 9px;
-    font-weight: 500;
-    position: relative;
-    z-index: 10;
-    font-size: 14px;
-    background-color: var(--gray-800);
-    user-select: none;
-  }
-</style>

@@ -3,7 +3,7 @@
     <Pane min-size="6.5">
       <FiniteAutomataExplorer :getGraph="getAutomataGraph" :key="`FA ${store.value.progKey}`" :name="store.value.name" />
     </Pane>
-    <Pane min-size="4" max-size="16" size="16">
+    <Pane min-size="3.5" max-size="16" size="16">
       <RegExExplorer :compiled="store.value.compiled" :key="`RegEx ${store.value.progKey}`" />
     </Pane>
   </Splitpanes>

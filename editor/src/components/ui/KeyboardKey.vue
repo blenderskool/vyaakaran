@@ -1,5 +1,5 @@
 <template>
-  <span class="key">
+  <span class="bg-gray-900 rounded py-0.5 px-1.5 inline-flex items-center justify-center text-xxs font-semibold text-center">
     <slot />
   </span>
 </template>
@@ -11,16 +11,3 @@ export default defineComponent({
   name: 'KeyboardKey',
 })
 </script>
-
-<style scoped>
-  .key {
-    background-color: var(--gray-900);
-    padding: 4px 6px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    font-size: 0.625rem;
-    text-align: center;
-  }
-</style>

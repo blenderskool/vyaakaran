@@ -1,12 +1,12 @@
 <template>
-  <Pane class="parser-explorer" min-size="5" size="93">
+  <Pane class="pt-2" min-size="5" size="93">
     <PaneHeader>
-      <div class="header">
+      <div class="flex justify-between">
         <span>Parsing table</span>
         <RadioTabs name="FA-type" :options="['LL(1)', 'LR(0)', 'SLR(1)', 'LR(1)', 'LALR(1)']" v-model="tableType" />
       </div>
     </PaneHeader>
-    <div class="output-container">
+    <div class="px-12 pb-16 h-full">
       <LL1ParseTable v-if="tableType === 'LL(1)'" :compiled="store.value.compiled" :table="parser.parseTable" />
       <LR0ParseTable
         v-if="tableType !== 'LL(1)'"
@@ -15,10 +15,14 @@
         :actionTableColumns="parser.actionTableColumns"
         :gotoTableColumns="parser.gotoTableColumns"
       />
-      <div class="notes">
-        <h4 v-if="parser.conclusions.length">Analysis</h4>
-        <ul>
-          <li v-for="conclusion in parser.conclusions" :key="conclusion">{{ conclusion }}</li>
+      <div class="mt-6 text-sm">
+        <h4 class="uppercase tracking-[1px] font-semibold text-xs text-cool-gray-500 mb-1" v-if="parser.conclusions.length">
+          Analysis
+        </h4>
+        <ul class="list-disc">
+          <li v-for="conclusion in parser.conclusions" :key="conclusion" class="leading-7">
+            {{ conclusion }}
+          </li>
         </ul>
       </div>
     </div>
@@ -88,59 +92,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .header {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .parser-explorer {
-    padding-top: 10px;
-  }
-
-  .output-container {
-    padding: 0 3rem 3rem;
-    max-height: 100%;
-    height: 100%;
-    overflow-y: auto;
-  }
-
-  .notes {
-    margin-top: 2rem;
-    font-size: 0.875rem;
-  }
-
-  .notes ul {
-    list-style-type: disc;
-  }
-
-  .notes li {
-    line-height: 1.75;
-  }
-
-  .notes li::marker {
-    color: var(--cool-gray-600);
-  }
-
-  .notes h4 {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    color: var(--cool-gray-500);
-    margin-bottom: 0.25rem;
+  li::marker {
+    @apply text-cool-gray-600;
   }
 </style>
 
 <style>
   .parse-table {
-    margin-top: 1rem;
-    overflow: auto;
-    max-width: 100%;
+    @apply mt-4 overflow-auto max-w-full text-xs;
     max-height: calc(100% - 9rem);
-    font-size: 0.875rem;
   }
 
   .parse-table td.conflict {
-    background-color: rgba(var(--red-500-rgb), 0.15);
+    @apply bg-red-500 bg-opacity-10;
   }
 </style>

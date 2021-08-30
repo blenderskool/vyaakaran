@@ -1,5 +1,5 @@
 <template>
-  <div class="editor" ref="editorRef" />
+  <div class="text-left overflow-hidden h-full w-full" ref="editorRef" />
 </template>
 
 <script lang="ts">
@@ -44,17 +44,8 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-  .editor {
-    text-align: left;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-  }
-</style>
-
 <style>
 .monaco-editor .margin-view-overlays .line-numbers {
-  font-size: 12px;
+  @apply text-xs;
 }
 </style>

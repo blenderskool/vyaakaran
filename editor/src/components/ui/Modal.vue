@@ -1,18 +1,22 @@
 <template>
   <teleport to="body">
-    <div class="modal-wrapper">
-      <div class="modal">
-        <header>
-          <span>{{ title }}</span>
-          <button class="close-btn" @click="() => $emit('close')">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </header>
-        <slot />
+    <FadeTransition>
+      <div v-if="show" class="fixed z-50 inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center pointer-events-none">
+        <GrowSlideTransition>
+          <div v-if="show" class="bg-gray-800 rounded-md shadow-xl px-6 py-4 pointer-events-auto">
+            <header class="mb-6 text-sm font-medium flex justify-between items-center">
+              <h3 class="text-lg font-semibold">{{ title }}</h3>
+              <button class="w-5 h-5 text-blue-gray-600 focus:outline-none transition hover:text-steel-blue-100" @click="() => $emit('close')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </header>
+            <slot />
+          </div>
+        </GrowSlideTransition>
       </div>
-    </div>
+    </FadeTransition>
   </teleport>
 </template>
 
@@ -22,6 +26,10 @@ import { defineComponent, onMounted, onUnmounted, PropType } from 'vue';
 export default defineComponent({
   name: 'Modal',
   props: {
+    show: {
+      type: Boolean as PropType<boolean>,
+      required: true,
+    },
     title: {
       type: String as PropType<string>,
       required: true,
@@ -46,46 +54,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-  .modal-wrapper {
-    position: fixed;
-    z-index: 100;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-color: rgba(var(--black-rgb), 0.6);
-    backdrop-filter: blur(2px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal {
-    background-color: var(--gray-800);
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.8);
-    padding: 1rem;
-  }
-
-  .modal header {
-    margin-bottom: 1.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .modal header .close-btn {
-    width: 20px;
-    height: 20px;
-    color: var(--blue-gray-500);
-    outline: none;
-    transition: all 0.2s ease;
-  }
-  .modal header .close-btn:hover {
-    color: var(--steel-blue-100);
-  }
-</style>

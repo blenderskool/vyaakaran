@@ -26,12 +26,6 @@ export default defineComponent({
 </script>
 
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
   :root {
     --white-rgb: 255, 255, 255;
     --blue-gray-500: #475569;
@@ -65,95 +59,54 @@ export default defineComponent({
     --font-family-code: 'Fira Code', monospace;
   }
 
-  ul, ol {
-    list-style: none;
-  }
-
   body {
-    background-color: var(--gray-800);
-    font-family: var(--font-family-sans);
-    color: var(--steel-blue-100);
-    overflow: hidden;
+    @apply bg-gray-800 font-sans text-steel-blue-100 overflow-hidden;
   }
 
   button {
-    border: none;
-    color: inherit;
-    font-family: var(--font-family-sans);
-    background-color: transparent;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
+    @apply bg-transparent cursor-pointer inline-flex items-center justify-center text-sm;
   }
   .secondary-btn {
-    padding: 2px 15px;
-    background-color: rgba(var(--white-rgb), 0.05);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    user-select: none;
-    border: 1px solid var(--cool-gray-500);
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(var(--black-rgb), 0.15);
+    @apply py-0.5 px-4 bg-cool-gray-400 bg-opacity-10 text-xs font-semibold cursor-pointer select-none rounded shadow border border-solid border-cool-gray-500 transition-colors hover:bg-opacity-20 focus:outline-none;
   }
 
   input {
-    font-family: var(--font-family-sans);
-    font-weight: 500;
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
+    @apply font-sans font-medium;
   }
 
   *::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    @apply w-2 h-2;
   }
  
   *::-webkit-scrollbar-track {
-    background-color: transparent;
+    @apply bg-transparent;
   }
   
   *::-webkit-scrollbar-thumb {
-    background-color: rgba(var(--steel-blue-100-rgb), 0.2);
+    @apply bg-steel-blue-100 bg-opacity-20;
   }
 
   table {
-    border-collapse: separate;
+    @apply border border-solid !border-blue-gray-600 whitespace-nowrap font-medium inline-block font-fira table-fixed !border-separate;
     border-spacing: 0;
-    table-layout: fixed;
-    font-family: var(--font-family-code);
-    display: inline-block;
-    font-weight: 500;
-    white-space: nowrap;
-    border: 1px solid var(--blue-gray-500);
+    outline: none;
   }
 
   td, th {
-    border: 1px solid var(--blue-gray-500);
-    padding: 0.5rem 1rem;
+    @apply border border-solid border-blue-gray-600 py-2 px-4;
   }
 
   table thead th {
-    position: sticky;
-    top: 0;
+    @apply sticky top-0 bg-gray-800;
     z-index: 2;
-    background: var(--gray-800);
   }
   table tbody th {
-    position: sticky;
-    left: 0;
-    background: var(--gray-800);
+    @apply sticky left-0 bg-gray-800;
     z-index: 1;
   }
 
   .splitpanes__splitter:active::after {
-    box-shadow: 0 0 5px rgba(var(--black-rgb), 0.9);
-    background-color: var(--blue-gray-500);
+    @apply bg-blue-gray-600 shadow;
   }
 
   .splitpanes--vertical > .splitpanes__splitter {
@@ -161,32 +114,24 @@ export default defineComponent({
   }
 
   .splitpanes--horizontal > .splitpanes__splitter {
+    @apply relative;
     min-height: 11px !important;
-    position: relative;
   }
   .splitpanes--horizontal > .splitpanes__splitter::after {
+    @apply absolute left-0 top-1 right-0 h-px bg-cool-gray-600 transition;
     content: '';
-    position: absolute;
-    left: 0;
-    top: 5px;
-    right: 0;
-    height: 1px;
-    background-color: var(--cool-gray-600);
-    transition: box-shadow 0.2s ease;
   }
 
   .hljs-terminal {
-    color: var(--cyan-300);
-    font-style: italic;
+    @apply text-cyan-300 italic;
   }
   .hljs-separator {
-    color: var(--blue-gray-500);
+    @apply text-blue-gray-600;
   }
   .hljs-operator {
-    color: var(--steel-blue-500);
+    @apply text-steel-blue-500;
   }
   .hljs-keyword {
-    color: var(--cyan-600);
-    font-weight: 600;
+    @apply text-cyan-600 font-semibold;
   }
 </style>

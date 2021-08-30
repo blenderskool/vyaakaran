@@ -1,13 +1,13 @@
 <template>
   <PaneHeader>
-    <div class="header">
+    <div class="flex justify-between">
       Parsing Automaton
       <a :download="`${name} - parsing automaton`" v-if="automataExists && !isGraphHuge" class="secondary-btn" @click="saveFigure">
         Save figure
       </a>
     </div>
   </PaneHeader>
-  <p v-if="!automataExists" class="no-automata-message">
+  <p v-if="!automataExists" class="mt-4 px-5 text-cool-gray-500 font-medium">
     LL(1) parser has no automaton
   </p>
   <div v-if="isGraphHuge" class="automata-large-message">
@@ -17,7 +17,7 @@
   <div v-else-if="isVisLoading" class="automata-large-message">
     Loading visualization...
   </div>
-  <div v-show="!isGraphHuge || !isVisLoading" class="output" ref="outputRef" />
+  <div v-show="!isGraphHuge || !isVisLoading" class="h-full outline-none" ref="outputRef" />
 </template>
 
 <script lang="ts">
@@ -25,7 +25,8 @@ import { defineComponent, onUnmounted, onUpdated, PropType, ref, watch } from 'v
 
 import { State, OrderedHashSet } from '../../../../compiler/src/utils';
 import { exportToImg, fillBg } from '../../utils/canvas';
-import { edgeConfig, getNodeConfig, useVisNetwork } from '../../config/graph';
+import { edgeConfig, getNodeConfig } from '../../config/graph';
+import useVisNetwork from '../../utils/useVisNetwork';
 import PaneHeader from '../ui/PaneHeader.vue';
 
 export default defineComponent({
@@ -133,22 +134,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-  .output {
-    height: 100%;
-    outline: none;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .no-automata-message {
-    margin-top: 1rem;
-    padding: 0 1.25rem;
-    color: var(--cool-gray-500);
-    font-weight: 500;
-  }
-</style>

@@ -1,7 +1,7 @@
 <template>
-  <div class="first-follow-explorer">
+  <div class="h-full">
     <PaneHeader>First &amp; Follow sets</PaneHeader>
-    <table>
+    <table class="mt-4 mx-5 max-w-11/12 text-sm overflow-auto">
       <thead>
         <tr>
           <th />
@@ -13,14 +13,14 @@
         <tr v-for="nonterminal in compiled.nonterminals" :key="nonterminal">
           <td>{{ nonterminal }}</td>
           <td>
-            <span class="bracket">{&nbsp;</span>
+            <span class="text-cool-gray-600">{&nbsp;</span>
             <span v-html="hljs.highlight('vyaakaran grammar', [...firstSets[nonterminal]].join('. ')).value" />
-            <span class="bracket">&nbsp;}</span>
+            <span class="text-cool-gray-600">&nbsp;}</span>
           </td>
           <td>
-            <span class="bracket">{&nbsp;</span>
+            <span class="text-cool-gray-600">{&nbsp;</span>
             <span v-html="hljs.highlight('vyaakaran grammar', [...followSets[nonterminal]].join('. ')).value" />
-            <span class="bracket">&nbsp;}</span>
+            <span class="text-cool-gray-600">&nbsp;}</span>
           </td>
         </tr>
       </tbody>
@@ -59,18 +59,6 @@ export default defineComponent({
 
 <style scoped>
   table {
-    margin: 1rem 20px 0 20px;
-    overflow: auto;
-    max-width: 95%;
     max-height: calc(100% - 3.5rem);
-    font-size: 0.875rem;
-  }
-
-  .first-follow-explorer {
-    height: 100%;
-  }
-
-  .bracket {
-    color: var(--cool-gray-600);
   }
 </style>
