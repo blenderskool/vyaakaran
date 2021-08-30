@@ -67,7 +67,9 @@ export default defineComponent({
     @apply bg-transparent cursor-pointer inline-flex items-center justify-center text-sm;
   }
   .secondary-btn {
-    @apply py-0.5 px-4 bg-cool-gray-400 bg-opacity-10 text-xs font-semibold cursor-pointer select-none rounded shadow border border-solid border-cool-gray-500 transition-colors hover:bg-opacity-20 focus:outline-none;
+    @apply py-0.5 px-4 bg-cool-gray-400 bg-opacity-10 text-xs font-semibold cursor-pointer select-none rounded shadow
+    @apply border border-solid border-cool-gray-500 transition;
+    @apply hover:bg-opacity-20 focus:outline-none disabled:(opacity-50 cursor-not-allowed);
   }
 
   input {

@@ -5,7 +5,7 @@
         <span>Finite Automaton</span>
         <div class="flex space-x-2">
           <RadioTabs name="FA-type" :options="['ε-NFA', 'NFA']" v-model="faType" v-if="showTypeSelector" />
-          <button class="secondary-btn" @click="explainConversion" v-if="showExplainationOption">
+          <button class="secondary-btn" @click="explainConversion" v-if="showExplainationOption" :disabled="faType === 'NFA'">
             Explain conversion
           </button>
           <a :download="`${name} - finite automaton`" class="secondary-btn" @click="saveFigure">

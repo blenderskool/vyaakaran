@@ -271,11 +271,11 @@ class IterateGenerator<T, TReturn, TNext> {
   }
 
   prev(): IteratorResult<T, TReturn> | undefined {
-    --this.position;
-    if (this.position < 0) {
+    if (this.position <= 0) {
       return undefined;
     }
 
+    --this.position;
     return this.history[this.position];
   }
 }
