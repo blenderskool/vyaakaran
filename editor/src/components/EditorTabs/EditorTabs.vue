@@ -33,8 +33,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
 import { playgrounds, Playground, getActivePlayground } from '../../store/code';
+import useKeyShortcut from '../../utils/useKeyShortcut';
 import Tab from './Tab.vue';
 
 export default defineComponent({
@@ -43,34 +45,46 @@ export default defineComponent({
     Tab,
   },
   emits: ['new-playground'],
-  computed: {
-    tabIdx() {
-      const id = Number(this.$route.params.id);
-      return id || 0;
-    },
-    tabs() {
-      return playgrounds.map(p => ({ name: p.name, lang: p.type }));
-    },
-  },
-  methods: {
-    removeTab(i) {
+  setup() {
+    const tabs = computed(() => playgrounds.map(p => ({ name: p.name, lang: p.type })));
+    const router = useRouter();
+    const tabIdx = computed(() => Number(router.currentRoute.value.params.id) || 0);
+
+    const removeTab = (i: number) => {
       const mutate = () => {
         playgrounds.splice(i, 1);
       };
 
-      if (i <= this.tabIdx) {
-        this.$router.replace(`${this.tabIdx - 1 >= 0 ? this.tabIdx - 1 : this.tabIdx}`).then(mutate);
+      if (i <= tabIdx.value) {
+        router.replace(`${tabIdx.value - 1 >= 0 ? tabIdx.value - 1 : tabIdx.value}`).then(mutate);
       } else {
         mutate();
       }
-    },
-    renameTab(i, name) {
+    };
+
+    const renameTab = (i: number, name: string) => {
       if (!name) return;
 
       // NOTE: This assumes that the tab being renamed is the active tab. Might change later
       (getActivePlayground() as Playground).name = name;
-    },
-  },
+    };
+
+    // Next tab navigate hotkey
+    useKeyShortcut((e) => e.ctrlKey && e.code === 'ArrowRight', () => {
+      if (tabIdx.value !== playgrounds.length - 1) {
+        router.replace(`${tabIdx.value + 1}`);
+      }
+    });
+
+    // Previous tab navigate hotkey
+    useKeyShortcut((e) => e.ctrlKey && e.code === 'ArrowLeft', () => {
+      if (tabIdx.value !== 0) {
+        router.replace(`${tabIdx.value - 1}`);
+      }
+    });
+
+    return { tabs, tabIdx, removeTab, renameTab };
+  }
 });
 </script>
 
