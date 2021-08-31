@@ -1,14 +1,21 @@
 #!/bin/bash
 
-# npm install inside website and editor if node_modules folder is not present
-if [ ! -d "./website/node_modules" ] 
+# npm install inside compiler, website and editor if node_modules folder is not present
+if [ ! -d "./compiler/node_modules" ] 
+then
+    pushd ./compiler
+        npm install
+    popd
+fi
+
+if [ ! -d "./website/node_modules" ]
 then
     pushd ./website
         npm install
     popd
 fi
 
-if [ ! -d "./editor/node_modules" ] 
+if [ ! -d "./editor/node_modules" ]
 then
     pushd ./editor
         npm install
