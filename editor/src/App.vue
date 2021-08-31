@@ -26,39 +26,6 @@ export default defineComponent({
 </script>
 
 <style>
-  :root {
-    --white-rgb: 255, 255, 255;
-    --blue-gray-500: #475569;
-    --cool-gray-500: #6B7280;
-    --cool-gray-600: #444c55;
-    --gray-800: #27272A;
-    --gray-900: #18181B;
-    --black: #000000;
-    --black-rgb: 0, 0, 0;
-
-    --green-400: #34D399;
-
-    --cyan-300: #67E8F9;
-    --cyan-300-rgb: 56, 189, 248;
-    --cyan-400: #22D3EE;
-    --cyan-500: #06B6D4;
-    --cyan-600: #0891B2;
-
-    --red-500: #EF4444;
-    --red-500-rgb: 239, 68, 68;
-
-    --orange-400: #FB923C;
-    --orange-400-rgb: 251, 146, 60;
-
-    --steel-blue-100: #d6e9ff;
-    --steel-blue-100-rgb: 214, 233, 255;
-    --steel-blue-400: #88b4e7;
-    --steel-blue-500: #64748B;
-
-    --font-family-sans: 'Inter', sans-serif;
-    --font-family-code: 'Fira Code', monospace;
-  }
-
   body {
     @apply bg-gray-800 font-sans text-steel-blue-100 overflow-hidden;
   }
