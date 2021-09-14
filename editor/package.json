@@ -1,6 +1,6 @@
 {
-  "name": "editor",
-  "version": "0.1.0",
+  "name": "vyaakaran-editor",
+  "version": "0.2.0",
   "author": "Akash Hamirwasia",
   "scripts": {
     "dev": "vite",
