@@ -70,14 +70,14 @@ export default defineComponent({
     };
 
     // Next tab navigate hotkey
-    useKeyShortcut((e) => e.ctrlKey && e.code === 'ArrowRight', () => {
+    useKeyShortcut((e) => e.shiftKey && e.altKey && e.code === 'ArrowRight', () => {
       if (tabIdx.value !== playgrounds.length - 1) {
         router.replace(`${tabIdx.value + 1}`);
       }
     });
 
     // Previous tab navigate hotkey
-    useKeyShortcut((e) => e.ctrlKey && e.code === 'ArrowLeft', () => {
+    useKeyShortcut((e) => e.shiftKey && e.altKey && e.code === 'ArrowLeft', () => {
       if (tabIdx.value !== 0) {
         router.replace(`${tabIdx.value - 1}`);
       }
