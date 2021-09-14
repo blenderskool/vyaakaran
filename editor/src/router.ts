@@ -52,7 +52,7 @@ const router = createRouter({
         } else {
           return next();
         }
-      }
+      },
     },
   ],
 });
@@ -63,6 +63,11 @@ router.afterEach((to) => {
     window.gtag('config', 'UA-82138003-6', {
       page_path: to.path,
     });
+  }
+
+  // Update page title to new tab's name
+  if (to.name === 'Playground') {
+    document.title = `${playgrounds[Number(to.params.id)].name} | Vyaakaran Playground`;
   }
 });
 

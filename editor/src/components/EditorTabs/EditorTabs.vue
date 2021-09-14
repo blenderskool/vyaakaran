@@ -67,6 +67,8 @@ export default defineComponent({
 
       // NOTE: This assumes that the tab being renamed is the active tab. Might change later
       (getActivePlayground() as Playground).name = name;
+      // Update page title
+      document.title = `${name} | Vyaakaran Playground`;
     };
 
     // Next tab navigate hotkey
