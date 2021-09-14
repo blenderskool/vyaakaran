@@ -18,7 +18,7 @@
         v-for="error in store.value.consoleStream"
         :key="error.timestamp"
         :class="error.type.toLowerCase()"
-        class="border-b border-solid border-gray-800 py-3 px-5 flex items-center text-sm"
+        class="border-b border-dashed border-gray-800 py-3 px-5 flex items-center text-sm"
       >
         <svg v-if="error.type === 'Error'" class="flex-shrink-0" width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
