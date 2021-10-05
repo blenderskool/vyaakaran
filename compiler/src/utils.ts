@@ -12,6 +12,27 @@ function isUpperAlpha(char: string) {
   return charCode >= 65 && charCode <= 90;
 }
 
+/**
+ * Generates a random integer in range [lower, upper]
+ * @param upper Upper bound (inclusive)
+ * @param lower Lower bound (inclusive)
+ * @returns Random integer within the range [lower, upper]
+ */
+function randInt(upper: number, lower: number = 0) {
+  return Math.floor(Math.random() * (upper - lower)) + lower;
+}
+
+/**
+ * Shuffles an array by mutation
+ * @param array Array to shuffle
+ */
+function shuffle<T>(array: T[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = randInt(i + 1);
+      [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 interface HashSetElement {
   hash: () => string;
   toString: () => string;
@@ -280,4 +301,15 @@ class IterateGenerator<T, TReturn, TNext> {
   }
 }
 
-export { isUpperAlpha, HashSet, OrderedHashSet, SimplifiedGrammarRepresentation, GrammarRule, State, IterateGenerator, getGeneratorReturn };
+export {
+  isUpperAlpha,
+  randInt,
+  shuffle,
+  HashSet,
+  OrderedHashSet,
+  SimplifiedGrammarRepresentation,
+  GrammarRule,
+  State,
+  IterateGenerator,
+  getGeneratorReturn
+};
