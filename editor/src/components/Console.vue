@@ -33,7 +33,7 @@
           {{ error.timestamp.toLocaleTimeString() }}
         </div> -->
         <div class="ml-4">
-          <span v-html="error.message.replaceAll('\n', '<br>')" />
+          <span v-html="error.message.replace(/\n/g, '<br>')" />
         </div>
       </li>
     </ul>
