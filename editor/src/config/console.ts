@@ -1,81 +1,98 @@
 import { EarleyParser } from '../../../compiler/src/validator';
 import { RandomStringGenerator } from '../../../compiler/src/generator';
-import { ConsoleStream, getActivePlayground, Playground } from '../store/code';
 import { ParseTree } from '../../../compiler/src/regular-grammar/types';
 import { SimplifiedGrammarRepresentation } from '../../../compiler/src/utils';
+import { JitterConsole, pushToStream } from '../utils/JitterConsole';
+import { ConsoleStream } from '../store/code';
+import pkg from '../../package.json';
 
-type Command = (_: string) => ConsoleStream[];
+const vykrnConsole = new JitterConsole({
+  name: 'Vyaakaran console',
+  version: pkg.version,
+  commands: {
+    'strings': {
+      description: 'Generates atmost [count] random strings that are part of the language.<br/>Use "--no-accept" to generate strings not part of the language.',
+      args: [
+        {
+          name: 'count',
+          type: Number,
+          default: 10,
+        }
+      ],
+      options: {
+        'accept': {
+          type: Boolean,
+          default: true,
+        }
+      },
+      handler(playground, options, args) {
+        const count = args.count as number;
+    
+        if (isNaN(count)) {
+          pushToStream(playground, 'Error', `Invalid value for 'count' passed`);
+          return;
+        }
 
-function newStream(type: ConsoleStream['type'], message: string | string[]): ConsoleStream[] {
-  if (!Array.isArray(message)) {
-    message = [ message ];
+        if (!playground.compiled?.parseTree) return pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
+    
+        const generator = new RandomStringGenerator(new SimplifiedGrammarRepresentation(playground.compiled?.parseTree));
+        try {
+          const strings = options.accept ? generator.acceptableAtMost(count) : generator.unacceptableAtMost(count);
+          pushToStream(playground, 'Success', `${strings.size} unique ${options.accept ? 'acceptable' : 'unacceptable'} strings were generated`);
+          pushToStream(playground, 'Output', [...strings]);
+        } catch(err: any) {
+          console.error(err);
+          pushToStream(playground, 'Error', err.message);
+        }
+      }
+    },
+    'compile': {
+      description: 'Compile the program',
+      handler(playground) {
+        playground.compile();
+      }
+    },
+    'clear': {
+      description: 'Clear the console',
+      handler(playground) {
+        playground.consoleStream = [];
+      }
+    },
+    'test': {
+      description: 'Test if the string is part of language defined',
+      args: [
+        {
+          name: 'string',
+          type: String,
+        }
+      ],
+      handler(playground, options, args) {
+        const str = args.string as string;
+
+        // if (str === undefined) return newStream('Error', `String to match is not defined. Usage: test "a b b e"`);
+        if (!playground.compiled?.parseTree) {
+          pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
+        }
+
+        const parseTreeCount = new EarleyParser(playground.compiled?.parseTree as ParseTree).isParsable(str);
+        if (parseTreeCount > 1) {
+          pushToStream(playground, 'Warning', `"${str}" was matched with ambiguity`);
+        } else if (parseTreeCount === 1) {
+          pushToStream(playground, 'Success', `"${str}" was accepted`);
+        } else {
+          pushToStream(playground, 'Warning', `"${str}" did not get accepted`);
+        }
+      }
+    }
   }
+});
 
-  return message.map((msg) => ({
-    type,
-    message: msg,
-    timestamp: new Date(),
-  }));
+function executeCommand(input: string, stream: ConsoleStream[]) {
+  try {
+    vykrnConsole.parse(input);
+  } catch(err: any) {
+    stream.push({ type: 'Error', message: err.message, timestamp: new Date() });
+  }
 }
 
-const COMMANDS: Record<string, Command> = {
-  'help': () => newStream(
-    'Output',
-    [
-      `> clear - Clear the console.`,
-      `> compile - Compile the program.`,
-      `> help - List of all supported commands.`,
-      `> strings - Generates atmost [count] random strings of language.
-      &nbsp;&nbsp;Usage: strings [count] where count is 10 by default.`,
-      `> test - Test if the string is part of language defined.
-      &nbsp;&nbsp;Usage: test "a b b e" where ' ' separates different symbols.`,
-    ],
-  ),
-  'compile': () => {
-    const playground = getActivePlayground() as Playground;
-    playground.compile();
-    return newStream('Output', 'Compiling...');
-  },
-  'clear': () => {
-    const playground = getActivePlayground() as Playground;
-    playground.consoleStream = [];
-    return newStream('Output', 'Console cleared');
-  },
-  'test': (input: string) => {
-    const playground = getActivePlayground() as Playground;
-    const match = input.match(/test "(.*)"/)?.[1];
-
-    if (match === undefined) return newStream('Error', `String to match is not defined. Usage: test "a b b e"`);
-    if (!playground.compiled?.parseTree) return newStream('Error', `Program is not compiled yet. Run 'compile'`);
-
-    const parseTreeCount = new EarleyParser(playground.compiled?.parseTree as ParseTree).isParsable(match);
-    if (parseTreeCount > 1) {
-      return newStream('Warning', `"${match}" was matched with ambiguity`);
-    } else if (parseTreeCount === 1) {
-      return newStream('Success', `"${match}" was matched`);
-    } else {
-      return newStream('Warning', `"${match}" did not get accepted`);
-    }
-  },
-  'strings': (input: string) => {
-    const match = input.match(/strings (.*)/)?.[1];
-    const count = parseInt(match as string);
-
-    if (match !== undefined && isNaN(count)) {
-      return newStream('Error', `"${match}" is not a valid number`);
-    }
-    const playground = getActivePlayground() as Playground;
-
-    if (!playground.compiled?.parseTree) return newStream('Error', `Program is not compiled yet. Run 'compile'`);
-
-    const generator = new RandomStringGenerator(new SimplifiedGrammarRepresentation(playground.compiled?.parseTree));
-    const strings = generator.generateAtMost(match === undefined ? undefined : count);
-
-    return [
-      ...newStream('Success', `${strings.size} unique strings were generated`),
-      ...newStream('Output', [...strings]),
-    ];
-  },
-};
-
-export { COMMANDS };
+export { executeCommand };

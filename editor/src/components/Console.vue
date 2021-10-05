@@ -1,5 +1,5 @@
 <template>
-  <Pane class="flex flex-col" min-size="3.5" v-life:updated="scrollToBottom" max-size="50">
+  <Pane class="console flex flex-col" min-size="3.5" v-life:updated="scrollToBottom" max-size="50">
     <PaneHeader>
       <div class="flex justify-between items-center">
         <span>Console</span>
@@ -29,9 +29,9 @@
         <svg v-else-if="error.type === 'Success'" class="flex-shrink-0" width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
-        <div class="ml-2 text-xs text-gray-500 whitespace-nowrap">
+        <!-- <div class="ml-2 text-xs text-gray-500 whitespace-nowrap">
           {{ error.timestamp.toLocaleTimeString() }}
-        </div>
+        </div> -->
         <div class="ml-4">
           <span v-html="error.message.replaceAll('\n', '<br>')" />
         </div>
@@ -50,10 +50,9 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, inject, ref } from 'vue';
+import { computed, ComputedRef, defineComponent, inject, onMounted, ref } from 'vue';
 import { Pane }  from 'splitpanes';
 import PaneHeader from './ui/PaneHeader.vue';
-import { COMMANDS } from '../config/console'; 
 import { Playground } from '../store/code';
 
 export default defineComponent({
@@ -63,30 +62,9 @@ export default defineComponent({
     Pane,
   },
   inject: ['store'],
-  methods: {
-    submitCommand() {
-      const command = this.inputCommand.trim().split(' ')[0];
-
-      if (COMMANDS[command]) {
-        this.store.value.consoleStream.push(...COMMANDS[command](this.inputCommand));
-      } else {
-        this.store.value.consoleStream.push({ type: 'Error', message: `Command '${command}' was not found. Type 'help' for list of supported commands`, timestamp: new Date() });
-      }
-      this.inputCommand = '';
-    },
-    consoleKeyHandler(e: KeyboardEvent) {
-      if (e.code === 'Enter') {
-        this.submitCommand(e);
-      } else if (e.code === 'KeyL' && e.ctrlKey) {
-        e.preventDefault();
-        COMMANDS['clear']('');
-      }
-    }
-  },
   setup() {
     const store = inject<ComputedRef<Playground>>('store');
     const consoleRef = ref<HTMLElement>(null);
-    const cnt = ref<number>(0);
     const inputCommand = ref<string>('');
     const errorsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Error').length);
     const warningsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Warning').length);
@@ -95,7 +73,24 @@ export default defineComponent({
       consoleRef.value.scrollTo(0, consoleRef.value.scrollHeight + 100);
     };
 
-    return { cnt, scrollToBottom, consoleRef, errorsCount, warningsCount, inputCommand };
+
+    const submitCommand = async () => {
+      const { executeCommand } = await import('../config/console');
+      executeCommand(inputCommand.value, store.value.consoleStream);
+      inputCommand.value = '';
+    };
+
+    const consoleKeyHandler = async (e: KeyboardEvent) => {
+      if (e.code === 'Enter') {
+        submitCommand();
+      } else if (e.code === 'KeyL' && e.ctrlKey) {
+        e.preventDefault();
+        const { executeCommand } = await import('../config/console');
+        executeCommand('clear', store.value.consoleStream);
+      }
+    }
+
+    return { consoleRef, errorsCount, warningsCount, inputCommand, scrollToBottom, submitCommand, consoleKeyHandler };
   },
 });
 </script>
@@ -109,5 +104,18 @@ export default defineComponent({
   }
   .success {
     @apply text-green-400;
+  }
+</style>
+
+<style>
+  .console td {
+    @apply align-top;
+  }
+  .console tr td:first-of-type {
+    @apply whitespace-nowrap;
+  }
+  .console table {
+    @apply border-separate;
+    border-spacing: 1rem;
   }
 </style>
