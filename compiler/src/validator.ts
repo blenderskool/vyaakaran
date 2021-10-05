@@ -30,8 +30,10 @@ class EarleyParser {
   states: HashSet<EarleyState>[];
   grammar: SimplifiedGrammarRepresentation;
 
-  constructor(parseTree: ParseTree) {
-    this.grammar = new SimplifiedGrammarRepresentation(parseTree);
+  constructor(grammar: SimplifiedGrammarRepresentation);
+  constructor(parseTree: ParseTree);
+  constructor(input: SimplifiedGrammarRepresentation | ParseTree) {
+    this.grammar = input instanceof SimplifiedGrammarRepresentation ? input : new SimplifiedGrammarRepresentation(input);
     this.states = [];
   }
 
