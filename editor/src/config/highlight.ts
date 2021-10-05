@@ -1,4 +1,4 @@
-import hljs from 'highlight.js/lib/core';
+import hljs from 'highlight.js/lib/core.js';
 
 hljs.registerLanguage('vyaakaran grammar', () => ({
   name: 'Vyaakaran Grammar',
