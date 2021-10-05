@@ -40,7 +40,7 @@ import { defineComponent, PropType } from 'vue';
 import { hljs } from '../../../config/highlight';
 
 export default defineComponent({
-  name: 'LR0ParseTable',
+  name: 'LRParseTable',
   props: {
     actionTable: {
       type: Array as PropType<any[][][]>,
