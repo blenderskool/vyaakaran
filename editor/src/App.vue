@@ -55,25 +55,6 @@ export default defineComponent({
     @apply bg-steel-blue-100 bg-opacity-20;
   }
 
-  table {
-    @apply border border-solid !border-blue-gray-600 whitespace-nowrap font-medium inline-block font-fira table-fixed !border-separate;
-    border-spacing: 0;
-    outline: none;
-  }
-
-  td, th {
-    @apply border border-solid border-blue-gray-600 py-2 px-4;
-  }
-
-  table thead th {
-    @apply sticky top-0 bg-gray-800;
-    z-index: 2;
-  }
-  table tbody th {
-    @apply sticky left-0 bg-gray-800;
-    z-index: 1;
-  }
-
   .splitpanes__splitter:active::after {
     @apply bg-blue-gray-600 shadow;
   }

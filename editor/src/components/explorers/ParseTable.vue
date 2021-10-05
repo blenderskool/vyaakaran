@@ -8,7 +8,7 @@
     </PaneHeader>
     <div class="px-12 pb-16 h-full">
       <LL1ParseTable v-if="tableType === 'LL(1)'" :compiled="store.value.compiled" :table="parser.parseTable" />
-      <LR0ParseTable
+      <LRParseTable
         v-if="tableType !== 'LL(1)'"
         :actionTable="parser.actionTable"
         :gotoTable="parser.gotoTable"
@@ -43,7 +43,7 @@ import { defineComponent } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 
 import LL1ParseTable from './ParseTables/LL1.vue';
-import LR0ParseTable from './ParseTables/LR0.vue';
+import LRParseTable from './ParseTables/LR.vue';
 
 import PaneHeader from '../ui/PaneHeader.vue';
 import RadioTabs from '../ui/RadioTabs.vue';
@@ -55,7 +55,7 @@ export default defineComponent({
     PaneHeader,
     RadioTabs,
     LL1ParseTable,
-    LR0ParseTable,
+    LRParseTable,
     Splitpanes,
     Pane,
     BottomUpAutomata,
@@ -99,11 +99,26 @@ export default defineComponent({
 
 <style>
   .parse-table {
-    @apply mt-4 overflow-auto max-w-full text-xs;
+    @apply mt-4 overflow-auto max-w-full text-xs border border-solid !border-blue-gray-600 whitespace-nowrap font-medium inline-block font-fira table-fixed !border-separate;
     max-height: calc(100% - 9rem);
+    border-spacing: 0;
+    outline: none;
   }
 
   .parse-table td.conflict {
     @apply bg-red-500 bg-opacity-10;
+  }
+
+  .parse-table td, .parse-table th {
+    @apply border border-solid border-blue-gray-600 py-2 px-4;
+  }
+
+  .parse-table thead th {
+    @apply sticky top-0 bg-gray-800;
+    z-index: 2;
+  }
+  .parse-table tbody th {
+    @apply sticky left-0 bg-gray-800;
+    z-index: 1;
   }
 </style>
