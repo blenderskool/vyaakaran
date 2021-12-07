@@ -19,7 +19,7 @@ const config = {
     }),
     vite: () => ({
       plugins: [
-        WindiCSS.default(),
+        WindiCSS(),
       ],
     }),
   },
