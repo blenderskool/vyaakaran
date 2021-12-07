@@ -38,8 +38,9 @@ const vykrnConsole = new JitterConsole({
         const generator = new RandomStringGenerator(new SimplifiedGrammarRepresentation(playground.compiled?.parseTree));
         try {
           const strings = options.accept ? generator.acceptableAtMost(count) : generator.unacceptableAtMost(count);
-          pushToStream(playground, 'Success', `${strings.size} unique ${options.accept ? 'acceptable' : 'unacceptable'} strings were generated`);
-          pushToStream(playground, 'Output', [...strings]);
+          const fmtedStrings = [...strings].map((str) => `"${str}"`);
+          pushToStream(playground, 'Success', `${fmtedStrings.length} unique ${options.accept ? 'acceptable' : 'unacceptable'} strings were generated`);
+          pushToStream(playground, 'Output', fmtedStrings);
         } catch(err: any) {
           console.error(err);
           pushToStream(playground, 'Error', err.message);
