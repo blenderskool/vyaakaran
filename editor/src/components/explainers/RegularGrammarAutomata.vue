@@ -24,11 +24,12 @@
         {{ step.step }}
       </p>
     </div>
-    <h3 class="text-lg font-semibold mt-8">Grammar productions</h3>
-    <table class="mt-6">
+    <h3 class="font-semibold mt-8">Grammar productions</h3>
+    <table class="output-table mt-6 !border-none">
       <tbody>
         <tr v-for="rule in rules" :key="rule">
-          <td v-html="hljs.highlight('vyaakaran grammar', rule).value" :class="{ 'rounded-sm z-10 relative ring-2 ring-cyan-300': rule === step.rule }" />
+          <td class="text-cyan-400 !border-none !pl-0">{{ rule === step.rule ? "->" : "" }}</td>
+          <td v-html="hljs.highlight('vyaakaran grammar', rule).value" />
         </tr>
       </tbody>
     </table>
