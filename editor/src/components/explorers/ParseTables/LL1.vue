@@ -1,5 +1,5 @@
 <template>
-  <table class="parse-table">
+  <table class="output-table">
     <thead>
       <tr>
         <th />

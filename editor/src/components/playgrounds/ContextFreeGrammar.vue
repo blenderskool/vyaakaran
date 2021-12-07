@@ -32,3 +32,29 @@ export default defineComponent({
   inject: ['store'],
 });
 </script>
+
+<style>
+  .output-table {
+    @apply mt-4 overflow-auto max-w-full text-xs border border-solid !border-blue-gray-600 whitespace-nowrap font-medium inline-block font-fira table-fixed !border-separate;
+    max-height: calc(100% - 9rem);
+    border-spacing: 0;
+    outline: none;
+  }
+
+  .output-table td.conflict {
+    @apply bg-red-500 bg-opacity-10;
+  }
+
+  .output-table td, .output-table th {
+    @apply border border-solid border-blue-gray-600 py-2 px-4;
+  }
+
+  .output-table thead th {
+    @apply sticky top-0 bg-gray-800;
+    z-index: 2;
+  }
+  .output-table tbody th {
+    @apply sticky left-0 bg-gray-800;
+    z-index: 1;
+  }
+</style>

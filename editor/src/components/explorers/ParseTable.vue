@@ -96,29 +96,3 @@ export default defineComponent({
     @apply text-cool-gray-600;
   }
 </style>
-
-<style>
-  .parse-table {
-    @apply mt-4 overflow-auto max-w-full text-xs border border-solid !border-blue-gray-600 whitespace-nowrap font-medium inline-block font-fira table-fixed !border-separate;
-    max-height: calc(100% - 9rem);
-    border-spacing: 0;
-    outline: none;
-  }
-
-  .parse-table td.conflict {
-    @apply bg-red-500 bg-opacity-10;
-  }
-
-  .parse-table td, .parse-table th {
-    @apply border border-solid border-blue-gray-600 py-2 px-4;
-  }
-
-  .parse-table thead th {
-    @apply sticky top-0 bg-gray-800;
-    z-index: 2;
-  }
-  .parse-table tbody th {
-    @apply sticky left-0 bg-gray-800;
-    z-index: 1;
-  }
-</style>

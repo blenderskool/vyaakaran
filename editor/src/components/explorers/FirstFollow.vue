@@ -1,7 +1,7 @@
 <template>
   <div class="h-full">
     <PaneHeader>First &amp; Follow sets</PaneHeader>
-    <table class="mt-4 mx-5 max-w-11/12 text-sm overflow-auto">
+    <table class="output-table mt-4 mx-5 max-w-11/12 text-sm overflow-auto">
       <thead>
         <tr>
           <th />
