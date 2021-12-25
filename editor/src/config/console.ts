@@ -68,7 +68,7 @@ const vykrnConsole = new JitterConsole({
         }
       ],
       handler(playground, options, args) {
-        const str = args.string as string;
+        const str = (args.string as string).trim();
 
         // if (str === undefined) return newStream('Error', `String to match is not defined. Usage: test "a b b e"`);
         if (!playground.compiled?.parseTree) {
