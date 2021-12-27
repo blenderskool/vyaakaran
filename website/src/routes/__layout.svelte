@@ -78,7 +78,7 @@
         <a class="px-4 py-3 hover:text-cyan-300" href="/docs/syntax">
           Syntax
         </a>
-        <a class="px-4 py-3 hover:text-cyan-300" href="https://akashhamirwasia.com/projects/vyaakaran" target="_blank" rel="external">
+        <a class="px-4 py-3 hover:text-cyan-300" href="https://akashhamirwasia.com/blog/vyaakaran" target="_blank" rel="external">
           How it works
         </a>
       </div>
@@ -111,7 +111,7 @@
         <a class="py-3 hover:text-cyan-300" href="/docs/syntax">
           Syntax
         </a>
-        <a class="py-3 hover:text-cyan-300" href="https://akashhamirwasia.com/projects/vyaakaran" target="_blank" rel="external">
+        <a class="py-3 hover:text-cyan-300" href="https://akashhamirwasia.com/blog/vyaakaran" target="_blank" rel="external">
           How it works
         </a>
         <div class="pt-6">
