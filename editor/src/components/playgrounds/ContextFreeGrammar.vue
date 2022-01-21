@@ -1,7 +1,7 @@
 <template>
   <Splitpanes horizontal v-if="store.value.progKey && !store.value.compiled.errors.length" :dbl-click-splitter="false">
     <ParseTableExplorer />
-    <Pane min-size="4" max-size="50" size="4">
+    <Pane min-size="4" size="4">
       <FirstFollowExplorer :compiled="store.value.compiled" />
     </Pane>
   </Splitpanes>
@@ -35,8 +35,8 @@ export default defineComponent({
 
 <style>
   .output-table {
-    @apply mt-4 overflow-auto max-w-full text-xs border border-solid !border-blue-gray-600 whitespace-nowrap font-medium inline-block font-fira table-fixed !border-separate;
-    max-height: calc(100% - 9rem);
+    @apply mt-4 overflow-auto max-w-full text-xs border border-solid border-blue-gray-600 whitespace-nowrap font-medium inline-block font-fira table-fixed;
+    border-collapse: separate;
     border-spacing: 0;
     outline: none;
   }

@@ -1,5 +1,5 @@
 <template>
-  <Pane class="pt-2" min-size="5" size="93">
+  <Pane class="pt-2" min-size="5" size="92">
     <PaneHeader>
       <div class="flex justify-between">
         <span>Parsing table</span>
@@ -94,5 +94,9 @@ export default defineComponent({
 <style scoped>
   li::marker {
     @apply text-cool-gray-600;
+  }
+
+  .output-table {
+    max-height: calc(100% - 9rem);
   }
 </style>
