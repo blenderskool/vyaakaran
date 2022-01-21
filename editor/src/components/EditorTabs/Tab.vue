@@ -33,6 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, nextTick, PropType, readonly, ref } from 'vue';
+import useKeyShortcut from '../../utils/useKeyShortcut';
 
 export default defineComponent({
   name: 'Tab',
@@ -71,6 +72,11 @@ export default defineComponent({
         inputRef.value.focus();
       }
     };
+
+    // Rename tab shortcut
+    useKeyShortcut((e) => e.key === 'F2', () => setEditing(true));
+    // Cancel renaming tab shortcut
+    useKeyShortcut((e) => e.key === 'Escape' && isEditing.value, () => setEditing(false));
 
     return {
       inputRef, setEditing,
