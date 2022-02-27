@@ -141,7 +141,7 @@
     </div>
 
     <div class="text-sm mt-6 md:mt-0">
-      Designed & Developed in 🇮🇳 by
+      A side project designed & developed by
       <a href="https://akashhamirwasia.com" target="_blank" class="text-cyan-300 font-medium">
         Akash Hamirwasia
       </a>

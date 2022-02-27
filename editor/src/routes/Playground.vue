@@ -27,7 +27,7 @@
   <NewPlaygroundModal :show="showNewPlaygroundModal" @close="showNewPlaygroundModal = false" />
   <footer class="h-6 text-xxs flex items-center px-5 bg-gray-900 text-cool-gray-500 border-t border-solid border-gray-800 font-semibold justify-end space-x-2">
     <span>
-      Designed & Developed in 🇮🇳 by
+      A side project designed & developed by
       {{ ' ' }}
       <a class="text-cyan-300" href="https://akashhamirwasia.com">Akash Hamirwasia</a>
     </span>
