@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/minimist": "^1.2.2",
+    "@types/splitpanes": "^2.2.1",
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
     "@vuedx/typecheck": "^0.6.0",
