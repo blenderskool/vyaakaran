@@ -6,6 +6,10 @@
 				:showButtons="showButtons"
 				:instructions="tapeInstructions"
 				ref="childComponentRef"
+				@toggleShowButtons="
+					showButtons = false;
+					inputString = '';
+				"
 			></Tape>
 			<form
 				@submit.prevent="handleInputSubmit"
@@ -23,6 +27,9 @@
 		</Pane>
 		<Pane size="55" max-size="95" class="bg-gray-900">
 			<PaneHeader>State Transitions</PaneHeader>
+			<TMStateTransitionGraph
+				:key="`TM ${store.value.progKey}`"
+			></TMStateTransitionGraph>
 		</Pane>
 	</Splitpanes>
 </template>
@@ -31,7 +38,8 @@
 import { defineComponent, ref } from "vue";
 import { Pane, Splitpanes } from "splitpanes";
 import PaneHeader from "../ui/PaneHeader.vue";
-import Tape from "../ui/Tape.vue";
+import Tape from "../explorers/Tape.vue";
+import TMStateTransitionGraph from "../explorers/TMStateTransitionGraph.vue";
 
 interface Instructions {
 	charArray: string[];
@@ -45,8 +53,9 @@ export default defineComponent({
 		Pane,
 		PaneHeader,
 		Tape,
+		TMStateTransitionGraph,
 	},
-
+	inject: ["store"],
 	setup() {
 		const childComponentRef = ref();
 		const showButtons = ref<boolean>(false);
