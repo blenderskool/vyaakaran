@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUpdated, PropType, ref } from "vue";
+import { defineComponent, onMounted, PropType, ref } from "vue";
 
 interface itType {
 	transVal: string;
@@ -104,7 +104,7 @@ interface itType {
 }
 interface Instructions {
 	charArray: string[];
-	move: "left" | "right" | "dont";
+	moveDir: number;
 }
 
 export default defineComponent({
@@ -172,7 +172,7 @@ export default defineComponent({
 			14560, 14610, 14660, 14710, 14760, 14810,
 		]);
 		const TArray = ref<itType[]>([]);
-		const stepCount = ref<number>(0);
+		const stepCount = ref<number>(1);
 		const inputString = ref<string>("");
 		const isPlaying = ref<boolean>(false);
 
@@ -194,9 +194,9 @@ export default defineComponent({
 		const accumulateString = (indexOfInstruction: number) => {
 			for (let i = 0; i < array.value.length; ++i) {
 				if (
-					i >= 211 ||
+					i >= 211 &&
 					i <
-						211 +
+						210 +
 							props.instructions[indexOfInstruction].charArray
 								.length
 				) {
@@ -210,13 +210,10 @@ export default defineComponent({
 			}
 		};
 
-		const changeArray = (
-			move: "left" | "right" | "dont",
-			indexOfInstruction: number
-		) => {
-			if (move === "dont") {
+		const changeArray = (move: number, indexOfInstruction: number) => {
+			if (move === 0) {
 				accumulateString(indexOfInstruction);
-			} else if (move === "right") {
+			} else if (move === 1) {
 				accumulateString(indexOfInstruction);
 				for (let i = 0; i < array.value.length; ++i) {
 					array.value[i] -= 50;
@@ -234,7 +231,7 @@ export default defineComponent({
 		const nextStepHandler = () => {
 			if (isPlaying.value) isPlaying.value = false;
 			changeArray(
-				props.instructions[stepCount.value].move,
+				props.instructions[stepCount.value].moveDir,
 				stepCount.value
 			);
 			stepCount.value += 1;
@@ -244,7 +241,7 @@ export default defineComponent({
 			isPlaying.value = true;
 			const intervalID = setInterval(() => {
 				changeArray(
-					props.instructions[stepCount.value].move,
+					props.instructions[stepCount.value].moveDir,
 					stepCount.value
 				);
 				stepCount.value += 1;
@@ -259,7 +256,7 @@ export default defineComponent({
 		};
 		const resetHandler = () => {
 			isPlaying.value = false;
-			stepCount.value = 0;
+			stepCount.value = 1;
 			array.value = [
 				-10140, -10090, -10040, -9990, -9940, -9890, -9840, -9790,
 				-9740, -9690, -9640, -9590, -9540, -9490, -9440, -9390, -9340,

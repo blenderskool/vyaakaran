@@ -29,13 +29,14 @@
 			<PaneHeader>State Transitions</PaneHeader>
 			<TMStateTransitionGraph
 				:key="`TM ${store.value.progKey}`"
+				:getGraph="graph"
 			></TMStateTransitionGraph>
 		</Pane>
 	</Splitpanes>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { Pane, Splitpanes } from "splitpanes";
 import PaneHeader from "../ui/PaneHeader.vue";
 import Tape from "../explorers/Tape.vue";
@@ -43,7 +44,7 @@ import TMStateTransitionGraph from "../explorers/TMStateTransitionGraph.vue";
 
 interface Instructions {
 	charArray: string[];
-	move: "left" | "right" | "dont";
+	moveDir: number;
 }
 
 export default defineComponent({
@@ -60,17 +61,125 @@ export default defineComponent({
 		const childComponentRef = ref();
 		const showButtons = ref<boolean>(false);
 		const inputString = ref<string>("");
-		const tapeInstructions = ref<Instructions[] | null>([
-			{ charArray: ["a", "b", "b", "a"], move: "right" },
-			{ charArray: ["a", "a", "b", "a"], move: "right" },
-			{ charArray: ["a", "a", "a", "a"], move: "left" },
-			{ charArray: ["a", "a", "a", "a"], move: "left" },
-			{ charArray: ["a", "a", "a", "a"], move: "left" },
-		]);
+		const tapeInstructions = ref<Instructions[] | null>();
+		const graph = ref({
+			S: [
+				{
+					readSymbol: "a",
+					writeSymbol: "x",
+					transition: ">",
+					nextState: "Q1",
+				},
+				{
+					readSymbol: "y",
+					writeSymbol: "y",
+					transition: ">",
+					nextState: "*Q4",
+				},
+			],
+			Q1: [
+				{
+					readSymbol: "a",
+					writeSymbol: "a",
+					transition: ">",
+					nextState: "Q1",
+				},
+				{
+					readSymbol: "b",
+					writeSymbol: "b",
+					transition: ">",
+					nextState: "Q1",
+				},
+				{
+					readSymbol: "y",
+					writeSymbol: "y",
+					transition: "<",
+					nextState: "Q2",
+				},
+				{
+					readSymbol: "#",
+					writeSymbol: "#",
+					transition: "<",
+					nextState: "Q2",
+				},
+			],
+			Q2: [
+				{
+					readSymbol: "b",
+					writeSymbol: "y",
+					transition: "<",
+					nextState: "Q3",
+				},
+			],
+			Q3: [
+				{
+					readSymbol: "a",
+					writeSymbol: "a",
+					transition: "<",
+					nextState: "Q3",
+				},
+				{
+					readSymbol: "b",
+					writeSymbol: "b",
+					transition: "<",
+					nextState: "Q3",
+				},
+				{
+					readSymbol: "x",
+					writeSymbol: "x",
+					transition: ">",
+					nextState: "S",
+				},
+			],
+		});
 
 		const handleInputSubmit = () => {
 			showButtons.value = true;
 			childComponentRef.value.loadTM(inputString.value);
+			let testInst = [
+				{
+					value: { moveDir: 0, string: ["a", "a", "b", "b", "#"] },
+					done: false,
+				},
+				{
+					value: { moveDir: 1, string: ["x", "a", "b", "b", "#"] },
+					done: false,
+				},
+				{
+					value: { moveDir: 1, string: ["x", "a", "b", "b", "#"] },
+					done: false,
+				},
+				{
+					value: { moveDir: 1, string: ["x", "a", "b", "b", "#"] },
+					done: false,
+				},
+				{
+					value: { moveDir: -1, string: ["x", "a", "b", "y", "#"] },
+					done: false,
+				},
+				{
+					value: { moveDir: -1, string: ["x", "a", "b", "y", "#"] },
+					done: false,
+				},
+				{
+					value: { moveDir: 1, string: ["x", "x", "b", "y", "#"] },
+					done: false,
+				},
+				{
+					value: { moveDir: -1, string: ["x", "x", "y", "y", "#"] },
+					done: false,
+				},
+				{
+					value: { moveDir: 1, string: ["x", "x", "y", "y", "#"] },
+					done: false,
+				},
+			];
+			tapeInstructions.value = testInst.map((inst) => {
+				return {
+					moveDir: inst.value.moveDir,
+					charArray: inst.value.string,
+				};
+			});
 		};
 
 		return {
@@ -79,6 +188,7 @@ export default defineComponent({
 			handleInputSubmit,
 			tapeInstructions,
 			childComponentRef,
+			graph,
 		};
 	},
 });
