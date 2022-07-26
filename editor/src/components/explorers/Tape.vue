@@ -17,6 +17,7 @@
 	</div>
 	<div class="flex" v-if="showButtons">
 		<button class="btn ml-auto" @click="resetHandler">
+			Reset
 			<span>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -31,10 +32,9 @@
 					/>
 				</svg>
 			</span>
-			Reset
 		</button>
 		<button class="btn mx-5" @click="nextStepHandler" :disabled="isDone()">
-			Next
+			<span>Next Step</span>
 			<span>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -47,10 +47,10 @@
 					/>
 				</svg>
 			</span>
-			Step
 		</button>
 
 		<button class="btn mr-auto" @click="pauseHandler" v-if="isPlaying">
+			Pause
 			<span>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,6 @@
 					/>
 				</svg>
 			</span>
-			Pause
 		</button>
 		<button
 			class="btn mr-auto"
@@ -73,6 +72,7 @@
 			v-else
 			:disabled="isDone()"
 		>
+			Play
 			<span>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +87,6 @@
 					/>
 				</svg>
 			</span>
-			Play
 		</button>
 	</div>
 	<div @click="anotherInputHandler" v-if="showButtons" class="re-enter-input">
@@ -367,27 +366,23 @@ export default defineComponent({
 	@apply mx-auto max-w-full;
 }
 .tape-cell > rect {
-	@apply fill-cyan-400 stroke-white stroke-3;
+	@apply fill-transparent stroke-cool-gray-600 stroke-2;
 }
 
 .tape-cell > text {
-	@apply text-2xl fill-white;
+	@apply text-2xl  fill-cyan-300;
 	text-anchor: middle;
 }
 
 #tape-head {
-	@apply fill-none stroke-orange-400 stroke-4;
-}
-
-.test-btn {
-	@apply bg-cyan-400 text-white rounded-lg mx-2 p-2;
+	@apply fill-none stroke-cyan-300 stroke-3;
 }
 
 .btn {
-	@apply flex flex-col bg-cyan-300 w-16 h-14 p-2 text-gray-800 text-xs rounded-2xl font-medium shadow-lg shadow-cyan-500/50 outline-none hover:translate-z-10 disabled:bg-cyan-600 disabled:cursor-not-allowed;
+	@apply flex bg-cyan-300 rounded text-blue-gray-800 pl-5 pr-3 py-2 font-semibold text-sm shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed;
 }
 
 .re-enter-input {
-	@apply flex justify-center text-cyan-300 mt-7 text-md hover:underline hover:cursor-pointer;
+	@apply flex justify-center text-cyan-300 mt-7 text-md font-semibold hover:underline hover:cursor-pointer;
 }
 </style>

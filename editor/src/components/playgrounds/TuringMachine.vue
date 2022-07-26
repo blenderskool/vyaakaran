@@ -1,5 +1,9 @@
 <template>
-	<Splitpanes horizontal class="h-full" :dbl-click-splitter="false">
+	<Splitpanes
+		horizontal
+		:dbl-click-splitter="false"
+		v-if="store.value.progKey && !store.value.compiled.errors.length"
+	>
 		<Pane size="45" class="bg-gray-900">
 			<PaneHeader>Turing Machine</PaneHeader>
 			<Tape
@@ -22,17 +26,18 @@
 					placeholder="Enter the input string"
 					class="input-box"
 				/>
-				<button type="submit" class="submit-btn">submit</button>
+				<button type="submit" class="submit-btn">Submit</button>
 			</form>
 		</Pane>
 		<Pane size="55" max-size="95" class="bg-gray-900">
 			<PaneHeader>State Transitions</PaneHeader>
 			<TMStateTransitionGraph
 				:key="`TM ${store.value.progKey}`"
-				:getGraph="graph"
+				:getGraph="store.value.compiled.parseTree"
 			></TMStateTransitionGraph>
 		</Pane>
 	</Splitpanes>
+	<Empty v-else />
 </template>
 
 <script lang="ts">
@@ -41,6 +46,7 @@ import { Pane, Splitpanes } from "splitpanes";
 import PaneHeader from "../ui/PaneHeader.vue";
 import Tape from "../explorers/Tape.vue";
 import TMStateTransitionGraph from "../explorers/TMStateTransitionGraph.vue";
+import Empty from "./Empty.vue";
 
 interface Instructions {
 	charArray: string[];
@@ -55,6 +61,7 @@ export default defineComponent({
 		PaneHeader,
 		Tape,
 		TMStateTransitionGraph,
+		Empty,
 	},
 	inject: ["store"],
 	setup() {
@@ -62,76 +69,6 @@ export default defineComponent({
 		const showButtons = ref<boolean>(false);
 		const inputString = ref<string>("");
 		const tapeInstructions = ref<Instructions[] | null>();
-		const graph = ref({
-			S: [
-				{
-					readSymbol: "a",
-					writeSymbol: "x",
-					transition: ">",
-					nextState: "Q1",
-				},
-				{
-					readSymbol: "y",
-					writeSymbol: "y",
-					transition: ">",
-					nextState: "*Q4",
-				},
-			],
-			Q1: [
-				{
-					readSymbol: "a",
-					writeSymbol: "a",
-					transition: ">",
-					nextState: "Q1",
-				},
-				{
-					readSymbol: "b",
-					writeSymbol: "b",
-					transition: ">",
-					nextState: "Q1",
-				},
-				{
-					readSymbol: "y",
-					writeSymbol: "y",
-					transition: "<",
-					nextState: "Q2",
-				},
-				{
-					readSymbol: "#",
-					writeSymbol: "#",
-					transition: "<",
-					nextState: "Q2",
-				},
-			],
-			Q2: [
-				{
-					readSymbol: "b",
-					writeSymbol: "y",
-					transition: "<",
-					nextState: "Q3",
-				},
-			],
-			Q3: [
-				{
-					readSymbol: "a",
-					writeSymbol: "a",
-					transition: "<",
-					nextState: "Q3",
-				},
-				{
-					readSymbol: "b",
-					writeSymbol: "b",
-					transition: "<",
-					nextState: "Q3",
-				},
-				{
-					readSymbol: "x",
-					writeSymbol: "x",
-					transition: ">",
-					nextState: "S",
-				},
-			],
-		});
 
 		const handleInputSubmit = () => {
 			showButtons.value = true;
@@ -188,7 +125,6 @@ export default defineComponent({
 			handleInputSubmit,
 			tapeInstructions,
 			childComponentRef,
-			graph,
 		};
 	},
 });
@@ -200,10 +136,10 @@ export default defineComponent({
 }
 
 .input-box {
-	@apply w-1/4 outline-none rounded-lg text-center text-black bg-white p-2 placeholder-cyan-400 text-md;
+	@apply w-1/4 outline-none rounded text-center text-cyan-400 bg-cool-gray-600 p-2 placeholder-cyan-400 font-semibold text-md;
 }
 
 .submit-btn {
-	@apply bg-cyan-300 text-black mt-3 rounded-lg w-1/8 p-2 shadow-2xl shadow-cyan-400;
+	@apply mt-2 bg-cyan-300 rounded text-blue-gray-800 px-4 py-2 font-semibold text-md shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed;
 }
 </style>

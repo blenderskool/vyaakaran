@@ -12,6 +12,7 @@ import {
 	ref,
 	watch,
 } from "vue";
+import { stateTransition } from "../../../../compiler/src/turing-machine/types";
 import { edgeConfig, getNodeConfig, tmEdgeConfig } from "../../config/graph";
 import { fillBg } from "../../utils/canvas";
 import useVisNetwork from "../../utils/useVisNetwork";
@@ -20,7 +21,10 @@ export default defineComponent({
 	name: "TMStateTransitionGraph",
 	props: {
 		name: { type: String as PropType<string> },
-		getGraph: { required: true },
+		getGraph: {
+			type: Map as PropType<Map<string, stateTransition[]>>,
+			required: true,
+		},
 	},
 	setup({ getGraph }) {
 		const outputRef = ref<HTMLElement>();
@@ -32,33 +36,32 @@ export default defineComponent({
 		const generateVisGraph = () => {
 			if (isVisLoading.value) return;
 
-			const graph: any = getGraph;
-			const nodes = [
-				...Object.keys(graph).map((node) => {
-					return node;
-				}),
-			];
+			const graph: Map<string, stateTransition[]> = getGraph;
 
-			const edges: any[] = [];
-			Object.keys(graph).map((node) => {
-				graph[node].map((inst: any) => {
-					if (!nodes.includes(inst.nextState)) {
-						nodes.push(inst.nextState);
+			let nodes = [];
+			let edges = [];
+
+			graph.forEach((value: stateTransition[], key: string) => {
+				nodes.push(key);
+
+				value.forEach((edge: stateTransition) => {
+					if (!nodes.includes(edge.nextState)) {
+						nodes.push(edge.nextState);
 					}
 
 					let i;
 					for (i = 0; i < edges.length; ++i) {
 						if (
-							edges[i].from === node &&
+							edges[i].from === key &&
 							edges[i].to ===
-								(inst.nextState[0] === "*"
-									? inst.nextState.slice(1)
-									: inst.nextState)
+								(edge.nextState[0] === "*"
+									? edge.nextState.slice(1)
+									: edge.nextState)
 						) {
 							edges[i].label =
 								edges[i].label +
-								`*_(${inst.readSymbol}/${inst.writeSymbol},${
-									inst.transition === ">" ? "R" : "L"
+								`*_(${edge.readSymbol}/${edge.writeSymbol},${
+									edge.transition === ">" ? "R" : "L"
 								})_*\n`;
 							break;
 						}
@@ -67,18 +70,20 @@ export default defineComponent({
 					if (i === edges.length) {
 						edges.push({
 							...tmEdgeConfig,
-							from: node,
+							from: key,
 							to:
-								inst.nextState[0] === "*"
-									? inst.nextState.slice(1)
-									: inst.nextState,
-							label: `*_(${inst.readSymbol}/${inst.writeSymbol},${
-								inst.transition === ">" ? "R" : "L"
+								edge.nextState[0] === "*"
+									? edge.nextState.slice(1)
+									: edge.nextState,
+							label: `*_(${edge.readSymbol}/${edge.writeSymbol},${
+								edge.transition === ">" ? "R" : "L"
 							})_*\n`,
 						});
 					}
 				});
 			});
+
+			nodes = [...new Set(nodes)];
 
 			const finalNodes = [
 				...nodes.map((node) => {
