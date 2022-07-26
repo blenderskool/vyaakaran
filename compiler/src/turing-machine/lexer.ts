@@ -1,14 +1,15 @@
 import { Lexer, createToken } from "chevrotain";
 
 // q1 (a:X) ->- q2
-export const StartState = createToken({
-  name: "StartState",
-  pattern: /S/,
-});
-
 export const State = createToken({
   name: "State",
   pattern: /[A-Z]\w*/,
+});
+
+export const StartState = createToken({
+  name: "StartState",
+  pattern: /S/,
+  longer_alt: State,
 });
 
 export const FinalState = createToken({
@@ -40,6 +41,7 @@ export const Hyphen = createToken({
   name: "Hyphen",
   pattern: /[-]/,
 });
+
 export const Dir = createToken({
   name: "Dir",
   pattern: /[=><]/,
@@ -74,8 +76,8 @@ export const TokenList = [
   Hyphen,
   Dir,
 
-  StartState,
   Symbol,
+  StartState,
   State,
   FinalState,
 ];
