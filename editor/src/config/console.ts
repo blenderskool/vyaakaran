@@ -78,10 +78,11 @@ const vykrnConsole = new JitterConsole({
           let tstr = (args.string as string).trim()
           const str=tstr+"#"
           let genobj= new TestInput(str,playground.compiled.parseTree as Map<string,stateTransition[]>)
-          let strgen=genobj.CheckString()
-          do {
-            console.log(strgen.next());
-          } while (!strgen.next().done);
+          let strcheck=genobj.consoleTestString()
+          if(strcheck)
+            pushToStream(playground,"Success","string accepted");
+          else
+            pushToStream(playground,"Warning","string not accepted")
         }
         else 
         {
