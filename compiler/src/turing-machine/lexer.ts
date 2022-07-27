@@ -1,6 +1,5 @@
 import { Lexer, createToken } from "chevrotain";
 
-// q1 (a:X) ->- q2
 export const State = createToken({
   name: "State",
   pattern: /[A-Z]\w*/,

@@ -107,7 +107,6 @@ class TuringMachinePlayground extends Playground {
 	compile() {
 		this.compiled = new StateTransitionGrammar(this.program);
 		super.compile();
-		console.log(this.compiled.parseTree);
 	}
 }
 

@@ -89,6 +89,7 @@ export class GraphHandler {
     for (let state of visited) {
       if (state[1] === false) {
         msg += state[0] + ", ";
+        this.edgeList.delete(state[0]);
       }
     }
     if (msg.length !== 0) {

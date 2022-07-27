@@ -1,0 +1,14 @@
+1) Turing Machine
+a) a^nb^nc^n
+
+S (a:x)->-Q1
+Q1 (a:a)->-Q1
+Q1 (b:b)->-Q1
+Q1 (y:y)-<-Q2
+Q1 (#:#)-<-Q2
+Q2 (b:y)-<-Q3
+Q3 (a:a)-<-Q3
+Q3 (b:b)-<-Q3
+Q3 (x:x)->-S
+S (y:y)->- *Q4
+
