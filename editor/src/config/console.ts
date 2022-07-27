@@ -4,7 +4,9 @@ import { ParseTree } from '../../../compiler/src/regular-grammar/types';
 import { SimplifiedGrammarRepresentation } from '../../../compiler/src/utils';
 import { JitterConsole, pushToStream } from '../utils/JitterConsole';
 import { ConsoleStream } from '../store/code';
+import {TestInput} from "../../../compiler/src/turing-machine/input"
 import pkg from '../../package.json';
+import { stateTransition } from '../../../compiler/src/turing-machine/types';
 
 const vykrnConsole = new JitterConsole({
   name: 'Vyaakaran console',
@@ -35,7 +37,7 @@ const vykrnConsole = new JitterConsole({
 
         if (!playground.compiled?.parseTree) return pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
     
-        const generator = new RandomStringGenerator(new SimplifiedGrammarRepresentation(playground.compiled?.parseTree));
+        const generator = new RandomStringGenerator(new SimplifiedGrammarRepresentation(playground.compiled?.parseTree as ParseTree));
         try {
           const strings = options.accept ? generator.acceptableAtMost(count) : generator.unacceptableAtMost(count);
           const fmtedStrings = [...strings].map((str) => `"${str}"`);
@@ -68,8 +70,22 @@ const vykrnConsole = new JitterConsole({
         }
       ],
       handler(playground, options, args) {
+        if(playground.type === "TM")
+        {
+          if (!playground.compiled?.parseTree) {
+            pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
+          }
+          let tstr = (args.string as string).trim()
+          const str=tstr+"#"
+          let genobj= new TestInput(str,playground.compiled.parseTree as Map<string,stateTransition[]>)
+          let strgen=genobj.CheckString()
+          do {
+            console.log(strgen.next());
+          } while (!strgen.next().done);
+        }
+        else 
+        {
         const str = (args.string as string).trim();
-
         // if (str === undefined) return newStream('Error', `String to match is not defined. Usage: test "a b b e"`);
         if (!playground.compiled?.parseTree) {
           pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
@@ -83,6 +99,7 @@ const vykrnConsole = new JitterConsole({
         } else {
           pushToStream(playground, 'Warning', `"${str}" did not get accepted`);
         }
+      }
       }
     }
   }
