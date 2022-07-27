@@ -1,7 +1,7 @@
 import RegularGrammarLexer from '../regular-grammar/lexer';
 import ContextFreeGrammarParser from './parser';
 import ContextFreeGrammarSemanticAnalyzer from './semantic';
-import { CompilerClass } from '../regular-grammar/types';
+import { CompilerClass, ParseTree } from '../regular-grammar/types';
 import { SimplifiedGrammarRepresentation } from '../utils';
 import { findFirstSets, findFollowSets, findLALR1Table, findLL1Table, findLR0Table, findLR1Table, findSLR1Table } from './algorithms';
 
@@ -27,13 +27,13 @@ class ContextFreeGrammar extends CompilerClass {
 
   semanticAnalysis() {
     if (!this.errors.length) {
-      const errors = new ContextFreeGrammarSemanticAnalyzer(this.parseTree).analyze();
+      const errors = new ContextFreeGrammarSemanticAnalyzer(this.parseTree as ParseTree).analyze();
       this.errors.push(...errors.filter(err => err.type === 'Error'));
       this.warnings.push(...errors.filter(err => err.type === 'Warning'));
     }
 
     if (!this.errors.length) {
-      this.grammar = new SimplifiedGrammarRepresentation(this.parseTree);
+      this.grammar = new SimplifiedGrammarRepresentation(this.parseTree as ParseTree);
     }
 
     return this;
@@ -106,7 +106,7 @@ class ContextFreeGrammar extends CompilerClass {
   }
 
   toLR0() {
-    const { actionTable, ...rest } = findLR0Table(this.parseTree, this.grammar);
+    const { actionTable, ...rest } = findLR0Table(this.parseTree as ParseTree, this.grammar);
     const conclusions = this.findBottomUpConclusions(actionTable, 'LR(0)');
 
     this.result = { actionTable, ...rest, conclusions };
@@ -114,7 +114,7 @@ class ContextFreeGrammar extends CompilerClass {
   }
 
   toSLR1() {
-    const { actionTable, ...rest } = findSLR1Table(this.parseTree, this.grammar);
+    const { actionTable, ...rest } = findSLR1Table(this.parseTree as ParseTree, this.grammar);
     const conclusions = this.findBottomUpConclusions(actionTable, 'SLR(1)');
 
     this.result = { actionTable, ...rest, conclusions };
@@ -122,7 +122,7 @@ class ContextFreeGrammar extends CompilerClass {
   }
 
   toLR1() {
-    const { actionTable, ...rest } = findLR1Table(this.parseTree, this.grammar);
+    const { actionTable, ...rest } = findLR1Table(this.parseTree as ParseTree, this.grammar);
     const conclusions = this.findBottomUpConclusions(actionTable, 'LR(1)');
 
     this.result = { actionTable, ...rest, conclusions };
@@ -130,7 +130,7 @@ class ContextFreeGrammar extends CompilerClass {
   }
 
   toLALR1() {
-    const { actionTable, ...rest } = findLALR1Table(this.parseTree, this.grammar);
+    const { actionTable, ...rest } = findLALR1Table(this.parseTree as ParseTree, this.grammar);
     const conclusions = this.findBottomUpConclusions(actionTable, 'LALR(1)');
 
     this.result = { actionTable, ...rest, conclusions };

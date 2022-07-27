@@ -27,7 +27,7 @@ class RegularGrammar extends CompilerClass {
 
   semanticAnalysis() {
     if (!this.errors.length) {
-      const errors = new RegularGrammarSemanticAnalyzer(this.parseTree).analyze();
+      const errors = new RegularGrammarSemanticAnalyzer(this.parseTree as ParseTree).analyze();
       this.errors.push(...errors.filter(err => err.type === 'Error'));
       this.warnings.push(...errors.filter(err => err.type === 'Warning'));
     }
@@ -78,7 +78,7 @@ class RegularGrammar extends CompilerClass {
       graph[from].nodes[via].add(to);
     }
 
-    const rules = new SimplifiedGrammarRepresentation(this.parseTree).rules;
+    const rules = new SimplifiedGrammarRepresentation(this.parseTree as ParseTree).rules;
 
     for (const rule of rules) {
       const { lhs: context, rhs: termsStack } = rule;
@@ -287,7 +287,7 @@ class RegularGrammar extends CompilerClass {
         dfs(root.body[i] as ParseTree);
       }
     }
-    dfs(this.parseTree);
+    dfs(this.parseTree as ParseTree);
 
     const star = (exp) => {
       if (!exp || exp === 'ε') return 'ε';
