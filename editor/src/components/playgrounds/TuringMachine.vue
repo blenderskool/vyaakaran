@@ -10,12 +10,29 @@
 				:showButtons="showButtons"
 				:instructions="tapeInstructions"
 				ref="childComponentRef"
+				:key="`TAPE ${store.value.progKey}`"
 				@toggleShowButtons="
 					showButtons = false;
 					inputString = '';
 				"
 			></Tape>
 			<form
+				class="form"
+				@submit.prevent="handleInputSubmit"
+				v-if="!showButtons"
+				:key="`TMINPUT ${store.value.progKey}`"
+			>
+				<div class="input-container">
+					<input
+						class="input-box"
+						type="text"
+						placeholder="Enter the string"
+						v-model="inputString"
+					/>
+					<button type="submit" class="submit-btn">Submit</button>
+				</div>
+			</form>
+			<!-- <form
 				@submit.prevent="handleInputSubmit"
 				v-if="!showButtons"
 				class="form"
@@ -27,7 +44,7 @@
 					class="input-box"
 				/>
 				<button type="submit" class="submit-btn">Submit</button>
-			</form>
+			</form> -->
 		</Pane>
 		<Pane size="55" max-size="95" class="bg-gray-900">
 			<PaneHeader>State Transitions</PaneHeader>
@@ -41,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, onUpdated, ref } from "vue";
 import { Pane, Splitpanes } from "splitpanes";
 import PaneHeader from "../ui/PaneHeader.vue";
 import Tape from "../explorers/Tape.vue";
@@ -131,15 +148,27 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.form {
+/* .form {
 	@apply flex flex-col items-center;
 }
 
 .input-box {
 	@apply w-1/4 outline-none rounded text-center text-cyan-400 bg-cool-gray-600 p-2 placeholder-cyan-400 font-semibold text-md;
+} */
+
+.form {
+	@apply flex justify-center;
+}
+
+.input-container {
+	@apply flex items-center border-b-[1.5px] border-cyan-300 py-2;
+}
+
+.input-box {
+	@apply appearance-none bg-transparent border-none w-full text-cyan-300 mr-3 py-1 px-2 placeholder-cyan-300 leading-tight text-lg outline-none;
 }
 
 .submit-btn {
-	@apply mt-2 bg-cyan-300 rounded text-blue-gray-800 px-4 py-2 font-semibold text-md shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed;
+	@apply mt-2 bg-cyan-300 rounded text-blue-gray-800 px-3 py-2 font-semibold text-md shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed;
 }
 </style>
