@@ -47,6 +47,7 @@ import PaneHeader from "../ui/PaneHeader.vue";
 import Tape from "../explorers/Tape.vue";
 import TMStateTransitionGraph from "../explorers/TMStateTransitionGraph.vue";
 import Empty from "./Empty.vue";
+import { TestInput } from "../../../../compiler/src/turing-machine/input";
 
 interface Instructions {
 	charArray: string[];
@@ -73,6 +74,9 @@ export default defineComponent({
 		const handleInputSubmit = () => {
 			showButtons.value = true;
 			childComponentRef.value.loadTM(inputString.value);
+			// let testobj=new TestInput(inputstring,this.store.value.parseTree)
+			// let strgen=testobj.CheckString();
+	
 			let testInst = [
 				{
 					value: { moveDir: 0, string: ["a", "a", "b", "b", "#"] },
