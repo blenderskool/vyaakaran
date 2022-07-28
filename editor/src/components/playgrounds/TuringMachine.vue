@@ -99,10 +99,10 @@ export default defineComponent({
 
 			let tmp = [];
 			do {
-				console.log(strgen.next().value);
+				tmp.push(strgen.next());
 			} while (!strgen.next().done);
 
-			// console.log(tmp);
+			console.log(tmp);
 
 			let testInst = [
 				{
