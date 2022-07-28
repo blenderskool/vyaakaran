@@ -1,115 +1,131 @@
 <template>
-	<div class="container">
-		<svg class="tm-tape" width="800" viewBox="0 0 870 70">
-			<g class="wrapper" transform="translate(0 10)">
-				<g
-					class="tape-cell"
-					v-for="ele in TArray"
-					:transform="ele.transVal"
-					:key="ele.val"
-				>
-					<rect width="50" height="50"></rect>
-					<text x="25" y="33">{{ ele.val }}</text>
+	<div>
+		<div class="container">
+			<svg class="tm-tape" width="800" viewBox="0 0 870 70">
+				<g class="wrapper" transform="translate(0 10)">
+					<g
+						class="tape-cell"
+						v-for="ele in TArray"
+						:transform="ele.transVal"
+						:key="ele.val"
+					>
+						<rect width="50" height="50"></rect>
+						<text x="25" y="33">{{ ele.val }}</text>
+					</g>
 				</g>
-			</g>
-			<rect id="tape-head" width="70" height="70" x="400" y="0"></rect>
-		</svg>
-	</div>
-	<div class="flex" v-if="showButtons">
-		<button class="btn ml-auto" @click="resetHandler">
-			Reset
-			<span>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-6 w-7"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-			</span>
-		</button>
-		<button
-			class="btn ml-5"
-			@click="previousStepHandler"
-			:disabled="stepCount === 1"
-		>
-			<span>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-6 w-7"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-				>
-					<path
-						d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"
-					/>
-				</svg>
-			</span>
-			<span>Previous Step</span>
-		</button>
-		<button class="btn mx-5" @click="nextStepHandler" :disabled="isDone()">
-			<span>Next Step</span>
-			<span>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-6 w-7"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-				>
-					<path
-						d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z"
-					/>
-				</svg>
-			</span>
-		</button>
+				<rect
+					id="tape-head"
+					width="70"
+					height="70"
+					x="400"
+					y="0"
+				></rect>
+			</svg>
+		</div>
+		<div class="flex" v-if="showButtons">
+			<button class="btn ml-auto" @click="resetHandler">
+				Reset
+				<span>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-6 w-7"
+						viewBox="0 0 20 20"
+						fill="currentColor"
+					>
+						<path
+							fill-rule="evenodd"
+							d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+							clip-rule="evenodd"
+						/>
+					</svg>
+				</span>
+			</button>
+			<button
+				class="btn ml-5"
+				@click="previousStepHandler"
+				:disabled="stepCount === 1"
+			>
+				<span>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-6 w-7"
+						viewBox="0 0 20 20"
+						fill="currentColor"
+					>
+						<path
+							d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"
+						/>
+					</svg>
+				</span>
+				<span>Previous Step</span>
+			</button>
+			<button
+				class="btn mx-5"
+				@click="nextStepHandler"
+				:disabled="isDone()"
+			>
+				<span>Next Step</span>
+				<span>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-6 w-7"
+						viewBox="0 0 20 20"
+						fill="currentColor"
+					>
+						<path
+							d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z"
+						/>
+					</svg>
+				</span>
+			</button>
 
-		<button class="btn mr-auto" @click="pauseHandler" v-if="isPlaying">
-			Pause
-			<span>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-6 w-7"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-			</span>
-		</button>
-		<button
-			class="btn mr-auto"
-			@click="playHandler"
-			v-else
-			:disabled="isDone()"
+			<button class="btn mr-auto" @click="pauseHandler" v-if="isPlaying">
+				Pause
+				<span>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-6 w-7"
+						viewBox="0 0 20 20"
+						fill="currentColor"
+					>
+						<path
+							fill-rule="evenodd"
+							d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+							clip-rule="evenodd"
+						/>
+					</svg>
+				</span>
+			</button>
+			<button
+				class="btn mr-auto"
+				@click="playHandler"
+				v-else
+				:disabled="isDone()"
+			>
+				Play
+				<span>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-6 w-7"
+						viewBox="0 0 20 20"
+						fill="currentColor"
+					>
+						<path
+							fill-rule="evenodd"
+							d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+							clip-rule="evenodd"
+						/>
+					</svg>
+				</span>
+			</button>
+		</div>
+		<div
+			@click="anotherInputHandler"
+			v-if="showButtons"
+			class="re-enter-input"
 		>
-			Play
-			<span>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-6 w-7"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-			</span>
-		</button>
-	</div>
-	<div @click="anotherInputHandler" v-if="showButtons" class="re-enter-input">
-		Want to enter another string?
+			Want to enter another string?
+		</div>
 	</div>
 </template>
 

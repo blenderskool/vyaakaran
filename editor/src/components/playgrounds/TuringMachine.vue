@@ -8,9 +8,8 @@
 			<PaneHeader>Turing Machine</PaneHeader>
 			<Tape
 				:showButtons="showButtons"
-				:instructions="tapeInstructions"
 				ref="childComponentRef"
-				:key="`TAPE ${store.value.progKey}`"
+				:instructions="tapeInstructions"
 				@toggleShowButtons="
 					showButtons = false;
 					inputString = '';
@@ -20,7 +19,6 @@
 				class="form"
 				@submit.prevent="handleInputSubmit"
 				v-if="!showButtons"
-				:key="`TMINPUT ${store.value.progKey}`"
 			>
 				<div class="input-container">
 					<input
@@ -58,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUpdated, ref } from "vue";
+import { defineComponent, inject, ref } from "vue";
 import { Pane, Splitpanes } from "splitpanes";
 import PaneHeader from "../ui/PaneHeader.vue";
 import Tape from "../explorers/Tape.vue";
@@ -86,14 +84,26 @@ export default defineComponent({
 		const childComponentRef = ref();
 		const showButtons = ref<boolean>(false);
 		const inputString = ref<string>("");
-		const tapeInstructions = ref<Instructions[] | null>();
+		const tapeInstructions = ref<Instructions[]>([]);
+		const store: any = inject("store");
 
 		const handleInputSubmit = () => {
 			showButtons.value = true;
 			childComponentRef.value.loadTM(inputString.value);
-			// let testobj=new TestInput(inputstring,this.store.value.parseTree)
-			// let strgen=testobj.CheckString();
-	
+			let testobj = new TestInput(
+				"aabb#",
+				store.value.compiled.parseTree
+			);
+
+			let strgen = testobj.CheckString();
+
+			let tmp = [];
+			do {
+				console.log(strgen.next().value);
+			} while (!strgen.next().done);
+
+			// console.log(tmp);
+
 			let testInst = [
 				{
 					value: { moveDir: 0, string: ["a", "a", "b", "b", "#"] },
@@ -169,10 +179,10 @@ export default defineComponent({
 }
 
 .input-box {
-	@apply appearance-none bg-transparent border-none w-full text-cyan-300 mr-3 py-1 px-2 placeholder-cyan-300 leading-tight text-lg outline-none;
+	@apply appearance-none bg-transparent border-none w-full text-cyan-300 mr-3 py-1 px-2 placeholder-cool-gray-500 leading-tight text-lg outline-none;
 }
 
 .submit-btn {
-	@apply mt-2 bg-cyan-300 rounded text-blue-gray-800 px-3 py-2 font-semibold text-md shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed;
+	@apply rounded border-1 border-solid border-cyan-300 bg-cyan-500 bg-opacity-10 text-cyan-300 px-3 py-2 font-semibold outline-none;
 }
 </style>
