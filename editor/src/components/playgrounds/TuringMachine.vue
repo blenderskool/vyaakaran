@@ -96,10 +96,10 @@ export default defineComponent({
 			);
 
 			let strgen = testobj.CheckString();
-
-			let tmp = [];
+			let tmp = new Array();
 			do {
-				tmp.push(strgen.next());
+				let tr = strgen.next();
+				tmp.push(JSON.parse(JSON.stringify(tr)));
 			} while (!strgen.next().done);
 
 			console.log(tmp);
