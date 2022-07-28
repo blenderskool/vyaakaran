@@ -481,10 +481,11 @@ export default defineComponent({
 }
 
 .btn {
-	@apply flex bg-cyan-300 rounded text-blue-gray-800 pl-5 pr-3 py-2 font-semibold text-sm shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed;
+	/* @apply flex bg-cyan-300 rounded text-blue-gray-800 pl-5 pr-3 py-2 font-semibold text-sm shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed; */
+	@apply rounded border-1 border-solid border-cyan-400 bg-cyan-500 bg-opacity-10 text-cyan-400 px-3 py-2 font-semibold outline-none disabled:cursor-not-allowed disabled:bg-cool-gray-400 disabled:border-cool-gray-400 disabled:bg-opacity-10 disabled:text-cool-gray-400 hover:bg-opacity-20;
 }
 
 .re-enter-input {
-	@apply flex justify-center text-cyan-300 mt-7 text-md font-semibold hover:underline hover:cursor-pointer;
+	@apply flex justify-center text-cyan-400 mt-7 text-md font-semibold hover:underline hover:cursor-pointer;
 }
 </style>

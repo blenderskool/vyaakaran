@@ -1,5 +1,22 @@
 <template>
-	<div v-show="!isVisLoading" class="h-full" ref="outputRef" />
+	<div class="tm-explorer">
+		<PaneHeader>
+			<div class="flex justify-between">
+				<span>State Transitions</span>
+				<a
+					:download="'Turing Machine State Transitions'"
+					class="secondary-btn"
+					@click="saveFigure"
+				>
+					Save figure
+				</a>
+			</div>
+		</PaneHeader>
+		<div v-if="isVisLoading" class="automata-large-message">
+			Loading visualization...
+		</div>
+		<div v-show="!isVisLoading" class="h-full" ref="outputRef" />
+	</div>
 </template>
 
 <script lang="ts">
@@ -14,8 +31,9 @@ import {
 } from "vue";
 import { stateTransition } from "../../../../compiler/src/turing-machine/types";
 import { edgeConfig, getNodeConfig, tmEdgeConfig } from "../../config/graph";
-import { fillBg } from "../../utils/canvas";
+import { exportToImg, fillBg } from "../../utils/canvas";
 import useVisNetwork from "../../utils/useVisNetwork";
+import PaneHeader from "../ui/PaneHeader.vue";
 
 export default defineComponent({
 	name: "TMStateTransitionGraph",
@@ -26,6 +44,7 @@ export default defineComponent({
 			required: true,
 		},
 	},
+	components: { PaneHeader },
 	setup({ getGraph }) {
 		const outputRef = ref<HTMLElement>();
 		const canvasRef = ref<HTMLCanvasElement>();
@@ -124,11 +143,22 @@ export default defineComponent({
 			});
 		};
 
+		const saveFigure = (e) => {
+			if (!network || !canvasRef.value) return;
+			e.target.href = exportToImg(canvasRef.value);
+		};
+
 		onUpdated(generateVisGraph);
 		watch(() => isVisLoading, generateVisGraph);
 		onUnmounted(() => network && network.destroy());
 
-		return { outputRef, isVisLoading };
+		return { outputRef, isVisLoading, saveFigure };
 	},
 });
 </script>
+
+<style>
+.tm-explorer .vis-network:focus {
+	@apply !outline-none;
+}
+</style>
