@@ -88,13 +88,15 @@ export default defineComponent({
 				let tr = strgen.next();
 				tmp.push(JSON.parse(JSON.stringify(tr)));
 			} while (!strgen.next().done);
-
+			console.log("here")
+			console.log(tmp)
 			tapeInstructions.value = tmp.map((inst) => {
 				return {
 					moveDir: inst.value.moveDir,
 					charArray: inst.value.string,
 				};
 			});
+			// alert(tmp[tmp.length-1].value.accepted)
 		};
 		return {
 			showButtons,

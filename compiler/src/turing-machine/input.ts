@@ -44,8 +44,9 @@ export class TestInput {
 				for (var j of this.vertices.get(s)) {
 					if (this.tape[index] == j.readSymbol) {
 						this.tape[index] = j.writeSymbol;
-						value.moveDir = this.tMove(j.transition);
+						// value.moveDir = this.tMove(j.transition);
 						index = index + this.tMove(j.transition);
+						value.moveDir=index
 						s = j.nextState;
 						if (s[0] == "*") {
 							value.accepted = true;
@@ -57,7 +58,6 @@ export class TestInput {
 					}
 					if (statecount >= this.vertices.get(s).length) {
 						flag = false;
-						console.log("failed");
 						yield value;
 					}
 					value.string = this.tape;
