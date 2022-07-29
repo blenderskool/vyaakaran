@@ -1,5 +1,37 @@
 <template>
 	<div>
+		<div class="h-10 flex flex-col justify-center">
+			<p v-if="isDone() && isAccepted" class="accepted-alert">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5 mr-1"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+				Input string has been accepted by the Turing Machine
+			</p>
+			<p v-else-if="isDone() && !isAccpted" class="rejected-alert">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5 mr-1"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+				Input string has been rejected by the Turing Machine
+			</p>
+		</div>
 		<div class="container">
 			<svg class="tm-tape" width="800" viewBox="0 0 870 70">
 				<g class="wrapper" transform="translate(0 10)">
@@ -150,6 +182,10 @@ export default defineComponent({
 			type: Array as PropType<Instructions[]>,
 			required: true,
 		},
+		isAccepted: {
+			type: Boolean as PropType<boolean>,
+			required: true,
+		},
 	},
 	setup(props, { emit }) {
 		const array = ref<number[]>([
@@ -209,11 +245,12 @@ export default defineComponent({
 		const stepCount = ref<number>(1);
 		const inputString = ref<string>("");
 		const isPlaying = ref<boolean>(false);
+		const TID = ref();
 
 		onMounted(() => {
 			for (let i = 0; i < array.value.length; ++i) {
 				let transVal = `translate(${array.value[i]})`;
-				let val = "";
+				let val = " ";
 
 				TArray.value.push({ transVal, val });
 			}
@@ -229,158 +266,167 @@ export default defineComponent({
 			if (move < 0) {
 				let index = props.instructions[stepCount.value - 1].moveDir;
 				let i = 0;
-				const intervalID = setInterval(() => {
-					if (
-						TArray.value[211 + index].val !==
-						props.instructions[stepCount.value].charArray[index]
-					) {
-						TArray.value[211 + index].val =
-							props.instructions[stepCount.value].charArray[
-								index
-							] === "#"
-								? ""
-								: props.instructions[stepCount.value].charArray[
-										index
-								  ];
-					}
-					for (let i = 0; i < array.value.length; ++i) {
-						array.value[i] += 50;
-					}
-					generateTArray();
-					index--;
-					i++;
-					if (i === move * -1) {
-						clearInterval(intervalID);
-						stepCount.value++;
-					}
-				}, 1000);
-				return;
+				const intervalID = setInterval(
+					() => {
+						if (
+							TArray.value[211 + index - 100].val !==
+							props.instructions[stepCount.value].charArray[index]
+						) {
+							TArray.value[211 + index - 100].val =
+								props.instructions[stepCount.value].charArray[
+									index
+								] === "#"
+									? " "
+									: props.instructions[stepCount.value]
+											.charArray[index];
+						}
+						for (let i = 0; i < array.value.length; ++i) {
+							array.value[i] += 50;
+						}
+						generateTArray();
+						index--;
+						i++;
+						if (i === move * -1) {
+							clearInterval(intervalID);
+							stepCount.value++;
+						}
+					},
+					isPlaying.value ? 1000 : 500
+				);
 			} else if (move > 0) {
 				let index = props.instructions[stepCount.value - 1].moveDir;
 				let i = 0;
-				const intervalID = setInterval(() => {
-					if (
-						TArray.value[211 + index].val !==
-						props.instructions[stepCount.value].charArray[index]
-					) {
-						TArray.value[211 + index].val =
-							props.instructions[stepCount.value].charArray[
-								index
-							] === "#"
-								? ""
-								: props.instructions[stepCount.value].charArray[
-										index
-								  ];
-					}
-					for (let i = 0; i < array.value.length; ++i) {
-						array.value[i] -= 50;
-					}
-					generateTArray();
-					index++;
-					i++;
-					if (i === move) {
-						clearInterval(intervalID);
-						stepCount.value++;
-					}
-				}, 1000);
-
-				return;
+				const intervalID = setInterval(
+					() => {
+						if (
+							TArray.value[211 + index - 100].val !==
+							props.instructions[stepCount.value].charArray[index]
+						) {
+							TArray.value[211 + index - 100].val =
+								props.instructions[stepCount.value].charArray[
+									index
+								] === "#"
+									? " "
+									: props.instructions[stepCount.value]
+											.charArray[index];
+						}
+						for (let i = 0; i < array.value.length; ++i) {
+							array.value[i] -= 50;
+						}
+						generateTArray();
+						index++;
+						i++;
+						if (i === move) {
+							clearInterval(intervalID);
+							stepCount.value++;
+						}
+					},
+					isPlaying.value ? 1000 : 500
+				);
 			} else {
 				let index = props.instructions[stepCount.value].moveDir;
 				if (
 					props.instructions[stepCount.value].charArray[index] !==
-					TArray.value[211 + index].val
+					TArray.value[211 + index - 100].val
 				) {
-					TArray.value[211 + index].val =
-						props.instructions[stepCount.value].charArray[index];
+					TArray.value[211 + index - 100].val =
+						props.instructions[stepCount.value].charArray[index] ===
+						"#"
+							? " "
+							: props.instructions[stepCount.value].charArray[
+									index
+							  ];
 				}
 				stepCount.value++;
 			}
-			return;
 		};
 
 		const prevStep = (move: number) => {
 			if (move < 0) {
 				let index = props.instructions[stepCount.value - 1].moveDir;
 				let i = 0;
-				const intervalID = setInterval(() => {
-					if (
-						TArray.value[211 + index].val !==
-						props.instructions[stepCount.value - 2].charArray[index]
-					) {
-						TArray.value[211 + index].val =
+				const intervalID = setInterval(
+					() => {
+						if (
+							TArray.value[211 + index - 100].val !==
 							props.instructions[stepCount.value - 2].charArray[
 								index
-							] === "#"
-								? ""
-								: props.instructions[stepCount.value - 2]
-										.charArray[index];
-					}
-					for (let i = 0; i < array.value.length; ++i) {
-						array.value[i] += 50;
-					}
-					generateTArray();
-					index--;
-					i++;
-					if (i === move * -1) {
-						clearInterval(intervalID);
-						stepCount.value--;
-						if (stepCount.value - 1 === 0) {
-							loadTM(inputString.value);
+							]
+						) {
+							TArray.value[211 + index - 100].val =
+								props.instructions[stepCount.value - 2]
+									.charArray[index] === "#"
+									? " "
+									: props.instructions[stepCount.value - 2]
+											.charArray[index];
 						}
-					}
-				}, 1000);
-				return;
+						for (let i = 0; i < array.value.length; ++i) {
+							array.value[i] += 50;
+						}
+						generateTArray();
+						index--;
+						i++;
+						if (i === move * -1) {
+							clearInterval(intervalID);
+							stepCount.value--;
+							if (stepCount.value - 1 === 0) {
+								loadTM(inputString.value);
+							}
+						}
+					},
+					isPlaying.value ? 1000 : 500
+				);
 			} else if (move > 0) {
 				let index = props.instructions[stepCount.value - 1].moveDir;
 				let i = 0;
-				const intervalID = setInterval(() => {
-					if (
-						TArray.value[211 + index].val !==
-						props.instructions[stepCount.value - 2].charArray[index]
-					) {
-						TArray.value[211 + index].val =
+				const intervalID = setInterval(
+					() => {
+						if (
+							TArray.value[211 + index - 100].val !==
 							props.instructions[stepCount.value - 2].charArray[
 								index
-							] === "#"
-								? ""
-								: props.instructions[stepCount.value - 2]
-										.charArray[index];
-					}
-					for (let i = 0; i < array.value.length; ++i) {
-						array.value[i] -= 50;
-					}
-					generateTArray();
-					index++;
-					i++;
-					if (i === move) {
-						clearInterval(intervalID);
-						stepCount.value--;
-						if (stepCount.value - 1 === 0) {
-							loadTM(inputString.value);
+							]
+						) {
+							TArray.value[211 + index - 100].val =
+								props.instructions[stepCount.value - 2]
+									.charArray[index] === "#"
+									? " "
+									: props.instructions[stepCount.value - 2]
+											.charArray[index];
 						}
-					}
-				}, 1000);
-
-				return;
+						for (let i = 0; i < array.value.length; ++i) {
+							array.value[i] -= 50;
+						}
+						generateTArray();
+						index++;
+						i++;
+						if (i === move) {
+							clearInterval(intervalID);
+							stepCount.value--;
+							if (stepCount.value - 1 === 0) {
+								loadTM(inputString.value);
+							}
+						}
+					},
+					isPlaying.value ? 1000 : 500
+				);
 			} else {
 				let index = props.instructions[stepCount.value - 2].moveDir;
 				if (
 					props.instructions[stepCount.value - 2].charArray[index] !==
-					TArray.value[211 + index].val
+					TArray.value[211 + index - 100].val
 				) {
-					TArray.value[211 + index].val =
+					TArray.value[211 + index - 100].val =
 						props.instructions[stepCount.value - 2].charArray[
 							index
 						] === "#"
-							? ""
+							? " "
 							: props.instructions[stepCount.value - 2].charArray[
 									index
 							  ];
 				}
 				stepCount.value--;
 			}
-			return;
 		};
 
 		const nextStepHandler = () => {
@@ -401,7 +447,8 @@ export default defineComponent({
 		const playHandler = () => {
 			isPlaying.value = true;
 
-			let intervalID = setTimeout(function myTimer() {
+			let timeoutID = setTimeout(function myTimer() {
+				TID.value = timeoutID;
 				nextStep(
 					props.instructions[stepCount.value].moveDir -
 						props.instructions[stepCount.value - 1].moveDir
@@ -411,9 +458,9 @@ export default defineComponent({
 					isPlaying.value === false
 				) {
 					isPlaying.value = false;
-					clearTimeout(intervalID);
+					clearTimeout(timeoutID);
 				} else {
-					intervalID = setTimeout(
+					timeoutID = setTimeout(
 						myTimer,
 						Math.abs(
 							props.instructions[stepCount.value].moveDir -
@@ -487,6 +534,7 @@ export default defineComponent({
 
 		const pauseHandler = () => {
 			isPlaying.value = !isPlaying.value;
+			clearTimeout(TID.value);
 		};
 
 		const anotherInputHandler = () => {
@@ -551,7 +599,7 @@ export default defineComponent({
 			];
 			generateTArray();
 			for (let i = 0; i < array.value.length; ++i) {
-				TArray.value[i].val = "";
+				TArray.value[i].val = " ";
 			}
 		};
 
@@ -588,7 +636,7 @@ export default defineComponent({
 
 <style scoped>
 .container {
-	@apply bg-gray-900 border-transparent border-2 p-8 mt-5;
+	@apply bg-gray-900 border-transparent border-2 p-8;
 }
 
 .tm-tape {
@@ -609,10 +657,17 @@ export default defineComponent({
 
 .btn {
 	/* @apply flex bg-cyan-300 rounded text-blue-gray-800 pl-5 pr-3 py-2 font-semibold text-sm shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed; */
-	@apply rounded border-1 border-solid border-cyan-400 bg-cyan-500 bg-opacity-10 text-cyan-400 px-3 py-2 font-semibold outline-none disabled:cursor-not-allowed disabled:bg-cool-gray-400 disabled:border-cool-gray-400 disabled:bg-opacity-10 disabled:text-cool-gray-400 hover:bg-opacity-20 disabled:hover:bg-opacity-10;
+	@apply rounded border-1 border-solid border-cyan-400 bg-cyan-500 bg-opacity-10 text-cyan-400 px-2 py-1 text-xs font-semibold outline-none disabled:cursor-not-allowed disabled:bg-cool-gray-400 disabled:border-cool-gray-400 disabled:bg-opacity-10 disabled:text-cool-gray-400 hover:bg-opacity-20 disabled:hover:bg-opacity-10;
 }
 
 .re-enter-input {
-	@apply flex justify-center text-cyan-400 mt-7 text-md font-semibold hover:underline hover:cursor-pointer;
+	@apply flex justify-center text-cyan-400 mt-7 text-sm font-semibold hover:underline hover:cursor-pointer;
+}
+
+.accepted-alert {
+	@apply flex justify-center bg-transparent text-green-400 text-sm font-semibold;
+}
+.rejected-alert {
+	@apply flex justify-center bg-transparent text-red-500 text-sm font-semibold;
 }
 </style>

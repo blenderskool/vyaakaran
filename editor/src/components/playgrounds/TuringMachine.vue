@@ -14,6 +14,7 @@
 					showButtons = false;
 					inputString = '';
 				"
+				:isAccepted="isAccepted"
 			></Tape>
 			<form
 				class="form"
@@ -73,6 +74,7 @@ export default defineComponent({
 		const inputString = ref<string>("");
 		const tapeInstructions = ref<Instructions[]>([]);
 		const store: any = inject("store");
+		const isAccepted = ref<boolean>(false);
 
 		const handleInputSubmit = () => {
 			showButtons.value = true;
@@ -88,15 +90,15 @@ export default defineComponent({
 				let tr = strgen.next();
 				tmp.push(JSON.parse(JSON.stringify(tr)));
 			} while (!strgen.next().done);
-			console.log("here");
-			console.log(tmp);
+
+			isAccepted.value = tmp[tmp.length - 1].value.accepted;
+
 			tapeInstructions.value = tmp.map((inst) => {
 				return {
 					moveDir: inst.value.moveDir,
 					charArray: inst.value.string,
 				};
 			});
-			alert(tmp[tmp.length - 1].value.accepted);
 		};
 		return {
 			showButtons,
@@ -104,6 +106,7 @@ export default defineComponent({
 			handleInputSubmit,
 			tapeInstructions,
 			childComponentRef,
+			isAccepted,
 		};
 	},
 });
@@ -111,7 +114,7 @@ export default defineComponent({
 
 <style scoped>
 .form {
-	@apply flex justify-center;
+	@apply flex justify-center mt-5;
 }
 
 .input-container {
@@ -119,10 +122,10 @@ export default defineComponent({
 }
 
 .input-box {
-	@apply appearance-none bg-transparent border-none w-full text-cyan-300 mr-3 py-1 px-2 placeholder-cool-gray-500 leading-tight text-lg outline-none;
+	@apply appearance-none bg-transparent border-none w-full text-cyan-300 mr-3 py-1 px-2 text-xs placeholder-cool-gray-500 leading-tight text-lg outline-none;
 }
 
 .submit-btn {
-	@apply rounded border-1 border-solid border-cyan-400 bg-cyan-500 bg-opacity-10 text-cyan-400 px-3 py-2 font-semibold outline-none hover:bg-opacity-20;
+	@apply rounded border-1 border-solid border-cyan-400 bg-cyan-500 bg-opacity-10 text-cyan-400 px-2 py-1 text-sm font-semibold outline-none hover:bg-opacity-20;
 }
 </style>
