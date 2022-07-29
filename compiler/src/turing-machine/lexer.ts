@@ -18,7 +18,7 @@ export const FinalState = createToken({
 
 export const Symbol = createToken({
   name: "Symbol",
-  pattern: /[a-z#]/,
+  pattern: /[0-9a-z#]/,
 });
 
 export const LParen = createToken({

@@ -1,6 +1,6 @@
 1) Turing Machine
-a) a^nb^nc^n
-
+a) a^nb^n, n>=1
+i)
 S (a:x)->-Q1
 Q1 (a:a)->-Q1
 Q1 (b:b)->-Q1
@@ -12,3 +12,25 @@ Q3 (b:b)-<-Q3
 Q3 (x:x)->-S
 S (y:y)->- *Q4
 
+b) a^nb^nc^n, n>=1
+S (a:x)->- Q1
+
+Q1 (y:y)->- Q1
+Q1 (a:a)->- Q1
+Q1 (b:y)->- Q2
+
+Q2 (z:z)->- Q2
+Q2 (b:b)->- Q2
+Q2 (c:z)-<- Q3
+
+Q3 (a:a)-<- Q3
+Q3 (y:y)-<- Q3
+Q3 (b:b)-<- Q3
+Q3 (z:z)-<- Q3
+Q3 (x:x)->- S
+
+S (y:y)->- Q4
+
+Q4 (y:y)->- Q4
+Q4 (z:z)->- Q4
+Q4 (#:#)->- *Q5
