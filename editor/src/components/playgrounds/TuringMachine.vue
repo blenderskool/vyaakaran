@@ -78,7 +78,7 @@ export default defineComponent({
 			showButtons.value = true;
 			childComponentRef.value.loadTM(inputString.value);
 			let testobj = new TestInput(
-				inputString.value + "#",
+				inputString.value ,
 				store.value.compiled.parseTree
 			);
 
