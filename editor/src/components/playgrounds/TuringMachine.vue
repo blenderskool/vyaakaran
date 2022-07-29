@@ -96,7 +96,7 @@ export default defineComponent({
 					charArray: inst.value.string,
 				};
 			});
-			// alert(tmp[tmp.length-1].value.accepted)
+			alert(tmp[tmp.length-1].value.accepted)
 		};
 		return {
 			showButtons,
