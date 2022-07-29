@@ -7,7 +7,7 @@
 						class="tape-cell"
 						v-for="ele in TArray"
 						:transform="ele.transVal"
-						:key="ele.val"
+						:key="ele.transVal"
 					>
 						<rect width="50" height="50"></rect>
 						<text x="25" y="33">{{ ele.val }}</text>
@@ -225,76 +225,203 @@ export default defineComponent({
 			}
 		};
 
-		const accumulateString = (indexOfInstruction: number) => {
-			for (let i = 0; i < array.value.length; ++i) {
+		const nextStep = (move: number) => {
+			if (move < 0) {
+				let index = props.instructions[stepCount.value - 1].moveDir;
+				let i = 0;
+				const intervalID = setInterval(() => {
+					if (
+						TArray.value[211 + index].val !==
+						props.instructions[stepCount.value].charArray[index]
+					) {
+						TArray.value[211 + index].val =
+							props.instructions[stepCount.value].charArray[
+								index
+							] === "#"
+								? ""
+								: props.instructions[stepCount.value].charArray[
+										index
+								  ];
+					}
+					for (let i = 0; i < array.value.length; ++i) {
+						array.value[i] += 50;
+					}
+					generateTArray();
+					index--;
+					i++;
+					if (i === move * -1) {
+						clearInterval(intervalID);
+						stepCount.value++;
+					}
+				}, 1000);
+				return;
+			} else if (move > 0) {
+				let index = props.instructions[stepCount.value - 1].moveDir;
+				let i = 0;
+				const intervalID = setInterval(() => {
+					if (
+						TArray.value[211 + index].val !==
+						props.instructions[stepCount.value].charArray[index]
+					) {
+						TArray.value[211 + index].val =
+							props.instructions[stepCount.value].charArray[
+								index
+							] === "#"
+								? ""
+								: props.instructions[stepCount.value].charArray[
+										index
+								  ];
+					}
+					for (let i = 0; i < array.value.length; ++i) {
+						array.value[i] -= 50;
+					}
+					generateTArray();
+					index++;
+					i++;
+					if (i === move) {
+						clearInterval(intervalID);
+						stepCount.value++;
+					}
+				}, 1000);
+
+				return;
+			} else {
+				let index = props.instructions[stepCount.value].moveDir;
 				if (
-					i >= 211 &&
-					i <
-						210 +
-							props.instructions[indexOfInstruction].charArray
-								.length
+					props.instructions[stepCount.value].charArray[index] !==
+					TArray.value[211 + index].val
 				) {
-					TArray.value[i].val =
-						props.instructions[indexOfInstruction].charArray[
-							i - 211
-						];
-				} else {
-					TArray.value[i].val = "";
+					TArray.value[211 + index].val =
+						props.instructions[stepCount.value].charArray[index];
 				}
+				stepCount.value++;
 			}
+			return;
 		};
 
-		const changeArray = (move: number, indexOfInstruction: number) => {
-			if (move === 0) {
-				accumulateString(indexOfInstruction);
-			} else if (move === 1) {
-				accumulateString(indexOfInstruction);
-				for (let i = 0; i < array.value.length; ++i) {
-					array.value[i] -= 50;
-				}
-				generateTArray();
+		const prevStep = (move: number) => {
+			if (move < 0) {
+				let index = props.instructions[stepCount.value - 1].moveDir;
+				let i = 0;
+				const intervalID = setInterval(() => {
+					if (
+						TArray.value[211 + index].val !==
+						props.instructions[stepCount.value - 2].charArray[index]
+					) {
+						TArray.value[211 + index].val =
+							props.instructions[stepCount.value - 2].charArray[
+								index
+							] === "#"
+								? ""
+								: props.instructions[stepCount.value - 2]
+										.charArray[index];
+					}
+					for (let i = 0; i < array.value.length; ++i) {
+						array.value[i] += 50;
+					}
+					generateTArray();
+					index--;
+					i++;
+					if (i === move * -1) {
+						clearInterval(intervalID);
+						stepCount.value--;
+						if (stepCount.value - 1 === 0) {
+							loadTM(inputString.value);
+						}
+					}
+				}, 1000);
+				return;
+			} else if (move > 0) {
+				let index = props.instructions[stepCount.value - 1].moveDir;
+				let i = 0;
+				const intervalID = setInterval(() => {
+					if (
+						TArray.value[211 + index].val !==
+						props.instructions[stepCount.value - 2].charArray[index]
+					) {
+						TArray.value[211 + index].val =
+							props.instructions[stepCount.value - 2].charArray[
+								index
+							] === "#"
+								? ""
+								: props.instructions[stepCount.value - 2]
+										.charArray[index];
+					}
+					for (let i = 0; i < array.value.length; ++i) {
+						array.value[i] -= 50;
+					}
+					generateTArray();
+					index++;
+					i++;
+					if (i === move) {
+						clearInterval(intervalID);
+						stepCount.value--;
+						if (stepCount.value - 1 === 0) {
+							loadTM(inputString.value);
+						}
+					}
+				}, 1000);
+
+				return;
 			} else {
-				accumulateString(indexOfInstruction);
-				for (let i = 0; i < array.value.length; ++i) {
-					array.value[i] += 50;
+				let index = props.instructions[stepCount.value - 2].moveDir;
+				if (
+					props.instructions[stepCount.value - 2].charArray[index] !==
+					TArray.value[211 + index].val
+				) {
+					TArray.value[211 + index].val =
+						props.instructions[stepCount.value - 2].charArray[
+							index
+						] === "#"
+							? ""
+							: props.instructions[stepCount.value - 2].charArray[
+									index
+							  ];
 				}
-				generateTArray();
+				stepCount.value--;
 			}
+			return;
 		};
 
 		const nextStepHandler = () => {
 			if (isPlaying.value) isPlaying.value = false;
-			changeArray(
-				props.instructions[stepCount.value].moveDir,
-				stepCount.value
+			nextStep(
+				props.instructions[stepCount.value].moveDir -
+					props.instructions[stepCount.value - 1].moveDir
 			);
-			stepCount.value += 1;
 		};
 		const previousStepHandler = () => {
 			if (isPlaying.value) isPlaying.value = false;
-			stepCount.value -= 1;
-			changeArray(
-				props.instructions[stepCount.value].moveDir * -1,
-				stepCount.value - 1
+			prevStep(
+				props.instructions[stepCount.value - 2].moveDir -
+					props.instructions[stepCount.value - 1].moveDir
 			);
 		};
 
 		const playHandler = () => {
 			isPlaying.value = true;
-			const intervalID = setInterval(() => {
+
+			let intervalID = setTimeout(function myTimer() {
+				nextStep(
+					props.instructions[stepCount.value].moveDir -
+						props.instructions[stepCount.value - 1].moveDir
+				);
 				if (
 					stepCount.value === props.instructions.length ||
 					isPlaying.value === false
 				) {
 					isPlaying.value = false;
-					clearInterval(intervalID);
+					clearTimeout(intervalID);
+				} else {
+					intervalID = setTimeout(
+						myTimer,
+						Math.abs(
+							props.instructions[stepCount.value].moveDir -
+								props.instructions[stepCount.value - 1].moveDir
+						) * 1000
+					);
 				}
-				changeArray(
-					props.instructions[stepCount.value].moveDir,
-					stepCount.value
-				);
-				stepCount.value += 1;
-			}, 1000);
+			}, 0);
 		};
 		const resetHandler = () => {
 			isPlaying.value = false;
@@ -443,7 +570,7 @@ export default defineComponent({
 			array,
 			TArray,
 			generateTArray,
-			changeArray,
+			nextStep,
 			nextStepHandler,
 			resetHandler,
 			playHandler,
@@ -482,7 +609,7 @@ export default defineComponent({
 
 .btn {
 	/* @apply flex bg-cyan-300 rounded text-blue-gray-800 pl-5 pr-3 py-2 font-semibold text-sm shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed; */
-	@apply rounded border-1 border-solid border-cyan-400 bg-cyan-500 bg-opacity-10 text-cyan-400 px-3 py-2 font-semibold outline-none disabled:cursor-not-allowed disabled:bg-cool-gray-400 disabled:border-cool-gray-400 disabled:bg-opacity-10 disabled:text-cool-gray-400 hover:bg-opacity-20;
+	@apply rounded border-1 border-solid border-cyan-400 bg-cyan-500 bg-opacity-10 text-cyan-400 px-3 py-2 font-semibold outline-none disabled:cursor-not-allowed disabled:bg-cool-gray-400 disabled:border-cool-gray-400 disabled:bg-opacity-10 disabled:text-cool-gray-400 hover:bg-opacity-20 disabled:hover:bg-opacity-10;
 }
 
 .re-enter-input {
