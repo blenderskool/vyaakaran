@@ -7,9 +7,15 @@ export class TestInput {
 		this.tape = [];
 		this.vertices = vertices;
 	}
-	private toTape(str: string) {
+	private toTape(str: string ) {
+		for (let index = 0;  index < 100 ; index++) {
+			this.tape.push("#")
+		}
 		for (var i of str) {
 			this.tape.push(i);
+		}
+		for (let index = 0; index < 100; index++) {
+			this.tape.push("#")
 		}
 	}
 	private tMove(m: string) {
@@ -25,11 +31,11 @@ export class TestInput {
 	*CheckString() {
 		let s = "S";
 		let flag = true;
-		let index = 0;
+		let index = 100;
 		this.initTape();
 		this.toTape(this.input);
 		let value = {
-			moveDir: 0,
+			moveDir: 100,
 			string: this.tape,
 			accepted: false,
 		};
@@ -70,7 +76,7 @@ export class TestInput {
 	consoleTestString() {
 		let s = "S";
 		let flag = true;
-		let index = 0;
+		let index = 100;
 		this.initTape();
 		this.toTape(this.input);
 		while (this.vertices.get(s) && flag) {

@@ -78,7 +78,7 @@ export default defineComponent({
 			showButtons.value = true;
 			childComponentRef.value.loadTM(inputString.value);
 			let testobj = new TestInput(
-				inputString.value + "#",
+				inputString.value ,
 				store.value.compiled.parseTree
 			);
 
@@ -96,7 +96,7 @@ export default defineComponent({
 					charArray: inst.value.string,
 				};
 			});
-			// alert(tmp[tmp.length-1].value.accepted)
+			alert(tmp[tmp.length-1].value.accepted)
 		};
 		return {
 			showButtons,
