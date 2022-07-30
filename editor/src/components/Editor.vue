@@ -21,7 +21,7 @@ export default defineComponent({
     onMounted(() => {
       editor = monaco.editor.create(editorRef.value, {
         ...editorConfig,
-        language: 'Vyaakaran Grammar',
+        language: 'State Transition Grammar',
         value: store.value.program,
       });
       editor.onDidChangeModelContent(() => {

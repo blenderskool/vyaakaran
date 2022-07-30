@@ -22,8 +22,8 @@ monaco.languages.setMonarchTokensProvider('State Transition Grammar', {
   tokenizer: {
     root: [
       [/#/, 'keyword'],
-      [/[A-Z]\w./, 'state'],
-      [/[0-9a-z]/, 'symbol'],
+      [/[A-Z]\w*/, 'state'],
+      [/[a-z0-9]/, 'symbol'],
       [/-/, 'hyphen'],
       [/[<>=]/, 'direction'],
       [/[\(\):]/, 'seperator'],
@@ -72,7 +72,7 @@ monaco.editor.defineTheme('statetransitiongrammar', {
 })
 
 const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
-  theme: 'vyaakaran',
+  theme: 'statetransitiongrammar',
   fontLigatures: true,
   fontFamily: 'Fira Code, monospace',
   fontWeight: '500',

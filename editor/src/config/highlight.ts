@@ -40,7 +40,7 @@ hljs.registerLanguage('State Transition Grammar', () => ({
     },
     {
       className: 'state',
-      match: /[A-Z]\w./,
+      match: /[A-Z]\w*/,
     },
     {
       className: 'symbol',
