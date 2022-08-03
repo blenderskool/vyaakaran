@@ -1,7 +1,7 @@
-export const dropDownData = [
-  {
-    name: "N number of a's and b's",
-    code: `// Σ = {a, b}
+export const dropDownDataTM = [
+	{
+		name: "N number of a's and b's",
+		code: `// Σ = {a, b}
 // S -> Start State
 // *Q4 -> Final State
 
@@ -18,10 +18,10 @@ Q2 ( b : y ) -<- Q3
 Q3 ( a : a ) -<- Q3  
 Q3 ( b : b ) -<- Q3  
 Q3 ( x : x ) ->- S`,
-  },
-  {
-    name: "Equal number of a's and b's",
-    code: `// Σ = {a, b}
+	},
+	{
+		name: "Equal number of a's and b's",
+		code: `// Σ = {a, b}
 // S -> Start State
 // *Q4 -> Final State
 
@@ -42,10 +42,10 @@ Q3 ( a : a ) -<- Q3
 Q3 ( b : b ) -<- Q3 
 Q3 ( x : x ) -<- Q3 
 Q3 ( # : # ) ->- S`,
-  },
-  {
-    name: "N number of a's, b's and c's",
-    code: `// Σ = {a, b, c}
+	},
+	{
+		name: "N number of a's, b's and c's",
+		code: `// Σ = {a, b, c}
 // S -> Start State
 // *Q5 -> Final State
 
@@ -69,10 +69,10 @@ Q3 ( x : x ) ->- S
 Q4 ( y : y ) ->- Q4
 Q4 ( z : z ) ->- Q4
 Q4 ( # : # ) ->- *Q5`,
-  },
-  {
-    name: "Palindrome of even length",
-    code: `// Σ = {a, b, c}
+	},
+	{
+		name: "Palindrome of even length",
+		code: `// Σ = {a, b, c}
 // S -> Start State
 // *Q15 -> Final State
 
@@ -130,5 +130,33 @@ Q14 ( a : a ) -<- Q14
 Q14 ( b : b ) -<- Q14
 Q14 ( x : x ) ->- Q8
 Q14 ( y : y ) ->- Q8`,
-  },
+	},
+];
+
+export const dropDownDataRG = [
+	{
+		name: "m number of a's followed by n number of b's | n,m>=0",
+		code: `S -> A|B.
+A ->aA|#.
+B ->bB|#.`,
+	},
+	{
+		name: "L={abw, w∈{a,b}*}",
+		code: `S -> aA.
+A -> bB.
+B -> aB|bB|#.`,
+	},
+];
+
+export const dropDownDataCFG = [
+	{
+		name: "L={num of a in w ≠ num of b in w, w∈{a,b}*}",
+		code: `S -> A|B.
+A -> aAb|bAa|AA|aA|Aa|a.
+B -> aBb|bBa|BB|bB|Bb|b.`,
+	},
+	{
+		name: "L={num of a in w = num of b in w+1, w∈{a,b}*}",
+		code: `S -> aSb|bSa|a|SS.`,
+	},
 ];

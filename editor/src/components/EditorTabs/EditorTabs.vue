@@ -42,14 +42,10 @@
 		</ul>
 
 		<div class="flex justify-between items-center">
-			<Menu
-				as="div"
-				class="relative inline-block text-left mr-5"
-				v-if="store.value.type === 'TM'"
-			>
+			<Menu as="div" class="relative inline-block text-left mr-5">
 				<div>
 					<MenuButton
-						class="inline-flex justify-center w-full rounded-md border text-xs border-cyan-300 outline-none hover:outline-none p-1 text-cyan-300 bg-cyan-400 bg-opacity-10 hover:bg-opacity-20"
+						class="inline-flex justify-center w-full rounded outline-none border text-xs border-cyan-300 hover:outline-none p-1 text-cyan-300 bg-cyan-400 bg-opacity-10 hover:bg-opacity-20 focus:outline-none"
 					>
 						Select Example
 						<svg
@@ -79,10 +75,48 @@
 					<MenuItems
 						class="origin-top-right absolute right-0 mt-2 w-56 rounded shadow-lg bg-black focus:outline-none"
 					>
-						<div class="py-1">
+						<div class="py-1" v-if="store.value.type === 'TM'">
 							<MenuItem
 								v-slot="{ active }"
-								v-for="item in dropdownData"
+								v-for="item in dropdownDataTM"
+								:key="item.name"
+								@click="store.value.program = item.code"
+							>
+								<div
+									:class="[
+										active
+											? 'bg-cyan-400 text-cyan-300 bg-opacity-10'
+											: 'text-cool-gray-400',
+										'block px-4 py-2 text-xs cursor-pointer',
+									]"
+								>
+									{{ item.name }}
+								</div>
+							</MenuItem>
+						</div>
+						<div class="py-1" v-else-if="store.value.type === 'RG'">
+							<MenuItem
+								v-slot="{ active }"
+								v-for="item in dropdownDataRG"
+								:key="item.name"
+								@click="store.value.program = item.code"
+							>
+								<div
+									:class="[
+										active
+											? 'bg-cyan-400 text-cyan-300 bg-opacity-10'
+											: 'text-cool-gray-400',
+										'block px-4 py-2 text-xs cursor-pointer',
+									]"
+								>
+									{{ item.name }}
+								</div>
+							</MenuItem>
+						</div>
+						<div class="py-1" v-else>
+							<MenuItem
+								v-slot="{ active }"
+								v-for="item in dropdownDataCFG"
 								:key="item.name"
 								@click="store.value.program = item.code"
 							>
@@ -126,7 +160,11 @@ import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { playgrounds, Playground, getActivePlayground } from "../../store/code";
-import { dropDownData } from "../../utils/dropDownData.ts";
+import {
+	dropDownDataTM,
+	dropDownDataRG,
+	dropDownDataCFG,
+} from "../../utils/dropDownData.ts";
 import useKeyShortcut from "../../utils/useKeyShortcut";
 import Tab from "./Tab.vue";
 
@@ -150,7 +188,9 @@ export default defineComponent({
 			() => Number(router.currentRoute.value.params.id) || 0
 		);
 
-		const dropdownData = ref(dropDownData);
+		const dropdownDataTM = ref(dropDownDataTM);
+		const dropdownDataRG = ref(dropDownDataRG);
+		const dropdownDataCFG = ref(dropDownDataCFG);
 
 		const removeTab = (i: number) => {
 			const mutate = () => {
@@ -201,7 +241,15 @@ export default defineComponent({
 			}
 		);
 
-		return { tabs, tabIdx, removeTab, renameTab, dropdownData };
+		return {
+			tabs,
+			tabIdx,
+			removeTab,
+			renameTab,
+			dropdownDataTM,
+			dropdownDataRG,
+			dropdownDataCFG,
+		};
 	},
 });
 </script>

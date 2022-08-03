@@ -605,8 +605,12 @@ export default defineComponent({
 
 		const loadTM = (input: string) => {
 			inputString.value = input;
-			for (let i = 211; i < 211 + input.length; ++i) {
-				TArray.value[i].val = input[i - 211];
+			for (let i = 0; i < array.value.length; ++i) {
+				if (i >= 211 && i < 211 + input.length) {
+					TArray.value[i].val = input[i - 211];
+				} else {
+					TArray.value[i].val = "";
+				}
 			}
 		};
 

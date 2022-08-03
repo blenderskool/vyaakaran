@@ -22,7 +22,8 @@
 					:dbl-click-splitter="false"
 				>
 					<Pane>
-						<Editor />
+						<TMEditor v-if="playground.type === 'TM'" />
+						<Editor v-else />
 					</Pane>
 					<Console />
 				</Splitpanes>
@@ -63,6 +64,7 @@ import pkg from "../../package.json";
 import NewPlaygroundModal from "../components/NewPlaygroundModal.vue";
 import CompileButton from "../components/ui/CompileButton.vue";
 import Editor from "../components/Editor.vue";
+import TMEditor from "../components/TMEditor.vue";
 import Console from "../components/Console.vue";
 import EditorTabs from "../components/EditorTabs/EditorTabs.vue";
 import RegularGrammarPlayground from "../components/playgrounds/RegularGrammar.vue";
@@ -110,6 +112,7 @@ export default defineComponent({
 		Splitpanes,
 		Pane,
 		Editor,
+		TMEditor,
 		Console,
 		TuringMachinePlayground,
 	},

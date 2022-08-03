@@ -19,7 +19,7 @@ import { editorConfig, tmEditorConfig } from "../config/editor";
 import { Playground } from "../store/code";
 
 export default defineComponent({
-	name: "Editor",
+	name: "TMEditor",
 	setup() {
 		const store = inject<ComputedRef<Playground>>("store");
 		const editorRef = ref<HTMLElement>(null);
@@ -30,8 +30,8 @@ export default defineComponent({
 
 		onMounted(() => {
 			editor = monaco.editor.create(editorRef.value, {
-				...editorConfig,
-				language: "Vyaakaran Grammar",
+				...tmEditorConfig,
+				language: "State Transition Grammar",
 				value: store.value.program,
 			});
 			editor.onDidChangeModelContent(() => {
