@@ -60,7 +60,7 @@
 				<span>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-7"
+						class="h-5 w-5"
 						viewBox="0 0 20 20"
 						fill="currentColor"
 					>
@@ -80,7 +80,7 @@
 				<span>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-7"
+						class="h-5 w-5"
 						viewBox="0 0 20 20"
 						fill="currentColor"
 					>
@@ -100,7 +100,7 @@
 				<span>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-7"
+						class="h-5 w-5"
 						viewBox="0 0 20 20"
 						fill="currentColor"
 					>
@@ -116,7 +116,7 @@
 				<span>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-7"
+						class="h-5 w-5"
 						viewBox="0 0 20 20"
 						fill="currentColor"
 					>
@@ -138,7 +138,7 @@
 				<span>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-7"
+						class="h-5 w-5"
 						viewBox="0 0 20 20"
 						fill="currentColor"
 					>
