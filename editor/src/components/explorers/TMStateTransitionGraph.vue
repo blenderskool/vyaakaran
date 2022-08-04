@@ -4,7 +4,7 @@
 			<div class="flex justify-between">
 				<span>State Transitions</span>
 				<a
-					:download="'Turing Machine State Transitions'"
+					:download="'Turing Machine State Transitions.png'"
 					class="secondary-btn"
 					@click="saveFigure"
 				>
