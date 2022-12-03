@@ -16,9 +16,9 @@
   // Configure Google Analytics
   if (browser && typeof window !== undefined) {
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function() {window.dataLayer.push(arguments);}
-    window.gtag('js', new Date());
-    window.gtag('config', 'UA-82138003-6');
+    window.gtag = function(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-K4KBEY7FZJ');
   }
 
   if (browser) {
@@ -54,7 +54,7 @@
   <meta property="twitter:image" content="https://vyaakaran.vercel.app/site-preview.jpg">
 
   {#if !dev}
-    <script async defer src="https://www.googletagmanager.com/gtag/js?id=UA-82138003-6"></script>
+    <script async defer src="https://www.googletagmanager.com/gtag/js?id=G-K4KBEY7FZJ"></script>
   {/if}
 </svelte:head>
 

@@ -29,15 +29,15 @@ export default defineComponent({
     // Configure Google Analytics
     if (import.meta.env.PROD && typeof window !== undefined) {
       const script = document.createElement('script');
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=UA-82138003-6';
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-K4KBEY7FZJ';
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
 
       window.dataLayer = window.dataLayer || [];
-      window.gtag = function() {window.dataLayer.push(arguments);}
-      window.gtag('js', new Date());
-      window.gtag('config', 'UA-82138003-6');
+      window.gtag = function(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-K4KBEY7FZJ');
     }
   }
 });
