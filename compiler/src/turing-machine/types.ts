@@ -1,4 +1,4 @@
-export interface astObj {
+export interface 2 {
   currState: string;
   replacementSymbols: { readSymbol: string; writeSymbol: string };
   transitionSymbols: string;

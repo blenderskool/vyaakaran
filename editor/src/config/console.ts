@@ -29,21 +29,21 @@ const vykrnConsole = new JitterConsole({
       },
       handler(playground, options, args) {
         const count = args.count as number;
-
+    
         if (isNaN(count)) {
           pushToStream(playground, 'Error', `Invalid value for 'count' passed`);
           return;
         }
 
         if (!playground.compiled?.parseTree) return pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
-
+    
         const generator = new RandomStringGenerator(new SimplifiedGrammarRepresentation(playground.compiled?.parseTree as ParseTree));
         try {
           const strings = options.accept ? generator.acceptableAtMost(count) : generator.unacceptableAtMost(count);
           const fmtedStrings = [...strings].map((str) => `"${str}"`);
           pushToStream(playground, 'Success', `${fmtedStrings.length} unique ${options.accept ? 'acceptable' : 'unacceptable'} strings were generated`);
           pushToStream(playground, 'Output', fmtedStrings);
-        } catch (err: any) {
+        } catch(err: any) {
           console.error(err);
           pushToStream(playground, 'Error', err.message);
         }

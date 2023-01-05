@@ -54,12 +54,12 @@ export default defineComponent({
       router.replace({ params: { id: playgrounds.length-1 } });
       emit('close');
     };
-    
+
     watchEffect((onInvalidate) => {
       const handleKeybinds = (e: KeyboardEvent) => {
         if (!props.show) return;
         if (e.ctrlKey || e.shiftKey || e.altKey) return;
-        
+  
         e.preventDefault();
         switch (e.code) {
           case 'KeyC':
@@ -73,15 +73,15 @@ export default defineComponent({
             break;
         };
       };
-      
+
       onInvalidate(() => {
         window.removeEventListener('keydown', handleKeybinds);
       });
-      
+
       window.addEventListener('keydown', handleKeybinds);
     });
-    
-    
+
+
     return { addNewPlayground };
   },
 });

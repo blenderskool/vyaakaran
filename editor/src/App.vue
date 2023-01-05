@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-view />
-    
+
     <!-- Phones unsupported message -->
     <div class="fixed inset-0 z-50 bg-gray-900 flex flex-col justify-center p-8 md:hidden">
       <div class="mb-auto" />
@@ -12,7 +12,7 @@
       <p class="mt-4 text-gray-500">
         Vyaakaran editor does not work on mobile phones. Try switching to a laptop or desktop instead. 💻
       </p>
-      
+
       <div class="mt-auto">
         <svg fill="none" class="h-10 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274 64">
           <path
@@ -46,7 +46,7 @@ export default defineComponent({
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
-      
+
       window.dataLayer = window.dataLayer || [];
       window.gtag = function() {window.dataLayer.push(arguments);}
       window.gtag('js', new Date());
@@ -57,62 +57,62 @@ export default defineComponent({
 </script>
 
 <style>
-body {
-  @apply bg-gray-800 font-sans text-steel-blue-100 overflow-hidden;
-}
+  body {
+    @apply bg-gray-800 font-sans text-steel-blue-100 overflow-hidden;
+  }
 
-button {
-  @apply bg-transparent cursor-pointer inline-flex items-center justify-center text-sm;
-}
-.secondary-btn {
-  @apply py-0.5 px-4 bg-cool-gray-400 bg-opacity-10 text-xs font-semibold cursor-pointer select-none rounded shadow
-  @apply border border-solid border-cool-gray-500 transition;
-  @apply hover:bg-opacity-20 focus:outline-none disabled:(opacity-50 cursor-not-allowed);
-}
+  button {
+    @apply bg-transparent cursor-pointer inline-flex items-center justify-center text-sm;
+  }
+  .secondary-btn {
+    @apply py-0.5 px-4 bg-cool-gray-400 bg-opacity-10 text-xs font-semibold cursor-pointer select-none rounded shadow
+    @apply border border-solid border-cool-gray-500 transition;
+    @apply hover:bg-opacity-20 focus:outline-none disabled:(opacity-50 cursor-not-allowed);
+  }
 
-input {
-  @apply font-sans font-medium;
-}
+  input {
+    @apply font-sans font-medium;
+  }
 
-*::-webkit-scrollbar {
-  @apply w-2 h-2;
-}
+  *::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
 
-*::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
+  *::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
 
-*::-webkit-scrollbar-thumb {
-  @apply bg-steel-blue-100 bg-opacity-20;
-}
+  *::-webkit-scrollbar-thumb {
+    @apply bg-steel-blue-100 bg-opacity-20;
+  }
 
-.splitpanes__splitter:active::after {
-  @apply bg-blue-gray-600 shadow;
-}
+  .splitpanes__splitter:active::after {
+    @apply bg-blue-gray-600 shadow;
+  }
 
-.splitpanes--vertical > .splitpanes__splitter {
-  min-width: 11px !important;
-}
+  .splitpanes--vertical > .splitpanes__splitter {
+    min-width: 11px !important;
+  }
 
-.splitpanes--horizontal > .splitpanes__splitter {
-  @apply relative;
-  min-height: 11px !important;
-}
-.splitpanes--horizontal > .splitpanes__splitter::after {
-  @apply absolute left-0 top-1 right-0 h-px bg-cool-gray-600 transition;
-  content: '';
-}
+  .splitpanes--horizontal > .splitpanes__splitter {
+    @apply relative;
+    min-height: 11px !important;
+  }
+  .splitpanes--horizontal > .splitpanes__splitter::after {
+    @apply absolute left-0 top-1 right-0 h-px bg-cool-gray-600 transition;
+    content: '';
+  }
 
-.hljs-terminal {
-  @apply text-cyan-300 italic;
-}
-.hljs-separator {
-  @apply text-blue-gray-600;
-}
-.hljs-operator {
-  @apply text-steel-blue-500;
-}
-.hljs-keyword {
-  @apply text-cyan-600 font-semibold;
-}
+  .hljs-terminal {
+    @apply text-cyan-300 italic;
+  }
+  .hljs-separator {
+    @apply text-blue-gray-600;
+  }
+  .hljs-operator {
+    @apply text-steel-blue-500;
+  }
+  .hljs-keyword {
+    @apply text-cyan-600 font-semibold;
+  }
 </style>

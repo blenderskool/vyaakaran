@@ -22,7 +22,7 @@ abstract class Playground {
   compiled: CompilerClass;
   progKey: number;
   abstract type: PlaygroundType;
-  
+
   constructor(name: string, program: string, compiledObj: CompilerClass) {
     this.name = name;
     this.program = program;
@@ -30,21 +30,21 @@ abstract class Playground {
     this.consoleStream = [];
     this.compiled = compiledObj;
     this.progKey = 0;
-    
+
     if (this.program.length) {
       this.compile();
     }
   }
-  
+
   compile() {
     const start = Date.now();
     this.compiled.parse().semanticAnalysis();
     const timeTaken = Date.now() - start;
-    
+
     this.errors = this.compiled.errors;
     const errors = this.compiled.errors.map(err => ({ ...err, timestamp: new Date() }));
     const warnings = this.compiled.warnings.map(err => ({ ...err, timestamp: new Date() }));
-    
+
     if (!errors.length) {
       this.consoleStream = [
         ...warnings,
@@ -57,7 +57,7 @@ abstract class Playground {
     } else {
       this.consoleStream = [...errors, ...warnings];
     }
-    
+
     this.progKey = Math.trunc(Math.random() * 10000 + 1);
   };
 };
@@ -68,7 +68,7 @@ class RegularGrammarPlayground extends Playground {
     super(name, program, new RegularGrammar(program));
     this.type = 'RG';
   }
-  
+
   compile() {
     this.compiled = new RegularGrammar(this.program);
     super.compile();
@@ -81,7 +81,7 @@ class ContextFreeGrammarPlayground extends Playground {
     super(name, program, new ContextFreeGrammar(program));
     this.type = 'CFG';
   }
-  
+
   compile() {
     this.compiled = new ContextFreeGrammar(this.program);
     super.compile();
@@ -113,13 +113,13 @@ const newPlayground = (name: string, type: PlaygroundType, program: string = '')
       throw new Error("Invalid playground type");
   };
 };
-  
+
 const playgrounds = reactive<Playground[]>([]);
 
 function getActivePlayground(): Playground | undefined {
   const { value: route } = router.currentRoute;
   const tabIdx = route.params.id ? Number(route.params.id) : 0;
-  
+
   return playgrounds[tabIdx];
 }
 
@@ -131,4 +131,3 @@ export {
   newPlayground,
   PlaygroundType,
 };
-  

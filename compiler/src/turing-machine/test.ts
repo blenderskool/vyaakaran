@@ -17,7 +17,7 @@ if (turingMachine.errors.length === 0) {
     let generator = testObj.CheckString();
 
     play(generator)
-    generator=testObj.CheckString();
+    generator = testObj.CheckString();
     step
   } else {
     console.log("Graph Errors: ", graphObj.errors);
@@ -25,15 +25,13 @@ if (turingMachine.errors.length === 0) {
 } else {
   console.log("Turing machine Errors: ", turingMachine.errors);
 }
-function play(generator : any)
-    {
-      let tmp = []
-      do {
-       tmp.push(step(generator))
-      } while ( !generator.next().done);  
+function play(generator: any) {
+  let tmp = []
+  do {
+    tmp.push(step(generator))
+  } while (!generator.next().done);
 
-    }
-function step(generator : any)
-{
+}
+function step(generator: any) {
   return generator.next()
 }

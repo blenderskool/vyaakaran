@@ -7,7 +7,7 @@
   </div>
   <div class="relative flex flex-col" v-else>
     <EditorTabs @new-playground="() => showNewPlaygroundModal = true" />
-  
+
     <Splitpanes class="flex relative w-screen view" :dbl-click-splitter="false">
       <Pane class="relative overflow-visible" min-size="25" size="35">
         <Splitpanes class="h-full" horizontal :dbl-click-splitter="false">
@@ -35,7 +35,7 @@
     <span>
       Vyaakaran v{{ pkg.version }}
     </span>
-</footer>
+  </footer>
 </template>
 
 <script lang="ts">
@@ -106,30 +106,30 @@ export default defineComponent({
     const showNewPlaygroundModal = ref(false);
     const route = useRoute();
     provide('store', playground);
-    
+
     const getView = () => {
       const explain = route.query['explain'] ?? 'default';
-      
+
       if (explain === 'default' || playground.value.errors.length || !playground.value.compiled) {
         return { type: 'default', view: views[playground.value.type].default.view };
       }
-      
+
       const params = views[playground.value.type][explain].params;
-      
+
       for(const param of params) {
         if (route.query[param] === undefined) {
           return { type: 'default', view: views[playground.value.type].default.view };
         }
       }
-      
+
       return { type: explain, view: views[playground.value.type][explain].view };
     };
-    
+
     // New playground hotkey
     useKeyShortcut((e) => e.shiftKey && e.code === 'KeyN', () => {
       showNewPlaygroundModal.value = true;
     });
-    
+
     return { playground, getView, showNewPlaygroundModal, pkg };
   }
 });
