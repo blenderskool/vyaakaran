@@ -2,11 +2,11 @@ import { EarleyParser } from '../../../compiler/src/validator';
 import { RandomStringGenerator } from '../../../compiler/src/generator';
 import { ParseTree } from '../../../compiler/src/regular-grammar/types';
 import { SimplifiedGrammarRepresentation } from '../../../compiler/src/utils';
+import { TestInput } from '../../../compiler/src/turing-machine/input';
+import { stateTransition } from '../../../compiler/src/turing-machine/types';
 import { JitterConsole, pushToStream } from '../utils/JitterConsole';
 import { ConsoleStream } from '../store/code';
-import {TestInput} from "../../../compiler/src/turing-machine/input"
 import pkg from '../../package.json';
-import { stateTransition } from '../../../compiler/src/turing-machine/types';
 
 const vykrnConsole = new JitterConsole({
   name: 'Vyaakaran console',
@@ -29,21 +29,21 @@ const vykrnConsole = new JitterConsole({
       },
       handler(playground, options, args) {
         const count = args.count as number;
-    
+
         if (isNaN(count)) {
           pushToStream(playground, 'Error', `Invalid value for 'count' passed`);
           return;
         }
 
         if (!playground.compiled?.parseTree) return pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
-    
+
         const generator = new RandomStringGenerator(new SimplifiedGrammarRepresentation(playground.compiled?.parseTree as ParseTree));
         try {
           const strings = options.accept ? generator.acceptableAtMost(count) : generator.unacceptableAtMost(count);
           const fmtedStrings = [...strings].map((str) => `"${str}"`);
           pushToStream(playground, 'Success', `${fmtedStrings.length} unique ${options.accept ? 'acceptable' : 'unacceptable'} strings were generated`);
           pushToStream(playground, 'Output', fmtedStrings);
-        } catch(err: any) {
+        } catch (err: any) {
           console.error(err);
           pushToStream(playground, 'Error', err.message);
         }
@@ -70,37 +70,34 @@ const vykrnConsole = new JitterConsole({
         }
       ],
       handler(playground, options, args) {
-        if(playground.type === "TM")
-        {
+        if (playground.type === 'TM') {
           if (!playground.compiled?.parseTree) {
             pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
           }
           let tstr = (args.string as string).trim()
-          const str=tstr+"#"
-          let genobj= new TestInput(str,playground.compiled.parseTree as Map<string,stateTransition[]>)
-          let strcheck=genobj.consoleTestString()
-          if(strcheck)
-            pushToStream(playground,"Success","string accepted");
+          const str = tstr + '#'
+          let genobj = new TestInput(str, playground.compiled.parseTree as Map<string, stateTransition[]>)
+          let strcheck = genobj.consoleTestString()
+          if (strcheck)
+            pushToStream(playground, 'Success', 'string accepted');
           else
-            pushToStream(playground,"Warning","string not accepted")
-        }
-        else 
-        {
-        const str = (args.string as string).trim();
-        // if (str === undefined) return newStream('Error', `String to match is not defined. Usage: test "a b b e"`);
-        if (!playground.compiled?.parseTree) {
-          pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
-        }
-
-        const parseTreeCount = new EarleyParser(playground.compiled?.parseTree as ParseTree).isParsable(str);
-        if (parseTreeCount > 1) {
-          pushToStream(playground, 'Warning', `"${str}" was matched with ambiguity`);
-        } else if (parseTreeCount === 1) {
-          pushToStream(playground, 'Success', `"${str}" was accepted`);
+            pushToStream(playground, 'Warning', 'string not accepted')
         } else {
-          pushToStream(playground, 'Warning', `"${str}" did not get accepted`);
+          const str = (args.string as string).trim();
+          // if (str === undefined) return newStream('Error', `String to match is not defined. Usage: test "a b b e"`);
+          if (!playground.compiled?.parseTree) {
+            pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
+          }
+
+          const parseTreeCount = new EarleyParser(playground.compiled?.parseTree as ParseTree).isParsable(str);
+          if (parseTreeCount > 1) {
+            pushToStream(playground, 'Warning', `"${str}" was matched with ambiguity`);
+          } else if (parseTreeCount === 1) {
+            pushToStream(playground, 'Success', `"${str}" was accepted`);
+          } else {
+            pushToStream(playground, 'Warning', `"${str}" did not get accepted`);
+          }
         }
-      }
       }
     }
   }

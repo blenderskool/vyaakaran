@@ -44,13 +44,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref } from "vue";
-import { Pane, Splitpanes } from "splitpanes";
-import PaneHeader from "../ui/PaneHeader.vue";
-import Tape from "../explorers/Tape.vue";
-import TMStateTransitionGraph from "../explorers/TMStateTransitionGraph.vue";
-import Empty from "./Empty.vue";
-import { TestInput } from "../../../../compiler/src/turing-machine/input";
+import { defineComponent, inject, ref } from 'vue';
+import { Pane, Splitpanes } from 'splitpanes';
+import { TestInput } from '../../../../compiler/src/turing-machine/input';
+import PaneHeader from '../ui/PaneHeader.vue';
+import Tape from '../explorers/Tape.vue';
+import TMStateTransitionGraph from '../explorers/TMStateTransitionGraph.vue';
+import Empty from './Empty.vue';
 
 interface Instructions {
 	charArray: string[];
@@ -58,7 +58,7 @@ interface Instructions {
 }
 
 export default defineComponent({
-	name: "TuringMachinePlayground",
+	name: 'TuringMachinePlayground',
 	components: {
 		Splitpanes,
 		Pane,
@@ -67,11 +67,11 @@ export default defineComponent({
 		TMStateTransitionGraph,
 		Empty,
 	},
-	inject: ["store"],
+	inject: ['store'],
 	setup() {
 		const childComponentRef = ref();
 		const showButtons = ref<boolean>(false);
-		const inputString = ref<string>("");
+		const inputString = ref<string>('');
 		const tapeInstructions = ref<Instructions[]>([]);
 		const store: any = inject("store");
 		const isAccepted = ref<boolean>(false);

@@ -2,18 +2,18 @@ const getNodeConfig = (node: string, final: boolean) => {
 	const nodeConfig = {
 		id: node,
 		label: node,
-		shape: "circle",
+		shape: 'circle',
 		color: {
-			border: "#64748B",
-			background: "#27272A",
+			border: '#64748B',
+			background: '#27272A',
 			highlight: {
-				background: "#444c55",
-				border: "#88b4e7",
+				background: '#444c55',
+				border: '#88b4e7',
 			},
 		},
 		font: {
-			color: "#d6e9ff",
-			face: "Fira Code",
+			color: '#d6e9ff',
+			face: 'Fira Code',
 		},
 	};
 
@@ -24,9 +24,9 @@ const getNodeConfig = (node: string, final: boolean) => {
 			borderWidthSelected: 4,
 			color: {
 				...nodeConfig.color,
-				border: "#0D9488",
-			},
-		};
+				border: '#0D9488',
+			}
+		}
 	}
 
 	return nodeConfig;
@@ -39,19 +39,20 @@ const edgeConfig = {
 			scaleFactor: 0.3,
 		},
 	},
-	color: "#475569",
+	color: '#475569',
 	font: {
-		multi: "md",
+		multi: 'md',
 		strokeWidth: 0,
-		color: "#67E8F9",
-		face: "Fira Code",
-		background: "#27272A",
+		color: '#67E8F9',
+		face: 'Fira Code',
+		background: '#27272A',
 	},
 	selfReference: {
 		size: 15,
 		angle: Math.PI / 1.2,
 	},
 };
+
 const tmEdgeConfig = {
 	arrows: {
 		to: {
@@ -60,13 +61,13 @@ const tmEdgeConfig = {
 		},
 	},
 	length: 150,
-	color: "#475569",
+	color: '#475569',
 	font: {
-		multi: "md",
+		multi: 'md',
 		strokeWidth: 0,
-		color: "#67E8F9",
-		face: "Fira Code",
-		background: "#27272A",
+		color: '#67E8F9',
+		face: 'Fira Code',
+		background: '#27272A',
 		size: 10,
 	},
 	selfReference: {
