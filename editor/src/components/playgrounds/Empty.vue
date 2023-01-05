@@ -1,7 +1,12 @@
 <template>
   <div class="flex flex-col items-center justify-center">
     <p class="font-medium text-lg leading-8 font-fira text-cool-gray-500 text-center">
-      Write some grammar and click<br />
+      {{
+        store.value.type === "TM"
+        ? "Write some state transitions and click"
+        : "Write some grammar and click"
+      }}
+      <br />
       <span class="text-cyan-300">
         Play button
       </span>
@@ -14,6 +19,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'EmptyPlayground', 
+  name: 'EmptyPlayground',
+  inject: ['store'],
 });
 </script>

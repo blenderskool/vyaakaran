@@ -53,4 +53,28 @@ const edgeConfig = {
   },
 };
 
-export { getNodeConfig, edgeConfig };
+const tmEdgeConfig = {
+  arrows: {
+    to: {
+      enabled: true,
+      scaleFactor: 0.3,
+    },
+  },
+  length: 150,
+  color: '#475569',
+  font: {
+    multi: 'md',
+    strokeWidth: 0,
+    color: '#67E8F9',
+    face: 'Fira Code',
+    background: '#27272A',
+    size: 10,
+  },
+  selfReference: {
+    size: 20,
+    angle: Math.PI / 1.2,
+    renderBehindTheNode: false,
+  },
+};
+
+export { getNodeConfig, edgeConfig, tmEdgeConfig };

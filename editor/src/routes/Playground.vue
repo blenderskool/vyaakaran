@@ -9,10 +9,11 @@
     <EditorTabs @new-playground="() => showNewPlaygroundModal = true" />
 
     <Splitpanes class="flex relative w-screen view" :dbl-click-splitter="false">
-      <Pane class="relative overflow-visible" min-size="25" size="45">
+      <Pane class="relative overflow-visible" min-size="25" size="35">
         <Splitpanes class="h-full" horizontal :dbl-click-splitter="false">
           <Pane>
-            <Editor />
+            <TMEditor v-if="playground.type === 'TM'" />
+            <Editor v-else />
           </Pane>
           <Console />
         </Splitpanes>
@@ -48,10 +49,12 @@ import pkg from '../../package.json';
 import NewPlaygroundModal from '../components/NewPlaygroundModal.vue';
 import CompileButton from '../components/ui/CompileButton.vue';
 import Editor from '../components/Editor.vue';
+import TMEditor from '../components/TMEditor.vue';
 import Console from '../components/Console.vue';
 import EditorTabs from '../components/EditorTabs/EditorTabs.vue';
 import RegularGrammarPlayground from '../components/playgrounds/RegularGrammar.vue';
 import ContextFreeGrammarPlayground from '../components/playgrounds/ContextFreeGrammar.vue';
+import TuringMachinePlayground from '../components/playgrounds/TuringMachine.vue';
 
 import RegularGrammarAutomataExplainer from '../components/explainers/RegularGrammarAutomata.vue';
 import useKeyShortcut from '../utils/useKeyShortcut';
@@ -75,6 +78,11 @@ const views = {
       view: ContextFreeGrammarPlayground,
     },
   },
+  TM: {
+    default: {
+      view: TuringMachinePlayground,
+    },
+  },
 };
 
 export default defineComponent({
@@ -89,7 +97,9 @@ export default defineComponent({
     Splitpanes,
     Pane,
     Editor,
+    TMEditor,
     Console,
+    TuringMachinePlayground,
   },
   setup() {
     const playground = computed(getActivePlayground);
@@ -125,19 +135,18 @@ export default defineComponent({
 });
 </script>
 
-
 <style scoped>
-  .view {
-    height: calc(100vh - 1.75rem - 1.5rem);
-  }
+.view {
+  height: calc(100vh - 1.75rem - 1.5rem);
+}
 </style>
 
 <style>
-  .automata-large-message {
-    @apply mt-12 px-5 text-cool-gray-500 font-medium text-center;
-  }
+.automata-large-message {
+  @apply mt-12 px-5 text-cool-gray-500 font-medium text-center;
+}
 
-  .automata-large-message button {
-    @apply mt-6 py-2 px-3 font-semibold rounded border border-solid border-cyan-500 shadow-md cursor-pointer text-gray-900 bg-cyan-300 transition transform focus:outline-none hover:(bg-cyan-400 scale-110);
-  }
+.automata-large-message button {
+  @apply mt-6 py-2 px-3 font-semibold rounded border border-solid border-cyan-500 shadow-md cursor-pointer text-gray-900 bg-cyan-300 transition transform focus:outline-none hover:(bg-cyan-400 scale-110);
+}
 </style>

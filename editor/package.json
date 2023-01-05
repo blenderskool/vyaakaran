@@ -8,6 +8,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.6.7",
     "argv-split": "^2.0.1",
     "highlight.js": "^10.6.0",
     "minimist": "^1.2.5",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@types/minimist": "^1.2.2",
+    "@types/splitpanes": "^2.2.1",
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
     "@vuedx/typecheck": "^0.6.0",
