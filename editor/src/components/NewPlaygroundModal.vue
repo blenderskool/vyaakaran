@@ -41,50 +41,50 @@ export default defineComponent({
   name: 'NewPlaygroundModal',
   props: {
     show: { type: Boolean as PropType<boolean>, required: true },
-    },
-    emits: ['close'],
-    components: {
-      Modal,
-      KeyboardKey,
-    },
-    setup(props, { emit }) {
-      const addNewPlayground = async (type) => {
-        playgrounds.push(newPlayground('New Tab', type));
-        await nextTick();
-        router.replace({ params: { id: playgrounds.length-1 } });
-        emit('close');
-      };
-      
-      watchEffect((onInvalidate) => {
-        const handleKeybinds = (e: KeyboardEvent) => {
-          if (!props.show) return;
-          if (e.ctrlKey || e.shiftKey || e.altKey) return;
-          
-          e.preventDefault();
-          switch (e.code) {
-            case 'KeyC':
+  },
+  emits: ['close'],
+  components: {
+    Modal,
+    KeyboardKey,
+  },
+  setup(props, { emit }) {
+    const addNewPlayground = async (type) => {
+      playgrounds.push(newPlayground('New Tab', type));
+      await nextTick();
+      router.replace({ params: { id: playgrounds.length-1 } });
+      emit('close');
+    };
+    
+    watchEffect((onInvalidate) => {
+      const handleKeybinds = (e: KeyboardEvent) => {
+        if (!props.show) return;
+        if (e.ctrlKey || e.shiftKey || e.altKey) return;
+        
+        e.preventDefault();
+        switch (e.code) {
+          case 'KeyC':
             addNewPlayground('CFG');
             break;
-            case 'KeyR':
+          case 'KeyR':
             addNewPlayground('RG');
             break;
-            case 'KeyT':
+          case 'KeyT':
             addNewPlayground('TM');
             break;
-          };
         };
-        
-        onInvalidate(() => {
-          window.removeEventListener('keydown', handleKeybinds);
-        });
-        
-        window.addEventListener('keydown', handleKeybinds);
+      };
+      
+      onInvalidate(() => {
+        window.removeEventListener('keydown', handleKeybinds);
       });
       
-      
-      return { addNewPlayground };
-    },
-  });
+      window.addEventListener('keydown', handleKeybinds);
+    });
+    
+    
+    return { addNewPlayground };
+  },
+});
 </script>
 
 <style scoped>

@@ -102,33 +102,33 @@ class TuringMachinePlayground extends Playground {
 }
 
 const newPlayground = (name: string, type: PlaygroundType, program: string = ''): Playground => {
-    switch(type) {
-      case 'RG':
-        return new RegularGrammarPlayground(name, program);
-      case 'CFG':
-        return new ContextFreeGrammarPlayground(name, program);
-      case 'TM':
-        return new TuringMachinePlayground(name, program);
-      default:
-        throw new Error("Invalid playground type");
-    };
+  switch(type) {
+    case 'RG':
+      return new RegularGrammarPlayground(name, program);
+    case 'CFG':
+      return new ContextFreeGrammarPlayground(name, program);
+    case 'TM':
+      return new TuringMachinePlayground(name, program);
+    default:
+      throw new Error("Invalid playground type");
   };
+};
   
-  const playgrounds = reactive<Playground[]>([]);
+const playgrounds = reactive<Playground[]>([]);
+
+function getActivePlayground(): Playground | undefined {
+  const { value: route } = router.currentRoute;
+  const tabIdx = route.params.id ? Number(route.params.id) : 0;
   
-  function getActivePlayground(): Playground | undefined {
-    const { value: route } = router.currentRoute;
-    const tabIdx = route.params.id ? Number(route.params.id) : 0;
-    
-    return playgrounds[tabIdx];
-  }
-  
-  export {
-    playgrounds,
-    ConsoleStream,
-    getActivePlayground,
-    Playground,
-    newPlayground,
-    PlaygroundType,
-  };
+  return playgrounds[tabIdx];
+}
+
+export {
+  playgrounds,
+  ConsoleStream,
+  getActivePlayground,
+  Playground,
+  newPlayground,
+  PlaygroundType,
+};
   

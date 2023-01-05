@@ -7,7 +7,7 @@ export default defineConfig({
       fontFamily: {
         sans: '"Inter", sans-serif',
         fira: '"Fira Code", monospace',
-		merri: '"Merriweather", serif',
+        merri: '"Merriweather", serif',
       },
       fontSize: {
         xxs: '0.625rem',

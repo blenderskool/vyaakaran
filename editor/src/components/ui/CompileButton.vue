@@ -16,27 +16,27 @@ export default defineComponent({
   emits: [ 'triggeredCompile' ],
   setup(_, { emit }) {
     const store = inject<ComputedRef<Playground>>('store');
-      
+
     const compile = () => {
       store.value.compile();
       emit('triggeredCompile');
     };
-    
+
     const handleCompileKeybind = (e: KeyboardEvent) => {
       if (e.altKey && e.code === 'Enter') {
         e.preventDefault();
         compile();
       }
     };
-    
+
     onMounted(() => {
       window.addEventListener('keydown', handleCompileKeybind);
     });
-    
+
     onUnmounted(() => {
       window.removeEventListener('keydown', handleCompileKeybind);
     });
-    
+
     return { compile };
   },
 });
