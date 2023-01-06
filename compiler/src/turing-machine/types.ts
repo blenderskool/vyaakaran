@@ -1,3 +1,5 @@
+export type TuringMachineParseTree = Map<string, TuringMachineStateTransition[]>;
+
 export interface TuringMachineAST {
   currState: string;
   replacementSymbols: { readSymbol: string; writeSymbol: string };

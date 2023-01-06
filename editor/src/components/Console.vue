@@ -15,8 +15,8 @@
     </PaneHeader>
     <ul class="bg-gray-1000 font-fira font-medium flex-grow list-none overflow-y-auto max-h-full" ref="consoleRef">
       <li
-        v-for="error in store.value.consoleStream"
-        :key="error.timestamp"
+        v-for="error in store.consoleStream"
+        :key="+error.timestamp"
         :class="error.type.toLowerCase()"
         class="border-b border-dashed border-gray-800 py-3 px-5 flex items-center text-sm"
       >
@@ -61,18 +61,17 @@ export default defineComponent({
     PaneHeader,
     Pane,
   },
-  inject: ['store'],
   setup() {
-    const store = inject<ComputedRef<Playground>>('store');
-    const consoleRef = ref<HTMLElement>(null);
+    const store = inject('store') as ComputedRef<Playground>;
+    const consoleRef = ref<HTMLElement | null>(null);
     const inputCommand = ref<string>('');
     const errorsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Error').length);
     const warningsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Warning').length);
 
     const scrollToBottom = () => {
+      if (!consoleRef.value) return;
       consoleRef.value.scrollTo(0, consoleRef.value.scrollHeight + 100);
     };
-
 
     const submitCommand = async () => {
       const { executeCommand } = await import('../config/console');
@@ -90,7 +89,7 @@ export default defineComponent({
       }
     }
 
-    return { consoleRef, errorsCount, warningsCount, inputCommand, scrollToBottom, submitCommand, consoleKeyHandler };
+    return { store, consoleRef, errorsCount, warningsCount, inputCommand, scrollToBottom, submitCommand, consoleKeyHandler };
   },
 });
 </script>

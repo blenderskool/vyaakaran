@@ -20,16 +20,16 @@
 </template>
 
 <script lang="ts">
+import { Edge, Network } from 'vis-network/declarations/entry-esnext';
 import {
   defineComponent,
-  onMounted,
   onUnmounted,
   onUpdated,
   PropType,
   ref,
   watch,
 } from 'vue';
-import { TuringMachineStateTransition } from '../../../../compiler/src/turing-machine/types';
+import { TuringMachineParseTree, TuringMachineStateTransition } from '../../../../compiler/src/turing-machine/types';
 import { edgeConfig, getNodeConfig, tmEdgeConfig } from '../../config/graph';
 import { exportToImg, fillBg } from '../../utils/canvas';
 import useVisNetwork from '../../utils/useVisNetwork';
@@ -40,25 +40,25 @@ export default defineComponent({
   props: {
     name: { type: String as PropType<string> },
     getGraph: {
-      type: Map as PropType<Map<string, TuringMachineStateTransition[]>>,
+      type: Map as PropType<TuringMachineParseTree>,
       required: true,
     },
   },
   components: { PaneHeader },
   setup({ getGraph }) {
-    const outputRef = ref<HTMLElement>();
+    const outputRef = ref<HTMLElement | null>(null);
     const canvasRef = ref<HTMLCanvasElement>();
     const [isVisLoading, networkLib, dataLib] = useVisNetwork();
 
-    let network: any;
+    let network: Network;
 
     const generateVisGraph = () => {
-      if (isVisLoading.value) return;
+      if (isVisLoading.value || !outputRef.value) return;
 
-      const graph: Map<string, TuringMachineStateTransition[]> = getGraph;
+      const graph: TuringMachineParseTree = getGraph;
 
-      let nodes = [];
-      let edges = [];
+      let nodes: string[] = [];
+      let edges: Edge[] = [];
 
       graph.forEach((value: TuringMachineStateTransition[], key: string) => {
         nodes.push(key);
@@ -129,7 +129,7 @@ export default defineComponent({
             {
               from: '_START',
               to: 'S',
-              ...edgeConfig,
+              ...(edgeConfig as Edge),
               length: 10,
             },
             ...edges,
@@ -143,9 +143,9 @@ export default defineComponent({
       });
     };
 
-    const saveFigure = (e) => {
+    const saveFigure = (e: Event) => {
       if (!network || !canvasRef.value) return;
-      e.target.href = exportToImg(canvasRef.value);
+      (e.target as HTMLAnchorElement).href = exportToImg(canvasRef.value);
     };
 
     onUpdated(generateVisGraph);

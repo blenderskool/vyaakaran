@@ -2,7 +2,7 @@
   <Splitpanes
     horizontal
     :dbl-click-splitter="false"
-    v-if="store.value.progKey && !store.value.compiled.errors.length"
+    v-if="store.progKey && !store.compiled.errors.length"
   >
     <Pane size="45" class="pt-3">
       <PaneHeader>Turing Machine</PaneHeader>
@@ -34,8 +34,8 @@
     </Pane>
     <Pane size="55" max-size="95">
       <TMStateTransitionGraph
-        :key="`TM ${store.value.progKey}`"
-        :getGraph="store.value.compiled.parseTree"
+        :key="`TM ${store.progKey}`"
+        :getGraph="(store.compiled.parseTree as TuringMachineParseTree)"
         class="h-full w-full"
       ></TMStateTransitionGraph>
     </Pane>
@@ -44,13 +44,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref } from 'vue';
+import { ComputedRef, defineComponent, inject, ref } from 'vue';
 import { Pane, Splitpanes } from 'splitpanes';
 import { TestInput } from '../../../../compiler/src/turing-machine/input';
+import { TuringMachineParseTree } from '../../../../compiler/src/turing-machine/types';
 import PaneHeader from '../ui/PaneHeader.vue';
 import Tape from '../explorers/Tape.vue';
 import TMStateTransitionGraph from '../explorers/TMStateTransitionGraph.vue';
 import Empty from './Empty.vue';
+import { Playground } from '../../store/code';
 
 interface Instructions {
   charArray: string[];
@@ -67,13 +69,12 @@ export default defineComponent({
     TMStateTransitionGraph,
     Empty,
   },
-  inject: ['store'],
   setup() {
     const childComponentRef = ref();
     const showButtons = ref<boolean>(false);
     const inputString = ref<string>('');
     const tapeInstructions = ref<Instructions[]>([]);
-    const store: any = inject("store");
+    const store = inject('store') as ComputedRef<Playground>;
     const isAccepted = ref<boolean>(false);
 
     const handleInputSubmit = () => {
@@ -81,7 +82,7 @@ export default defineComponent({
       childComponentRef.value.loadTM(inputString.value);
       let testobj = new TestInput(
         inputString.value,
-        store.value.compiled.parseTree
+        (store.value.compiled.parseTree as TuringMachineParseTree)
       );
 
       let strgen = testobj.CheckString();
@@ -100,7 +101,9 @@ export default defineComponent({
         };
       });
     };
+
     return {
+      store,
       showButtons,
       inputString,
       handleInputSubmit,

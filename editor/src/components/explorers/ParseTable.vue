@@ -7,7 +7,7 @@
       </div>
     </PaneHeader>
     <div class="px-12 pb-16 h-full">
-      <LL1ParseTable v-if="tableType === 'LL(1)'" :compiled="store.value.compiled" :table="parser.parseTable" />
+      <LL1ParseTable v-if="tableType === 'LL(1)'" :compiled="(store.compiled as ContextFreeGrammar)" :table="parser.parseTable" />
       <LRParseTable
         v-if="tableType !== 'LL(1)'"
         :actionTable="parser.actionTable"
@@ -29,17 +29,17 @@
   </Pane>
   <Pane min-size="4" size="4">
     <BottomUpAutomata
-      :key="`Bottom-up automata ${tableType} ${store.value.progKey}`"
+      :key="`Bottom-up automata ${tableType} ${store.progKey}`"
       :graph="parser.graph"
       :states="parser.states"
       :automataExists="tableType !== 'LL(1)'"
-      :name="`${store.value.name} - ${tableType}`"
+      :name="`${store.name} - ${tableType}`"
     />
   </Pane>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, ComputedRef, defineComponent, getCurrentInstance, inject, onMounted, ref } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 
 import LL1ParseTable from './ParseTables/LL1.vue';
@@ -48,6 +48,8 @@ import LRParseTable from './ParseTables/LR.vue';
 import PaneHeader from '../ui/PaneHeader.vue';
 import RadioTabs from '../ui/RadioTabs.vue';
 import BottomUpAutomata from './BottomUpAutomata.vue';
+import { Playground } from '../../store/code';
+import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
 
 export default defineComponent({
   name: 'ParseTableExplorer',
@@ -60,16 +62,13 @@ export default defineComponent({
     Pane,
     BottomUpAutomata,
   },
-  inject: ['store'],
-  data() {
-    return {
-      tableType: 'LL(1)',
-    };
-  },
-  computed: {
-    parser() {
-      const compiled = this.store.value.compiled;
-      switch (this.tableType) {
+  setup() {
+    const tableType = ref('LL(1)');
+    const store = inject('store') as ComputedRef<Playground>;
+
+    const parser = computed(() => {
+      const compiled = store.value.compiled as ContextFreeGrammar;
+      switch (tableType.value) {
         case 'LL(1)':
           return compiled.toLL1().result;
         case 'LR(0)':
@@ -83,11 +82,19 @@ export default defineComponent({
         default:
           return compiled.toLL1().result;
       }
-    },
-  },
-  mounted() {
-    this.$forceUpdate();
-  },
+    });
+
+    onMounted(() => {
+      const instance = getCurrentInstance();
+      instance?.proxy?.$forceUpdate();
+    });
+
+    return {
+      tableType,
+      parser,
+      store
+    };
+  }
 });
 </script>
 

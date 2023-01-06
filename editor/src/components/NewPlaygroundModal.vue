@@ -32,7 +32,7 @@
 <script lang="ts">
 import { defineComponent, nextTick, onMounted, onUnmounted, PropType, watchEffect } from 'vue';
 import router from '../router';
-import { newPlayground, playgrounds } from '../store/code';
+import { newPlayground, playgrounds, PlaygroundType } from '../store/code';
 
 import Modal from '../components/ui/Modal.vue';
 import KeyboardKey from '../components/ui/KeyboardKey.vue';
@@ -48,7 +48,7 @@ export default defineComponent({
     KeyboardKey,
   },
   setup(props, { emit }) {
-    const addNewPlayground = async (type) => {
+    const addNewPlayground = async (type: PlaygroundType) => {
       playgrounds.push(newPlayground('New Tab', type));
       await nextTick();
       router.replace({ params: { id: playgrounds.length-1 } });

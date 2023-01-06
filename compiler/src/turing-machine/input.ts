@@ -1,8 +1,11 @@
+import { TuringMachineStateTransition } from "./types";
+
 export class TestInput {
   private input: string;
   private tape: string[];
-  private vertices: Map<string, any>;
-  constructor(input: string, vertices: Map<any, any>) {
+  private vertices: Map<string, TuringMachineStateTransition[]>;
+
+  constructor(input: string, vertices: Map<string, TuringMachineStateTransition[]>) {
     this.input = input;
     this.tape = [];
     this.vertices = vertices;

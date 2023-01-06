@@ -15,7 +15,7 @@ export default defineComponent({
   name: 'CompileButton',
   emits: [ 'triggeredCompile' ],
   setup(_, { emit }) {
-    const store = inject<ComputedRef<Playground>>('store');
+    const store = inject('store') as ComputedRef<Playground>;
 
     const compile = () => {
       store.value.compile();

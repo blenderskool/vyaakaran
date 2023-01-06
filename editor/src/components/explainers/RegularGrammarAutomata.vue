@@ -53,6 +53,7 @@ import { RegularGrammar } from '../../../../compiler/src/regular-grammar';
 import { IterateGenerator, SimplifiedGrammarRepresentation } from '../../../../compiler/src/utils';
 import { Playground } from '../../store/code';
 import FiniteAutomataExplorer from '../explorers/FiniteAutomata.vue';
+import { ParseTree } from '../../../../compiler/src/regular-grammar/types';
 
 export default defineComponent({
   name: 'RegularGrammarAutomataExplainer',
@@ -61,12 +62,12 @@ export default defineComponent({
     Pane,
   },
   setup() {
-    const playground: ComputedRef<Playground> = inject('store');
+    const playground = inject('store') as ComputedRef<Playground>;
     const compiled = playground.value.compiled as RegularGrammar;
     const step = ref({ graph: null, step: '', rule: '' });
     const rules = ref<string[]>([]);
 
-    let generator;
+    let generator: any;
 
     const next = () => {
       const nextValue = generator.next();
@@ -85,7 +86,9 @@ export default defineComponent({
 
       generator = new IterateGenerator(compiled.toFAGenerator());
       next();
-      rules.value = new SimplifiedGrammarRepresentation(compiled.parseTree).rules.map((rule) => rule.toString());
+      rules.value = new SimplifiedGrammarRepresentation(compiled.parseTree as ParseTree)
+        .rules
+        .map((rule) => rule.toString());
     });
 
 

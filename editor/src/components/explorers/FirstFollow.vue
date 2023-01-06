@@ -41,7 +41,7 @@ export default defineComponent({
     PaneHeader,
   },
   props: {
-    compiled: { type: Object as PropType<ContextFreeGrammar> },
+    compiled: { type: Object as PropType<ContextFreeGrammar>, required: true },
   },
   computed: {
     firstSets() {

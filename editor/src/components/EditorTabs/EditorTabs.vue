@@ -51,12 +51,12 @@
           leave-to-class="transform opacity-0 scale-95"
         >
           <MenuItems class="origin-top-right absolute right-0 mt-2 w-56 rounded shadow-lg bg-black focus:outline-none">
-            <div class="py-1" v-if="store.value.type === 'TM'">
+            <div class="py-1" v-if="store?.type === 'TM'">
               <MenuItem
                 v-slot="{ active }"
                 v-for="item in dropdownDataTM"
                 :key="item.name"
-                @click="store.value.program = item.code"
+                @click="store.program = item.code"
               >
                 <div
                   :class="[
@@ -70,12 +70,12 @@
                 </div>
               </MenuItem>
             </div>
-            <div class="py-1" v-else-if="store.value.type === 'RG'">
+            <div class="py-1" v-else-if="store?.type === 'RG'">
               <MenuItem
                 v-slot="{ active }"
                 v-for="item in dropdownDataRG"
                 :key="item.name"
-                @click="store.value.program = item.code"
+                @click="store.program = item.code"
               >
                 <div
                   :class="[
@@ -94,7 +94,7 @@
                 v-slot="{ active }"
                 v-for="item in dropdownDataCFG"
                 :key="item.name"
-                @click="store.value.program = item.code"
+                @click="store.program = item.code"
               >
                 <div
                   :class="[
@@ -125,7 +125,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, ComputedRef, defineComponent, inject, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { playgrounds, Playground, getActivePlayground } from '../../store/code';
@@ -133,7 +133,7 @@ import {
   dropDownDataTM,
   dropDownDataRG,
   dropDownDataCFG,
-} from '../../utils/dropDownData.ts';
+} from '../../utils/dropDownData';
 import useKeyShortcut from '../../utils/useKeyShortcut';
 import Tab from './Tab.vue';
 
@@ -147,8 +147,8 @@ export default defineComponent({
     MenuItems,
   },
   emits: ['new-playground'],
-  inject: ['store'],
   setup() {
+    const store = inject('store') as ComputedRef<Playground>;
     const tabs = computed(() => playgrounds.map(p => ({ name: p.name, lang: p.type })));
     const router = useRouter();
     const tabIdx = computed(() => Number(router.currentRoute.value.params.id) || 0);
@@ -193,6 +193,7 @@ export default defineComponent({
     });
 
     return {
+      store,
       tabs,
       tabIdx,
       removeTab,

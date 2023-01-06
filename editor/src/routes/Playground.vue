@@ -38,11 +38,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, provide, ref } from 'vue';
+import { Component, computed, defineComponent, provide, ref } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 import { useRoute } from 'vue-router';
 
-import { getActivePlayground } from '../store/code';
+import { getActivePlayground, PlaygroundType } from '../store/code';
 import pkg from '../../package.json';
 
 import NewPlaygroundModal from '../components/NewPlaygroundModal.vue';
@@ -57,7 +57,7 @@ import TuringMachinePlayground from '../components/playgrounds/TuringMachine.vue
 import RegularGrammarAutomataExplainer from '../components/explainers/RegularGrammarAutomata.vue';
 import useKeyShortcut from '../utils/useKeyShortcut';
 
-const views = {
+const views: Record<PlaygroundType, Record<string, { params?: string[], view: Component }>> = {
   RG: {
     nfa: {
       params: [],
@@ -105,13 +105,17 @@ export default defineComponent({
     provide('store', playground);
 
     const getView = () => {
-      const explain = route.query['explain'] ?? 'default';
+      let explain = (
+        (Array.isArray(route.query['explain']) ? route.query['explain'][0] : route.query['explain'])
+        ??
+        'default'
+      );
 
       if (explain === 'default' || playground.value.errors.length || !playground.value.compiled) {
         return { type: 'default', view: views[playground.value.type].default.view };
       }
 
-      const params = views[playground.value.type][explain].params;
+      const params = views[playground.value.type][explain].params ?? [];
 
       for(const param of params) {
         if (route.query[param] === undefined) {

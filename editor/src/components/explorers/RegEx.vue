@@ -17,7 +17,7 @@ import PaneHeader from '../ui/PaneHeader.vue';
 export default defineComponent({
   name: 'RegExExplorer',
   props: {
-    compiled: { type: Object as PropType<RegularGrammar> },
+    compiled: { type: Object as PropType<RegularGrammar>, required: true },
   },
   components: {
     PaneHeader,

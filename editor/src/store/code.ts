@@ -115,7 +115,7 @@ const newPlayground = (name: string, type: PlaygroundType, program: string = '')
 
 const playgrounds = reactive<Playground[]>([]);
 
-function getActivePlayground(): Playground | undefined {
+function getActivePlayground(): Playground {
   const { value: route } = router.currentRoute;
   const tabIdx = route.params.id ? Number(route.params.id) : 0;
 

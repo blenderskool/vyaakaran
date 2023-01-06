@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { ComputedRef, defineComponent, inject, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
+import { ComputedRef, defineComponent, inject, onMounted, onUnmounted, ref, watch } from 'vue';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { getEditorConfig } from '../config/editor';
@@ -12,13 +12,14 @@ import { Playground } from '../store/code';
 export default defineComponent({
   name: 'Editor',
   setup() {
-    const store = inject<ComputedRef<Playground>>('store');
-    const editorRef = ref<HTMLElement>(null);
+    const store = inject('store') as ComputedRef<Playground>;
+    const editorRef = ref<HTMLElement | null>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
     
     const getEditorValue = () => editor.getValue().replace(/\r\n/g, '\n');
     
     onMounted(() => {
+      if (!editorRef.value) return;
       editor = monaco.editor.create(editorRef.value, {
         ...getEditorConfig(store.value.type),
         value: store.value.program,

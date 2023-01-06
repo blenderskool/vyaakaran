@@ -19,7 +19,7 @@
           ref="inputRef"
           class="bg-transparent text-steel-blue-100 focus:outline-none border-none w-20 text-xs"
           :value="name"
-          @change="(e) => $emit('rename', e.target.value.trim())"
+          @change="(e) => $emit('rename', (e.target as HTMLInputElement).value.trim())"
           @blur="() => setEditing(false)"
           @keydown.enter="() => setEditing(false)"
         />
@@ -64,11 +64,14 @@ export default defineComponent({
       required: false,
     },
   },
+  emits: ['rename', 'remove'],
   setup() {
-    const inputRef = ref<HTMLInputElement>(null);
+    const inputRef = ref<HTMLInputElement | null>(null);
     const isEditing = ref<boolean>(false);
 
-    const setEditing = async (state) => {
+    const setEditing = async (state: boolean) => {
+      if (!inputRef.value) return;
+
       isEditing.value = state;
       if (state) {
         await nextTick();
