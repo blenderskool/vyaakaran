@@ -29,7 +29,7 @@ import {
   ref,
   watch,
 } from 'vue';
-import { stateTransition } from '../../../../compiler/src/turing-machine/types';
+import { TuringMachineStateTransition } from '../../../../compiler/src/turing-machine/types';
 import { edgeConfig, getNodeConfig, tmEdgeConfig } from '../../config/graph';
 import { exportToImg, fillBg } from '../../utils/canvas';
 import useVisNetwork from '../../utils/useVisNetwork';
@@ -40,7 +40,7 @@ export default defineComponent({
   props: {
     name: { type: String as PropType<string> },
     getGraph: {
-      type: Map as PropType<Map<string, stateTransition[]>>,
+      type: Map as PropType<Map<string, TuringMachineStateTransition[]>>,
       required: true,
     },
   },
@@ -55,15 +55,15 @@ export default defineComponent({
     const generateVisGraph = () => {
       if (isVisLoading.value) return;
 
-      const graph: Map<string, stateTransition[]> = getGraph;
+      const graph: Map<string, TuringMachineStateTransition[]> = getGraph;
 
       let nodes = [];
       let edges = [];
 
-      graph.forEach((value: stateTransition[], key: string) => {
+      graph.forEach((value: TuringMachineStateTransition[], key: string) => {
         nodes.push(key);
 
-        value.forEach((edge: stateTransition) => {
+        value.forEach((edge: TuringMachineStateTransition) => {
           if (!nodes.includes(edge.nextState)) {
             nodes.push(edge.nextState);
           }

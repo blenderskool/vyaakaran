@@ -1,17 +1,17 @@
 import { CompileError } from "../regular-grammar/types";
-import { astObj, stateTransition, errorWarning } from "./types";
+import { TuringMachineAST, TuringMachineStateTransition } from "./types";
 
 export class GraphHandler {
-  private ast: astObj;
+  private ast: TuringMachineAST;
   private vertices: Set<string>;
-  edgeList: Map<string, stateTransition[]>;
+  edgeList: Map<string, TuringMachineStateTransition[]>;
   errors: CompileError[];
   warnings: CompileError[];
 
-  constructor(ast: astObj) {
+  constructor(ast: TuringMachineAST) {
     this.ast = ast;
     this.vertices = new Set<string>();
-    this.edgeList = new Map<string, stateTransition[]>();
+    this.edgeList = new Map<string, TuringMachineStateTransition[]>();
     this.errors = [];
     this.warnings = [];
   }
@@ -20,7 +20,7 @@ export class GraphHandler {
     if (!this.edgeList.get(state)) this.edgeList.set(state, []);
   }
 
-  private graphEdgeAdd(state: string, info: stateTransition) {
+  private graphEdgeAdd(state: string, info: TuringMachineStateTransition) {
     this.edgeList.get(state)!.push(info);
   }
 

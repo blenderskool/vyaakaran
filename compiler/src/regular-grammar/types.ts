@@ -1,4 +1,5 @@
-import { stateTransition } from './../turing-machine/types';
+import { TuringMachineStateTransition } from './../turing-machine/types';
+
 enum TokenType {
   Literal = 'LITERAL',
   Identifier = 'IDENTIFER',
@@ -39,7 +40,7 @@ abstract class CompilerClass {
   program: string;
   errors: CompileError[];
   warnings: CompileError[];
-  parseTree: ParseTree | Map<string, stateTransition[]>;
+  parseTree: ParseTree | Map<string, TuringMachineStateTransition[]>;
 
   constructor(program: string) {
     this.program = program;

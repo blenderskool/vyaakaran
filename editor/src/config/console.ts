@@ -3,7 +3,7 @@ import { RandomStringGenerator } from '../../../compiler/src/generator';
 import { ParseTree } from '../../../compiler/src/regular-grammar/types';
 import { SimplifiedGrammarRepresentation } from '../../../compiler/src/utils';
 import { TestInput } from '../../../compiler/src/turing-machine/input';
-import { stateTransition } from '../../../compiler/src/turing-machine/types';
+import { TuringMachineStateTransition } from '../../../compiler/src/turing-machine/types';
 import { JitterConsole, pushToStream } from '../utils/JitterConsole';
 import { ConsoleStream } from '../store/code';
 import pkg from '../../package.json';
@@ -76,7 +76,7 @@ const vykrnConsole = new JitterConsole({
           }
           let tstr = (args.string as string).trim()
           const str = tstr + '#'
-          let genobj = new TestInput(str, playground.compiled.parseTree as Map<string, stateTransition[]>)
+          let genobj = new TestInput(str, playground.compiled.parseTree as Map<string, TuringMachineStateTransition[]>)
           let strcheck = genobj.consoleTestString()
           if (strcheck)
             pushToStream(playground, 'Success', 'string accepted');

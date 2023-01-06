@@ -4,11 +4,11 @@ import { StateTransitionLexer } from "./lexer";
 
 import { StateTransitionParser } from "./parser";
 import { CompilerClass } from "../regular-grammar/types";
-import { astObj } from "./types";
+import { TuringMachineAST } from "./types";
 
 export class StateTransitionGrammar extends CompilerClass {
   graphObj: GraphHandler;
-  astObj: astObj;
+  astObj: TuringMachineAST;
 
   constructor(program: string) {
     super(program);

@@ -2,7 +2,6 @@ import { reactive } from 'vue';
 import { CompileError, CompilerClass } from '../../../compiler/src/regular-grammar/types';
 import { RegularGrammar } from '../../../compiler/src/regular-grammar';
 import { ContextFreeGrammar } from '../../../compiler/src/context-free-grammar';
-import { astObj } from '../../../compiler/src/turing-machine/types';
 import { StateTransitionGrammar } from '../../../compiler/src/turing-machine';
 import router from '../router';
 
