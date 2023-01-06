@@ -14,7 +14,7 @@ export default defineConfig({
       },
       colors: {
         gray: {
-          ...colors.gray,
+          ...colors.zinc,
           850: '#212023',
         },
         'steel-blue': {

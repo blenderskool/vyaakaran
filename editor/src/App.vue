@@ -58,7 +58,7 @@ export default defineComponent({
 
 <style>
   body {
-    @apply bg-gray-800 font-sans text-steel-blue-100 overflow-hidden;
+    @apply bg-zinc-800 font-sans text-steel-blue-100 overflow-hidden;
   }
 
   button {
