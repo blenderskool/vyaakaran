@@ -1,6 +1,6 @@
 {
   "name": "vyaakaran-editor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Akash Hamirwasia",
   "scripts": {
     "dev": "vite --port 3000",
