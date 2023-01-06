@@ -14,5 +14,10 @@ export default defineConfig({
     rollupOptions: {
       plugins: [visualizer({ gzipSize: true })],
     }
-  }
+  },
+  server: {
+    fs: {
+      allow: ['..'],
+    },
+  },
 })
