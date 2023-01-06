@@ -35,7 +35,7 @@ const router = createRouter({
       component: Playground,
       beforeEnter(to, _, next) {
         try {
-          playgrounds.push(newPlayground('New Tab', (to.params.type as string).toUpperCase() as PlaygroundType, sampleProgram));
+          playgrounds.push(newPlayground('Program 1', (to.params.type as string).toUpperCase() as PlaygroundType, sampleProgram));
           return next({ name: 'Playground', params: { id: 0 }, query: to.query });
         } catch(err) {
           return next({ name: '404' });

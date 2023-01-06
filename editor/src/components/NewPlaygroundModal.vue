@@ -49,7 +49,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const addNewPlayground = async (type: PlaygroundType) => {
-      playgrounds.push(newPlayground('New Tab', type));
+      playgrounds.push(newPlayground(`Program ${playgrounds.length + 1}`, type));
       await nextTick();
       router.replace({ params: { id: playgrounds.length-1 } });
       emit('close');
