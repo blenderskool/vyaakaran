@@ -9,7 +9,7 @@
     <EditorTabs @new-playground="() => showNewPlaygroundModal = true" />
 
     <Splitpanes class="flex relative w-screen view" :dbl-click-splitter="false">
-      <Pane class="relative overflow-visible" min-size="25" size="35">
+      <Pane class="relative overflow-visible" min-size="25" size="45">
         <Splitpanes class="h-full" horizontal :dbl-click-splitter="false">
           <Pane>
             <TMEditor v-if="playground.type === 'TM'" />
