@@ -10,7 +10,7 @@
 
     <Splitpanes class="flex relative w-screen view" :dbl-click-splitter="false">
       <Pane class="relative overflow-visible" min-size="25" size="45">
-        <Splitpanes class="h-full" horizontal :dbl-click-splitter="false">
+        <Splitpanes class="h-full editor-console-split" horizontal :dbl-click-splitter="false">
           <Pane>
             <Editor />
           </Pane>
@@ -38,11 +38,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, provide, ref } from 'vue';
+import { Component, computed, defineComponent, provide, ref } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 import { useRoute } from 'vue-router';
 
-import { getActivePlayground } from '../store/code';
+import { getActivePlayground, PlaygroundType } from '../store/code';
 import pkg from '../../package.json';
 
 import NewPlaygroundModal from '../components/NewPlaygroundModal.vue';
@@ -52,11 +52,12 @@ import Console from '../components/Console.vue';
 import EditorTabs from '../components/EditorTabs/EditorTabs.vue';
 import RegularGrammarPlayground from '../components/playgrounds/RegularGrammar.vue';
 import ContextFreeGrammarPlayground from '../components/playgrounds/ContextFreeGrammar.vue';
+import TuringMachinePlayground from '../components/playgrounds/TuringMachine.vue';
 
 import RegularGrammarAutomataExplainer from '../components/explainers/RegularGrammarAutomata.vue';
 import useKeyShortcut from '../utils/useKeyShortcut';
 
-const views = {
+const views: Record<PlaygroundType, Record<string, { params?: string[], view: Component }>> = {
   RG: {
     nfa: {
       params: [],
@@ -75,6 +76,11 @@ const views = {
       view: ContextFreeGrammarPlayground,
     },
   },
+  TM: {
+    default: {
+      view: TuringMachinePlayground,
+    },
+  },
 };
 
 export default defineComponent({
@@ -90,6 +96,7 @@ export default defineComponent({
     Pane,
     Editor,
     Console,
+    TuringMachinePlayground,
   },
   setup() {
     const playground = computed(getActivePlayground);
@@ -98,13 +105,17 @@ export default defineComponent({
     provide('store', playground);
 
     const getView = () => {
-      const explain = route.query['explain'] ?? 'default';
+      let explain = (
+        (Array.isArray(route.query['explain']) ? route.query['explain'][0] : route.query['explain'])
+        ??
+        'default'
+      );
 
       if (explain === 'default' || playground.value.errors.length || !playground.value.compiled) {
         return { type: 'default', view: views[playground.value.type].default.view };
       }
 
-      const params = views[playground.value.type][explain].params;
+      const params = views[playground.value.type][explain].params ?? [];
 
       for(const param of params) {
         if (route.query[param] === undefined) {
@@ -125,19 +136,18 @@ export default defineComponent({
 });
 </script>
 
-
 <style scoped>
-  .view {
-    height: calc(100vh - 1.75rem - 1.5rem);
-  }
+.view {
+  height: calc(100vh - 1.75rem - 1.5rem);
+}
 </style>
 
 <style>
-  .automata-large-message {
-    @apply mt-12 px-5 text-cool-gray-500 font-medium text-center;
-  }
+.automata-large-message {
+  @apply mt-12 px-5 text-cool-gray-500 font-medium text-center;
+}
 
-  .automata-large-message button {
-    @apply mt-6 py-2 px-3 font-semibold rounded border border-solid border-cyan-500 shadow-md cursor-pointer text-gray-900 bg-cyan-300 transition transform focus:outline-none hover:(bg-cyan-400 scale-110);
-  }
+.automata-large-message button {
+  @apply mt-6 py-2 px-3 font-semibold rounded border border-solid border-cyan-500 shadow-md cursor-pointer text-gray-900 bg-cyan-300 transition transform focus:outline-none hover:(bg-cyan-400 scale-110);
+}
 </style>

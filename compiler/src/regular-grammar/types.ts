@@ -1,3 +1,5 @@
+import { TuringMachineParseTree } from './../turing-machine/types';
+
 enum TokenType {
   Literal = 'LITERAL',
   Identifier = 'IDENTIFER',
@@ -38,7 +40,7 @@ abstract class CompilerClass {
   program: string;
   errors: CompileError[];
   warnings: CompileError[];
-  parseTree: ParseTree;
+  parseTree: ParseTree | TuringMachineParseTree;
 
   constructor(program: string) {
     this.program = program;

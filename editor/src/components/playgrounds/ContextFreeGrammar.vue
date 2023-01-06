@@ -1,22 +1,24 @@
 <template>
-  <Splitpanes horizontal v-if="store.value.progKey && !store.value.compiled.errors.length" :dbl-click-splitter="false">
+  <Splitpanes horizontal v-if="store.progKey && !store.compiled.errors.length" :dbl-click-splitter="false">
     <ParseTableExplorer />
     <Pane min-size="4" size="4">
-      <FirstFollowExplorer :compiled="store.value.compiled" />
+      <FirstFollowExplorer :compiled="(store.compiled as ContextFreeGrammar)" />
     </Pane>
   </Splitpanes>
   <Empty v-else />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { ComputedRef, defineComponent, inject } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 
+import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
+import ParseTableExplorer from '../explorers/ParseTable.vue';
+import FirstFollowExplorer from '../explorers/FirstFollow.vue';
+import { Playground } from '../../store/code';
 import Editor from '../Editor.vue';
 import Console from '../Console.vue';
 import Empty from './Empty.vue';
-import ParseTableExplorer from '../explorers/ParseTable.vue';
-import FirstFollowExplorer from '../explorers/FirstFollow.vue';
 
 export default defineComponent({
   name: 'ContextFreeGrammarPlayground',
@@ -29,7 +31,10 @@ export default defineComponent({
     ParseTableExplorer,
     FirstFollowExplorer,
   },
-  inject: ['store'],
+  setup() {
+    const store = inject('store') as ComputedRef<Playground>;
+    return { store };
+  }
 });
 </script>
 

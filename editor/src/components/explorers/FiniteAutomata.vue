@@ -32,6 +32,8 @@ import useVisNetwork from '../../utils/useVisNetwork';
 
 import PaneHeader from '../ui/PaneHeader.vue';
 import RadioTabs from '../ui/RadioTabs.vue';
+import { Edge, Network } from 'vis-network/declarations/entry-esnext';
+import { FAGraph } from '../../../../compiler/src/regular-grammar';
 
 export default defineComponent({
   name: 'FiniteAutomataExplorer',
@@ -47,22 +49,22 @@ export default defineComponent({
   },
   setup({ getGraph, showTypeSelector }) {
     const faType = ref<'ε-NFA' | 'NFA'>('ε-NFA');
-    const outputRef = ref<HTMLElement>(null);
-    const canvasRef = ref<HTMLCanvasElement>(null);
+    const outputRef = ref<HTMLElement | null>(null);
+    const canvasRef = ref<HTMLCanvasElement | null>(null);
     const [isVisLoading, networkLib, dataLib] = useVisNetwork();
     const router = useRouter();
-    let network;
+    let network: Network;
 
     const generateVisGraph = () => {
-      if (isVisLoading.value) return;
+      if (isVisLoading.value || !outputRef.value) return;
 
-      const graph = getGraph(showTypeSelector ? faType.value : undefined);
+      const graph: FAGraph = getGraph(showTypeSelector ? faType.value : undefined);
       const nodes: any[] = [
         { id: '_START', opacity: 0 },
         ...Object.keys(graph).map(node => getNodeConfig(node, graph[node].final)),
       ];
 
-      let edges: object = { '_START S': [] };
+      let edges: Record<string, string[]> = { '_START S': [] };
       for(const from in graph) {
         for(const via in graph[from].nodes) {
           graph[from].nodes[via].forEach(to => {
@@ -75,7 +77,7 @@ export default defineComponent({
         }
       }
 
-      edges = Object.keys(edges).map((edge) => {
+      const visEdges: Edge[] = Object.keys(edges).map((edge) => {
         const [from, to] = edge.split(' ');
         return {
           ...edgeConfig, from, to,
@@ -89,7 +91,7 @@ export default defineComponent({
 
       network = new networkLib.value.Network(outputRef.value, {
         nodes: new dataLib.value.DataSet(nodes),
-        edges: new dataLib.value.DataSet(edges),
+        edges: new dataLib.value.DataSet(visEdges),
       }, {});
       network.on('beforeDrawing', (ctx: CanvasRenderingContext2D) => {
         canvasRef.value = ctx.canvas;
@@ -97,9 +99,9 @@ export default defineComponent({
       });
     };
 
-    const saveFigure = (e) => {
+    const saveFigure = (e: Event) => {
       if (!network || !canvasRef.value) return;
-      e.target.href = exportToImg(canvasRef.value);
+      (e.target as HTMLAnchorElement).href = exportToImg(canvasRef.value);
     };
 
     const explainConversion = () => {

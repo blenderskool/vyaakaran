@@ -21,19 +21,21 @@
       </Tab>
     </ul>
 
-    <nav class="mx-2 flex-shrink-0 text-xs text-cyan-300 font-medium">
-      <a href="https://vyaakaran.vercel.app/docs/syntax" target="_blank">
-        Learn Syntax
-      </a>
-      <a class="mx-3" href="https://vyaakaran.vercel.app/feedback" target="_blank">
-        Feedback
-      </a>
-    </nav>
+    <div class="flex justify-between items-center">
+      <nav class="mx-2 flex-shrink-0 text-xs text-cyan-300 font-medium">
+        <a href="https://vyaakaran.vercel.app/docs/syntax" target="_blank">
+          Learn Syntax
+        </a>
+        <a class="mx-3" href="https://vyaakaran.vercel.app/feedback" target="_blank">
+          Feedback
+        </a>
+      </nav>
+    </div>
   </header>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, ComputedRef, defineComponent, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import { playgrounds, Playground, getActivePlayground } from '../../store/code';
 import useKeyShortcut from '../../utils/useKeyShortcut';
@@ -46,6 +48,7 @@ export default defineComponent({
   },
   emits: ['new-playground'],
   setup() {
+    const store = inject('store') as ComputedRef<Playground>;
     const tabs = computed(() => playgrounds.map(p => ({ name: p.name, lang: p.type })));
     const router = useRouter();
     const tabIdx = computed(() => Number(router.currentRoute.value.params.id) || 0);
@@ -85,13 +88,19 @@ export default defineComponent({
       }
     });
 
-    return { tabs, tabIdx, removeTab, renameTab };
-  }
+    return {
+      store,
+      tabs,
+      tabIdx,
+      removeTab,
+      renameTab,
+    };
+  },
 });
 </script>
 
 <style scoped>
-  .tabs::-webkit-scrollbar {
-    height: 3px;
-  }
+.tabs::-webkit-scrollbar {
+  height: 3px;
+}
 </style>

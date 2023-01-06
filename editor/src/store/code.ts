@@ -2,6 +2,7 @@ import { reactive } from 'vue';
 import { CompileError, CompilerClass } from '../../../compiler/src/regular-grammar/types';
 import { RegularGrammar } from '../../../compiler/src/regular-grammar';
 import { ContextFreeGrammar } from '../../../compiler/src/context-free-grammar';
+import { StateTransitionGrammar } from '../../../compiler/src/turing-machine';
 import router from '../router';
 
 interface ConsoleStream {
@@ -10,7 +11,7 @@ interface ConsoleStream {
   message: string;
 };
 
-type PlaygroundType = 'RG' | 'CFG';
+type PlaygroundType = 'RG' | 'CFG' | 'TM';
 
 abstract class Playground {
   name: string;
@@ -44,9 +45,16 @@ abstract class Playground {
     const warnings = this.compiled.warnings.map(err => ({ ...err, timestamp: new Date() }));
 
     if (!errors.length) {
-      this.consoleStream = [ ...warnings, { type: 'Success', message: `Compiled successfully in ${timeTaken}ms`, timestamp: new Date() } ];
+      this.consoleStream = [
+        ...warnings,
+        {
+          type: "Success",
+          message: `Compiled successfully in ${timeTaken}ms`,
+          timestamp: new Date(),
+        },
+      ];
     } else {
-      this.consoleStream = [ ...errors, ...warnings ];
+      this.consoleStream = [...errors, ...warnings];
     }
 
     this.progKey = Math.trunc(Math.random() * 10000 + 1);
@@ -79,6 +87,18 @@ class ContextFreeGrammarPlayground extends Playground {
   }
 }
 
+class TuringMachinePlayground extends Playground {
+  type: PlaygroundType;
+  constructor(name: string, program: string) {
+    super(name, program, new StateTransitionGrammar(program));
+    this.type = 'TM';
+  }
+  
+  compile() {
+    this.compiled = new StateTransitionGrammar(this.program);
+    super.compile();
+  }
+}
 
 const newPlayground = (name: string, type: PlaygroundType, program: string = ''): Playground => {
   switch(type) {
@@ -86,6 +106,8 @@ const newPlayground = (name: string, type: PlaygroundType, program: string = '')
       return new RegularGrammarPlayground(name, program);
     case 'CFG':
       return new ContextFreeGrammarPlayground(name, program);
+    case 'TM':
+      return new TuringMachinePlayground(name, program);
     default:
       throw new Error("Invalid playground type");
   };
@@ -93,8 +115,8 @@ const newPlayground = (name: string, type: PlaygroundType, program: string = '')
 
 const playgrounds = reactive<Playground[]>([]);
 
-function getActivePlayground(): Playground | undefined {
-  const { value:route } = router.currentRoute;
+function getActivePlayground(): Playground {
+  const { value: route } = router.currentRoute;
   const tabIdx = route.params.id ? Number(route.params.id) : 0;
 
   return playgrounds[tabIdx];

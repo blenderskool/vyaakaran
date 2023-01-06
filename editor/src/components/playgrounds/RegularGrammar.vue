@@ -1,17 +1,17 @@
 <template>
-  <Splitpanes horizontal v-if="store.value.progKey && !store.value.compiled.errors.length" :dbl-click-splitter="false">
+  <Splitpanes horizontal v-if="store.progKey && !store.compiled.errors.length" :dbl-click-splitter="false">
     <Pane min-size="6.5">
-      <FiniteAutomataExplorer :getGraph="getAutomataGraph" :key="`FA ${store.value.progKey}`" :name="store.value.name" />
+      <FiniteAutomataExplorer :getGraph="getAutomataGraph" :key="`FA ${store.progKey}`" :name="store.name" />
     </Pane>
     <Pane min-size="3.5" max-size="16" size="16">
-      <RegExExplorer :compiled="store.value.compiled" :key="`RegEx ${store.value.progKey}`" />
+      <RegExExplorer :compiled="(store.compiled as RegularGrammar)" :key="`RegEx ${store.progKey}`" />
     </Pane>
   </Splitpanes>
   <Empty v-else />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { ComputedRef, defineComponent, inject } from 'vue';
 import { Pane, Splitpanes } from 'splitpanes';
 
 import Console from '../Console.vue';
@@ -19,6 +19,8 @@ import Editor from '../Editor.vue';
 import Empty from './Empty.vue';
 import FiniteAutomataExplorer from '../explorers/FiniteAutomata.vue';
 import RegExExplorer from '../explorers/RegEx.vue';
+import { Playground } from '../../store/code';
+import { FAGraph, RegularGrammar } from '../../../../compiler/src/regular-grammar';
 
 export default defineComponent({
   name: 'RegularGrammarPlayground',
@@ -32,15 +34,20 @@ export default defineComponent({
     RegExExplorer,
   },
   inject: ['store'],
-  methods: {
-    getAutomataGraph(faType: string) {
+  setup() {
+    const store = inject('store') as ComputedRef<Playground>;
+
+    const getAutomataGraph = (faType: 'ε-NFA' | 'NFA'): FAGraph => {
+      const compiled = store.value.compiled as RegularGrammar;
       switch (faType) {
         case 'ε-NFA':
-          return this.store.value.compiled.toFA().optimizeFA().result;
+          return compiled.toFA().optimizeFA().result;
         case 'NFA':
-          return this.store.value.compiled.toEpsilonFreeFA().optimizeFA().result;
+          return compiled.toEpsilonFreeFA().optimizeFA().result;
       }
-    },
+    };
+
+    return { store, getAutomataGraph };
   },
 });
 </script>

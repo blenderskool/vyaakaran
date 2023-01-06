@@ -28,6 +28,7 @@ import { exportToImg, fillBg } from '../../utils/canvas';
 import { edgeConfig, getNodeConfig } from '../../config/graph';
 import useVisNetwork from '../../utils/useVisNetwork';
 import PaneHeader from '../ui/PaneHeader.vue';
+import { Edge, Network } from 'vis-network/declarations/entry-esnext';
 
 export default defineComponent({
   name: 'BottomUpAutomata',
@@ -52,14 +53,14 @@ export default defineComponent({
     PaneHeader,
   },
   setup({ graph, states }) {
-    const outputRef = ref<HTMLElement>(null);
-    const canvasRef = ref<HTMLCanvasElement>(null);
+    const outputRef = ref<HTMLElement | null>(null);
+    const canvasRef = ref<HTMLCanvasElement | null>(null);
     const isGraphHuge = ref<boolean>(states.length > 50);
     const [isVisLoading, networkLib, dataLib] = useVisNetwork();
-    let network;
+    let network: Network;
 
     const generateVisGraph = () => {
-      if (isVisLoading.value) return;
+      if (isVisLoading.value || !outputRef.value) return;
 
       const nodes: object[] = states.map((state, i) => {
         return ({
@@ -80,7 +81,7 @@ export default defineComponent({
         });
       });
 
-      let edges = [];
+      let edges: Edge[] = [];
       for(const from in graph) {
         for(const via in graph[from]) {
           edges.push({
@@ -114,9 +115,9 @@ export default defineComponent({
       });
     };
 
-    const saveFigure = (e) => {
+    const saveFigure = (e: Event) => {
       if (!network || !canvasRef.value) return;
-      e.target.href = exportToImg(canvasRef.value);
+      (e.target as HTMLAnchorElement).href = exportToImg(canvasRef.value);
     }
 
     watch(() => states.length, () => {

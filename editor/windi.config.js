@@ -7,14 +7,16 @@ export default defineConfig({
       fontFamily: {
         sans: '"Inter", sans-serif',
         fira: '"Fira Code", monospace',
+        merri: '"Merriweather", serif',
       },
       fontSize: {
         xxs: '0.625rem',
       },
       colors: {
         gray: {
-          ...colors.gray,
+          ...colors.zinc,
           850: '#212023',
+          1000: '#0c0c0e',
         },
         'steel-blue': {
           100: '#d6e9ff',
@@ -23,6 +25,7 @@ export default defineConfig({
         },
       },
       boxShadow: {
+        'inner-md': 'inset 0 3px 6px 0 rgb(0 0 0 / 0.2)',
         '3xl': '0 34px 65px #02091c, 0 3px 2px rgb(0 0 0 / 7%), 0 7px 5px rgb(0 0 0 / 4%), 0 13px 10px rgb(0 0 0 / 3%), 0 22px 18px rgb(0 0 0 / 3%), 0 42px 33px rgb(0 0 0 / 2%), 0 100px 80px rgb(0 0 0 / 2%)',
       },
     },

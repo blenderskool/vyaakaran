@@ -23,8 +23,8 @@ export default defineComponent({
     modelValue: { type: String as PropType<string>, required: true },
   },
   methods: {
-    onChange(e) {
-      this.$emit('update:modelValue', e.target.value);
+    onChange(e: Event) {
+      this.$emit('update:modelValue', (e.target as HTMLInputElement).value);
     },
   },
 });
