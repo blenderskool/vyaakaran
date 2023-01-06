@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="h-10 flex flex-col justify-center">
-      <p v-if="isDone() && isAccepted" class="accepted-alert">
+      <p v-if="isDone() && isAccepted" class="flex justify-center bg-transparent text-green-400 text-sm font-semibold">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-5 w-5 mr-1"
@@ -16,7 +16,7 @@
         </svg>
         Input string has been accepted by the Turing Machine
       </p>
-      <p v-else-if="isDone() && !isAccpted" class="rejected-alert">
+      <p v-else-if="isDone() && !isAccepted" class="flex justify-center bg-transparent text-red-500 text-sm font-semibold">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-5 w-5 mr-1"
@@ -32,26 +32,25 @@
         Input string has been rejected by the Turing Machine
       </p>
     </div>
-    <div class="container">
-      <svg class="tm-tape" width="800" viewBox="0 0 870 70">
+    <div class="bg-gray-900 border-transparent border-2 p-8">
+      <svg class="mx-auto max-w-full" width="800" viewBox="0 0 870 70">
         <g class="wrapper" transform="translate(0 10)">
           <g
-            class="tape-cell"
             v-for="ele in TArray"
             :transform="ele.transVal"
             :key="ele.transVal"
           >
-            <rect width="50" height="50"></rect>
-            <text x="25" y="33">{{ ele.val }}</text>
+            <rect width="50" height="50" class="fill-transparent stroke-cool-gray-600 stroke-2" />
+            <text x="25" y="33" class="text-2xl fill-cyan-300 text-anchor-middle">{{ ele.val }}</text>
           </g>
         </g>
         <rect
-          id="tape-head"
           width="70"
           height="70"
           x="400"
           y="0"
-        ></rect>
+          class="fill-none stroke-cyan-300 stroke-3"
+        />
       </svg>
     </div>
     <div class="flex" v-if="showButtons">
@@ -154,7 +153,7 @@
     <div
       @click="anotherInputHandler"
       v-if="showButtons"
-      class="re-enter-input"
+      class="flex justify-center text-cyan-400 mt-7 text-sm font-semibold hover:underline hover:cursor-pointer"
     >
       Want to enter another string?
     </div>
@@ -639,39 +638,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.container {
-  @apply bg-gray-900 border-transparent border-2 p-8;
-}
 
-.tm-tape {
-  @apply mx-auto max-w-full;
-}
-.tape-cell > rect {
-  @apply fill-transparent stroke-cool-gray-600 stroke-2;
-}
-
-.tape-cell > text {
-  @apply text-2xl  fill-cyan-300;
+.text-anchor-middle {
   text-anchor: middle;
-}
-
-#tape-head {
-  @apply fill-none stroke-cyan-300 stroke-3;
 }
 
 .btn {
   /* @apply flex bg-cyan-300 rounded text-blue-gray-800 pl-5 pr-3 py-2 font-semibold text-sm shadow-lg text-shadow-none outline-none disabled:bg-cyan-600 disabled:cursor-not-allowed; */
   @apply rounded border-1 border-solid border-cyan-400 bg-cyan-500 bg-opacity-10 text-cyan-400 px-2 py-1 text-xs font-semibold outline-none disabled:cursor-not-allowed disabled:bg-cool-gray-400 disabled:border-cool-gray-400 disabled:bg-opacity-10 disabled:text-cool-gray-400 hover:bg-opacity-20 disabled:hover:bg-opacity-10;
-}
-
-.re-enter-input {
-  @apply flex justify-center text-cyan-400 mt-7 text-sm font-semibold hover:underline hover:cursor-pointer;
-}
-
-.accepted-alert {
-  @apply flex justify-center bg-transparent text-green-400 text-sm font-semibold;
-}
-.rejected-alert {
-  @apply flex justify-center bg-transparent text-red-500 text-sm font-semibold;
 }
 </style>
