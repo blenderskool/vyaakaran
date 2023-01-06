@@ -69,12 +69,12 @@ export default defineComponent({
     const inputRef = ref<HTMLInputElement | null>(null);
     const isEditing = ref<boolean>(false);
 
-    const setEditing = async (state: boolean) => {
-      if (!inputRef.value) return;
-
+    const setEditing = async (state: boolean) => {      
       isEditing.value = state;
       if (state) {
         await nextTick();
+        if (!inputRef.value) return;
+
         inputRef.value.focus();
       }
     };
