@@ -10,7 +10,7 @@
 
     <Splitpanes class="flex relative w-screen view" :dbl-click-splitter="false">
       <Pane class="relative overflow-visible" min-size="25" size="45">
-        <Splitpanes class="h-full" horizontal :dbl-click-splitter="false">
+        <Splitpanes class="h-full editor-console-split" horizontal :dbl-click-splitter="false">
           <Pane>
             <Editor />
           </Pane>

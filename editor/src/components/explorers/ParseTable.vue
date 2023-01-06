@@ -1,5 +1,5 @@
 <template>
-  <Pane class="pt-2" min-size="5" size="92">
+  <Pane class="pt-3" min-size="5" size="92">
     <PaneHeader>
       <div class="flex justify-between">
         <span>Parsing table</span>

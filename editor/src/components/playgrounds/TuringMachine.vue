@@ -4,7 +4,7 @@
     :dbl-click-splitter="false"
     v-if="store.value.progKey && !store.value.compiled.errors.length"
   >
-    <Pane size="45" class="bg-gray-900">
+    <Pane size="45" class="pt-3">
       <PaneHeader>Turing Machine</PaneHeader>
       <Tape
         :showButtons="showButtons"

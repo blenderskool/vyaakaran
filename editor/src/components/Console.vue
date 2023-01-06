@@ -1,6 +1,6 @@
 <template>
   <Pane class="console flex flex-col" min-size="3.5" v-life:updated="scrollToBottom" max-size="50">
-    <PaneHeader>
+    <PaneHeader class="!bg-gray-900 shadow-lg">
       <div class="flex justify-between items-center">
         <span>Console</span>
         <div class="space-x-4 text-xs">
@@ -13,7 +13,7 @@
         </div>
       </div>
     </PaneHeader>
-    <ul class="bg-gray-900 font-fira font-medium flex-grow list-none overflow-y-auto max-h-full" ref="consoleRef">
+    <ul class="bg-gray-1000 font-fira font-medium flex-grow list-none overflow-y-auto max-h-full" ref="consoleRef">
       <li
         v-for="error in store.value.consoleStream"
         :key="error.timestamp"
@@ -37,13 +37,13 @@
         </div>
       </li>
     </ul>
-    <div class="flex-shrink-0 w-full border-t border-solid border-gray-800 py-2.5 px-5 text-blue-gray-600 bg-black font-fira text-sm font-medium">
+    <div class="flex-shrink-0 w-full border-t border-solid border-gray-900 py-2.5 px-5 text-blue-gray-600 bg-gray-1000 font-fira text-sm font-medium">
       >
       <input
         v-model="inputCommand"
         placeholder="Type help for list of commands"
         @keydown="consoleKeyHandler"
-        class="bg-black text-steel-blue-100 border-none focus:outline-none pr-5 w-11/12 placeholder-blue-gray-600"
+        class="bg-transparent text-steel-blue-100 border-none focus:outline-none pr-5 w-11/12 placeholder-blue-gray-600"
       />
     </div>
   </Pane>

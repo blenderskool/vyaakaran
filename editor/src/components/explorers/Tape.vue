@@ -32,13 +32,13 @@
         Input string has been rejected by the Turing Machine
       </p>
     </div>
-    <div class="bg-gray-900 border-transparent border-2 p-8">
+    <div class="p-8">
       <div class="mx-auto max-w-full relative pl-1/2">
         <div class="flex transition" :style="{ transform: `translateX(${headPosition - CENTER_CELL_IDX * CELL_WIDTH - CELL_WIDTH / 2}px)` }">
           <div
             v-for="ele, i in TArray"
             :key="i"
-            class="border-2 border-cool-gray-600 inline-flex flex-shrink-0 items-center justify-center"
+            class="ring-2 ring-cool-gray-600 inline-flex flex-shrink-0 items-center justify-center relative bg-gray-800 shadow-inner-md"
             :style="{ width: `${CELL_WIDTH}px`, height: `${CELL_WIDTH}px` }"
           >
             {{ ele.val }}

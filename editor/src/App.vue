@@ -103,6 +103,10 @@ export default defineComponent({
     content: '';
   }
 
+  .editor-console-split > .splitpanes__splitter {
+    @apply bg-zinc-900;
+  }
+
   .hljs-terminal {
     @apply text-cyan-300 italic;
   }
