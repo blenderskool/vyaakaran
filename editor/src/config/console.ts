@@ -29,6 +29,11 @@ const vykrnConsole = new JitterConsole({
       },
       handler(playground, options, args) {
         const count = args.count as number;
+
+        if (playground.type === 'TM') {
+          pushToStream(playground, 'Error', `'strings' command is not supported for Turing Machine playground`);
+          return;
+        }
     
         if (isNaN(count)) {
           pushToStream(playground, 'Error', `Invalid value for 'count' passed`);
@@ -70,32 +75,31 @@ const vykrnConsole = new JitterConsole({
         }
       ],
       handler(playground, options, args) {
+        if (!playground.compiled?.parseTree) {
+          pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
+          return;
+        }
+
         if (playground.type === 'TM') {
-          if (!playground.compiled?.parseTree) {
-            pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
-          }
           let tstr = (args.string as string).trim()
           const str = tstr + '#'
           let genobj = new TestInput(str, playground.compiled.parseTree as Map<string, TuringMachineStateTransition[]>)
           let strcheck = genobj.consoleTestString()
           if (strcheck)
-            pushToStream(playground, 'Success', 'string accepted');
+            pushToStream(playground, 'Success', 'string was accepted');
           else
-            pushToStream(playground, 'Warning', 'string not accepted')
+            pushToStream(playground, 'Warning', 'string was rejected');
         } else {
           const str = (args.string as string).trim();
           // if (str === undefined) return newStream('Error', `String to match is not defined. Usage: test "a b b e"`);
-          if (!playground.compiled?.parseTree) {
-            pushToStream(playground, 'Error', `Program is not compiled yet. Run 'compile'`);
-          }
 
           const parseTreeCount = new EarleyParser(playground.compiled?.parseTree as ParseTree).isParsable(str);
           if (parseTreeCount > 1) {
-            pushToStream(playground, 'Warning', `"${str}" was matched with ambiguity`);
+            pushToStream(playground, 'Warning', `"${str}" was accepted with ambiguity`);
           } else if (parseTreeCount === 1) {
             pushToStream(playground, 'Success', `"${str}" was accepted`);
           } else {
-            pushToStream(playground, 'Warning', `"${str}" did not get accepted`);
+            pushToStream(playground, 'Warning', `"${str}" was rejected`);
           }
         }
       }
