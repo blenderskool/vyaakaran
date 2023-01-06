@@ -6,7 +6,7 @@
 import { ComputedRef, defineComponent, inject, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import { editorConfig, tmEditorConfig } from '../config/editor';
+import { getEditorConfig } from '../config/editor';
 import { Playground } from '../store/code';
 
 export default defineComponent({
@@ -15,14 +15,12 @@ export default defineComponent({
     const store = inject<ComputedRef<Playground>>('store');
     const editorRef = ref<HTMLElement>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
-    const pType = ref(store.value.type);
     
     const getEditorValue = () => editor.getValue().replace(/\r\n/g, '\n');
     
     onMounted(() => {
       editor = monaco.editor.create(editorRef.value, {
-        ...editorConfig,
-        language: 'Vyaakaran Grammar',
+        ...getEditorConfig(store.value.type),
         value: store.value.program,
       });
       editor.onDidChangeModelContent(() => {
@@ -35,12 +33,22 @@ export default defineComponent({
         editor.setValue(store.value.program);
       }
     });
+
+    // Update language and theme based on playground type change
+    watch(() => store.value.type, () => {
+      const editorConfig = getEditorConfig(store.value.type);
+      const editorModel = editor.getModel();
+      if (!editorModel || !editorConfig.language) return;
+
+      editor.updateOptions({ theme: editorConfig.theme });
+      monaco.editor.setModelLanguage(editorModel, editorConfig.language);
+    })
     
     onUnmounted(() => {
       editor.dispose();
     });
     
-    return { editorRef, editor, store };
+    return { editorRef, store };
   },
 })
 </script>

@@ -1,6 +1,7 @@
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import 'monaco-editor/esm/vs/editor/contrib/find/findController';
 import 'monaco-editor/esm/vs/editor/contrib/multicursor/multicursor';
+import { PlaygroundType } from '../store/code';
 
 monaco.languages.register({ id: 'Vyaakaran Grammar' });
 monaco.languages.setMonarchTokensProvider('Vyaakaran Grammar', {
@@ -16,8 +17,8 @@ monaco.languages.setMonarchTokensProvider('Vyaakaran Grammar', {
   },
 });
 
-monaco.languages.register({ id: 'State Transition Grammar' });
-monaco.languages.setMonarchTokensProvider('State Transition Grammar', {
+monaco.languages.register({ id: 'Vyaakaran State Transition' });
+monaco.languages.setMonarchTokensProvider('Vyaakaran State Transition', {
   tokenizer: {
     root: [
       [/#/, 'keyword'],
@@ -31,7 +32,7 @@ monaco.languages.setMonarchTokensProvider('State Transition Grammar', {
   },
 });
 
-monaco.editor.defineTheme('vyaakaran', {
+monaco.editor.defineTheme('vyaakaran-grammar', {
   base: 'vs-dark',
   inherit: false,
   rules: [
@@ -50,7 +51,7 @@ monaco.editor.defineTheme('vyaakaran', {
   },
 });
 
-monaco.editor.defineTheme('statetransitiongrammar', {
+monaco.editor.defineTheme('vyaakaran-state-transition', {
   base: 'vs-dark',
   inherit: false,
   rules: [
@@ -70,8 +71,9 @@ monaco.editor.defineTheme('statetransitiongrammar', {
   },
 });
 
-const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
-  theme: 'vyaakaran',
+const getEditorConfig = (playgroundType: PlaygroundType): monaco.editor.IStandaloneEditorConstructionOptions => ({
+  theme: playgroundType === 'TM' ? 'vyaakaran-state-transition' : 'vyaakaran-grammar',
+  language: playgroundType === 'TM' ? 'Vyaakaran State Transition' : 'Vyaakaran Grammar',
   fontLigatures: true,
   fontFamily: 'Fira Code, monospace',
   fontWeight: '500',
@@ -91,11 +93,6 @@ const editorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
   lineDecorationsWidth: 20,
   automaticLayout: true,
   mouseWheelZoom: true,
-};
+});
 
-const tmEditorConfig: monaco.editor.IStandaloneEditorConstructionOptions = {
-  ...editorConfig,
-  theme: 'statetransitiongrammar',
-};
-
-export { editorConfig, tmEditorConfig };
+export { getEditorConfig };
