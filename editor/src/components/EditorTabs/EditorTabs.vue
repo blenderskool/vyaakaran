@@ -13,7 +13,7 @@
         @remove="() => removeTab(i)"
       />
       <Tab class="!opacity-100">
-        <button class="h-full px-2 text-blue-gray-600 focus:outline-none" @click="() => $emit('new-playground')" title="Add a new tab [Shift + N]">
+        <button class="h-full px-2 text-blue-gray-600 focus:outline-none" @click="() => emit('new-playground')" title="Add a new tab [Shift + N]">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
@@ -34,68 +34,54 @@
   </header>
 </template>
 
-<script lang="ts">
-import { computed, ComputedRef, defineComponent, inject } from 'vue';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { playgrounds, Playground, getActivePlayground } from '../../store/code';
 import useKeyShortcut from '../../utils/useKeyShortcut';
 import Tab from './Tab.vue';
 
-export default defineComponent({
-  name: 'EditorTabs',
-  components: {
-    Tab,
-  },
-  emits: ['new-playground'],
-  setup() {
-    const store = inject('store') as ComputedRef<Playground>;
-    const tabs = computed(() => playgrounds.map(p => ({ name: p.name, lang: p.type })));
-    const router = useRouter();
-    const tabIdx = computed(() => Number(router.currentRoute.value.params.id) || 0);
+const emit = defineEmits<{
+  (e: 'new-playground'): void
+}>();
 
-    const removeTab = (i: number) => {
-      const mutate = () => {
-        playgrounds.splice(i, 1);
-      };
+const tabs = computed(() => playgrounds.map(p => ({ name: p.name, lang: p.type })));
+const router = useRouter();
+const tabIdx = computed(() => Number(router.currentRoute.value.params.id) || 0);
 
-      if (i <= tabIdx.value) {
-        router.replace(`${tabIdx.value - 1 >= 0 ? tabIdx.value - 1 : tabIdx.value}`).then(mutate);
-      } else {
-        mutate();
-      }
-    };
+const removeTab = (i: number) => {
+  const mutate = () => {
+    playgrounds.splice(i, 1);
+  };
 
-    const renameTab = (i: number, name: string) => {
-      if (!name) return;
+  if (i <= tabIdx.value) {
+    router.replace(`${tabIdx.value - 1 >= 0 ? tabIdx.value - 1 : tabIdx.value}`).then(mutate);
+  } else {
+    mutate();
+  }
+};
 
-      // NOTE: This assumes that the tab being renamed is the active tab. Might change later
-      (getActivePlayground() as Playground).name = name;
-      // Update page title
-      document.title = `${name} | Vyaakaran Playground`;
-    };
+const renameTab = (i: number, name: string) => {
+  if (!name) return;
 
-    // Next tab navigate hotkey
-    useKeyShortcut((e) => e.shiftKey && e.altKey && e.code === 'ArrowRight', () => {
-      if (tabIdx.value !== playgrounds.length - 1) {
-        router.replace(`${tabIdx.value + 1}`);
-      }
-    });
+  // NOTE: This assumes that the tab being renamed is the active tab. Might change later
+  (getActivePlayground() as Playground).name = name;
+  // Update page title
+  document.title = `${name} | Vyaakaran Playground`;
+};
 
-    // Previous tab navigate hotkey
-    useKeyShortcut((e) => e.shiftKey && e.altKey && e.code === 'ArrowLeft', () => {
-      if (tabIdx.value !== 0) {
-        router.replace(`${tabIdx.value - 1}`);
-      }
-    });
+// Next tab navigate hotkey
+useKeyShortcut((e) => e.shiftKey && e.altKey && e.code === 'ArrowRight', () => {
+  if (tabIdx.value !== playgrounds.length - 1) {
+    router.replace(`${tabIdx.value + 1}`);
+  }
+});
 
-    return {
-      store,
-      tabs,
-      tabIdx,
-      removeTab,
-      renameTab,
-    };
-  },
+// Previous tab navigate hotkey
+useKeyShortcut((e) => e.shiftKey && e.altKey && e.code === 'ArrowLeft', () => {
+  if (tabIdx.value !== 0) {
+    router.replace(`${tabIdx.value - 1}`);
+  }
 });
 </script>
 

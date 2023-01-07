@@ -22,25 +22,12 @@
   </table>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script lang="ts" setup>
 import { hljs } from '../../../config/highlight';
 import { ContextFreeGrammar } from '../../../../../compiler/src/context-free-grammar';
 
-export default defineComponent({
-  name: 'LL1ParseTable',
-  props: {
-    compiled: {
-      type: Object as PropType<ContextFreeGrammar>,
-      required: true,
-    },
-    table: {
-      type: Array as PropType<string[][][]>,
-      required: true,
-    },
-  },
-  setup() {
-    return { hljs };
-  },
-});
+const props = defineProps<{
+  compiled: ContextFreeGrammar,
+  table: string[][][]
+}>();
 </script>

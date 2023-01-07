@@ -37,8 +37,8 @@
   </footer>
 </template>
 
-<script lang="ts">
-import { Component, computed, defineComponent, provide, ref } from 'vue';
+<script lang="ts" setup>
+import { computed, provide, ref } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 import { useRoute } from 'vue-router';
 
@@ -57,7 +57,7 @@ import TuringMachinePlayground from '../components/playgrounds/TuringMachine.vue
 import RegularGrammarAutomataExplainer from '../components/explainers/RegularGrammarAutomata.vue';
 import useKeyShortcut from '../utils/useKeyShortcut';
 
-const views: Record<PlaygroundType, Record<string, { params?: string[], view: Component }>> = {
+const views: Record<PlaygroundType, Record<string, { params?: string[], view: any }>> = {
   RG: {
     nfa: {
       params: [],
@@ -83,56 +83,36 @@ const views: Record<PlaygroundType, Record<string, { params?: string[], view: Co
   },
 };
 
-export default defineComponent({
-  name: 'Playground',
-  components: {
-    RegularGrammarPlayground,
-    ContextFreeGrammarPlayground,
-    RegularGrammarAutomataExplainer,
-    NewPlaygroundModal,
-    CompileButton,
-    EditorTabs,
-    Splitpanes,
-    Pane,
-    Editor,
-    Console,
-    TuringMachinePlayground,
-  },
-  setup() {
-    const playground = computed(getActivePlayground);
-    const showNewPlaygroundModal = ref(false);
-    const route = useRoute();
-    provide('store', playground);
+const playground = computed(getActivePlayground);
+const showNewPlaygroundModal = ref(false);
+const route = useRoute();
+provide('store', playground);
 
-    const getView = () => {
-      let explain = (
-        (Array.isArray(route.query['explain']) ? route.query['explain'][0] : route.query['explain'])
-        ??
-        'default'
-      );
+const getView = () => {
+  let explain = (
+    (Array.isArray(route.query['explain']) ? route.query['explain'][0] : route.query['explain'])
+    ??
+    'default'
+  );
 
-      if (explain === 'default' || playground.value.errors.length || !playground.value.compiled) {
-        return { type: 'default', view: views[playground.value.type].default.view };
-      }
-
-      const params = views[playground.value.type][explain].params ?? [];
-
-      for(const param of params) {
-        if (route.query[param] === undefined) {
-          return { type: 'default', view: views[playground.value.type].default.view };
-        }
-      }
-
-      return { type: explain, view: views[playground.value.type][explain].view };
-    };
-
-    // New playground hotkey
-    useKeyShortcut((e) => e.shiftKey && e.code === 'KeyN', () => {
-      showNewPlaygroundModal.value = true;
-    });
-
-    return { playground, getView, showNewPlaygroundModal, pkg };
+  if (explain === 'default' || playground.value.errors.length || !playground.value.compiled) {
+    return { type: 'default', view: views[playground.value.type].default.view };
   }
+
+  const params = views[playground.value.type][explain].params ?? [];
+
+  for(const param of params) {
+    if (route.query[param] === undefined) {
+      return { type: 'default', view: views[playground.value.type].default.view };
+    }
+  }
+
+  return { type: explain, view: views[playground.value.type][explain].view };
+};
+
+// New playground hotkey
+useKeyShortcut((e) => e.shiftKey && e.code === 'KeyN', () => {
+  showNewPlaygroundModal.value = true;
 });
 </script>
 

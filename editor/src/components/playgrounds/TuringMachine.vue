@@ -43,8 +43,8 @@
   <Empty v-else />
 </template>
 
-<script lang="ts">
-import { ComputedRef, defineComponent, inject, ref } from 'vue';
+<script lang="ts" setup>
+import { ComputedRef, inject, ref } from 'vue';
 import { Pane, Splitpanes } from 'splitpanes';
 import { TestInput } from '../../../../compiler/src/turing-machine/input';
 import { TuringMachineParseTree } from '../../../../compiler/src/turing-machine/types';
@@ -59,60 +59,37 @@ interface Instructions {
   moveDir: number;
 }
 
-export default defineComponent({
-  name: 'TuringMachinePlayground',
-  components: {
-    Splitpanes,
-    Pane,
-    PaneHeader,
-    Tape,
-    TMStateTransitionGraph,
-    Empty,
-  },
-  setup() {
-    const childComponentRef = ref();
-    const showButtons = ref<boolean>(false);
-    const inputString = ref<string>('');
-    const tapeInstructions = ref<Instructions[]>([]);
-    const store = inject('store') as ComputedRef<Playground>;
-    const isAccepted = ref<boolean>(false);
+const childComponentRef = ref();
+const showButtons = ref<boolean>(false);
+const inputString = ref<string>('');
+const tapeInstructions = ref<Instructions[]>([]);
+const store = inject('store') as ComputedRef<Playground>;
+const isAccepted = ref<boolean>(false);
 
-    const handleInputSubmit = () => {
-      showButtons.value = true;
-      childComponentRef.value.loadTM(inputString.value);
-      let testobj = new TestInput(
-        inputString.value,
-        (store.value.compiled.parseTree as TuringMachineParseTree)
-      );
+const handleInputSubmit = () => {
+  showButtons.value = true;
+  childComponentRef.value.loadTM(inputString.value);
+  let testobj = new TestInput(
+    inputString.value,
+    (store.value.compiled.parseTree as TuringMachineParseTree)
+  );
 
-      let strgen = testobj.CheckString();
-      let tmp = new Array();
-      do {
-        let tr = strgen.next();
-        tmp.push(JSON.parse(JSON.stringify(tr)));
-      } while (!strgen.next().done);
+  let strgen = testobj.CheckString();
+  let tmp = new Array();
+  do {
+    let tr = strgen.next();
+    tmp.push(JSON.parse(JSON.stringify(tr)));
+  } while (!strgen.next().done);
 
-      isAccepted.value = tmp[tmp.length - 1].value.accepted;
+  isAccepted.value = tmp[tmp.length - 1].value.accepted;
 
-      tapeInstructions.value = tmp.map((inst) => {
-        return {
-          moveDir: inst.value.moveDir,
-          charArray: inst.value.string,
-        };
-      });
-    };
-
+  tapeInstructions.value = tmp.map((inst) => {
     return {
-      store,
-      showButtons,
-      inputString,
-      handleInputSubmit,
-      tapeInstructions,
-      childComponentRef,
-      isAccepted,
+      moveDir: inst.value.moveDir,
+      charArray: inst.value.string,
     };
-  },
-});
+  });
+};
 </script>
 
 <style scoped>

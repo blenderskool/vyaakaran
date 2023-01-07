@@ -38,9 +38,9 @@
   </Pane>
 </template>
 
-<script lang="ts">
-import { computed, ComputedRef, defineComponent, getCurrentInstance, inject, onMounted, ref } from 'vue';
-import { Splitpanes, Pane } from 'splitpanes';
+<script lang="ts" setup>
+import { computed, ComputedRef, getCurrentInstance, inject, onMounted, ref } from 'vue';
+import { Pane } from 'splitpanes';
 
 import LL1ParseTable from './ParseTables/LL1.vue';
 import LRParseTable from './ParseTables/LR.vue';
@@ -51,50 +51,30 @@ import BottomUpAutomata from './BottomUpAutomata.vue';
 import { Playground } from '../../store/code';
 import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
 
-export default defineComponent({
-  name: 'ParseTableExplorer',
-  components: {
-    PaneHeader,
-    RadioTabs,
-    LL1ParseTable,
-    LRParseTable,
-    Splitpanes,
-    Pane,
-    BottomUpAutomata,
-  },
-  setup() {
-    const tableType = ref('LL(1)');
-    const store = inject('store') as ComputedRef<Playground>;
+const tableType = ref('LL(1)');
+const store = inject('store') as ComputedRef<Playground>;
 
-    const parser = computed(() => {
-      const compiled = store.value.compiled as ContextFreeGrammar;
-      switch (tableType.value) {
-        case 'LL(1)':
-          return compiled.toLL1().result;
-        case 'LR(0)':
-          return compiled.toLR0().result;
-        case 'SLR(1)':
-          return compiled.toSLR1().result;
-        case 'LR(1)':
-          return compiled.toLR1().result;
-        case 'LALR(1)':
-          return compiled.toLALR1().result;
-        default:
-          return compiled.toLL1().result;
-      }
-    });
-
-    onMounted(() => {
-      const instance = getCurrentInstance();
-      instance?.proxy?.$forceUpdate();
-    });
-
-    return {
-      tableType,
-      parser,
-      store
-    };
+const parser = computed(() => {
+  const compiled = store.value.compiled as ContextFreeGrammar;
+  switch (tableType.value) {
+    case 'LL(1)':
+      return compiled.toLL1().result;
+    case 'LR(0)':
+      return compiled.toLR0().result;
+    case 'SLR(1)':
+      return compiled.toSLR1().result;
+    case 'LR(1)':
+      return compiled.toLR1().result;
+    case 'LALR(1)':
+      return compiled.toLALR1().result;
+    default:
+      return compiled.toLL1().result;
   }
+});
+
+onMounted(() => {
+  const instance = getCurrentInstance();
+  instance?.proxy?.$forceUpdate();
 });
 </script>
 

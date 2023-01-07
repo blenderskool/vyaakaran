@@ -8,34 +8,17 @@
   <Empty v-else />
 </template>
 
-<script lang="ts">
-import { ComputedRef, defineComponent, inject } from 'vue';
+<script lang="ts" setup>
+import { ComputedRef, inject } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
 
 import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
 import ParseTableExplorer from '../explorers/ParseTable.vue';
 import FirstFollowExplorer from '../explorers/FirstFollow.vue';
 import { Playground } from '../../store/code';
-import Editor from '../Editor.vue';
-import Console from '../Console.vue';
 import Empty from './Empty.vue';
 
-export default defineComponent({
-  name: 'ContextFreeGrammarPlayground',
-  components: {
-    Splitpanes,
-    Pane,
-    Editor,
-    Console,
-    Empty,
-    ParseTableExplorer,
-    FirstFollowExplorer,
-  },
-  setup() {
-    const store = inject('store') as ComputedRef<Playground>;
-    return { store };
-  }
-});
+const store = inject('store') as ComputedRef<Playground>;
 </script>
 
 <style>

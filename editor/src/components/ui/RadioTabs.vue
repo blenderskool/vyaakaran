@@ -12,20 +12,18 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script lang="ts" setup>
+const props = defineProps<{
+  name: string,
+  options: string[],
+  modelValue: string
+}>();
 
-export default defineComponent({
-  name: 'Output',
-  props: {
-    name: { type: String as PropType<string>, required: true },
-    options: { type: Array as PropType<string[]>, required: true },
-    modelValue: { type: String as PropType<string>, required: true },
-  },
-  methods: {
-    onChange(e: Event) {
-      this.$emit('update:modelValue', (e.target as HTMLInputElement).value);
-    },
-  },
-});
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void
+}>();
+
+const onChange = (e: Event) => {
+  emit('update:modelValue', (e.target as HTMLInputElement).value);
+};
 </script>

@@ -33,27 +33,20 @@
 </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+// Configure Google Analytics
+if (import.meta.env.PROD && typeof window !== undefined) {
+  const script = document.createElement('script');
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=G-K4KBEY7FZJ';
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
 
-export default defineComponent({
-  name: 'App',
-  setup() {
-    // Configure Google Analytics
-    if (import.meta.env.PROD && typeof window !== undefined) {
-      const script = document.createElement('script');
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-K4KBEY7FZJ';
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-K4KBEY7FZJ');
-    }
-  }
-});
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-K4KBEY7FZJ');
+}
 </script>
 
 <style>

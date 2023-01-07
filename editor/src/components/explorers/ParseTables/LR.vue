@@ -35,38 +35,19 @@
   </table>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script lang="ts" setup>
 import { hljs } from '../../../config/highlight';
 
-export default defineComponent({
-  name: 'LRParseTable',
-  props: {
-    actionTable: {
-      type: Array as PropType<any[][][]>,
-      required: true,
-    },
-    gotoTable: {
-      type: Array as PropType<any[][][]>,
-      required: true,
-    },
-    actionTableColumns: {
-      type: Object as PropType<Record<string, number>>,
-      required: true,
-    },
-    gotoTableColumns: {
-      type: Object as PropType<Record<string, number>>,
-      required: true,
-    },
-  },
-  setup() {
-    const computeCellValue = (rule) => {
-      if (rule.value === undefined) return rule.action;
+const props = defineProps<{
+  actionTable: any[][][],
+  gotoTable: any[][][],
+  actionTableColumns: Record<string, number>,
+  gotoTableColumns: Record<string, number>,
+}>();
 
-      return `${rule.action}(${hljs.highlight('vyaakaran grammar', rule.value.toString()).value})`;
-    };
+const computeCellValue = (rule: any) => {
+  if (rule.value === undefined) return rule.action;
 
-    return { hljs, computeCellValue };
-  },
-});
+  return `${rule.action}(${hljs.highlight('vyaakaran grammar', rule.value.toString()).value})`;
+};
 </script>

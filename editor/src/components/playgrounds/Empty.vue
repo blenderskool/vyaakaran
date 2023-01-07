@@ -15,15 +15,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ComputedRef, defineComponent, inject } from 'vue';
+<script lang="ts" setup>
+import { ComputedRef, inject } from 'vue';
 import { Playground } from '../../store/code';
 
-export default defineComponent({
-  name: 'EmptyPlayground',
-  setup() {
-    const store = inject('store') as ComputedRef<Playground>;
-    return { store };
-  }
-});
+const store = inject('store') as ComputedRef<Playground>;
 </script>

@@ -54,65 +54,51 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ComputedRef, defineComponent, inject, onMounted, onUnmounted, readonly, ref, watch } from 'vue';
+<script lang="ts" setup>
+import { ComputedRef, inject, onMounted, onUnmounted, ref, watch } from 'vue';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { getEditorConfig } from '../config/editor';
-import codeExamplesData from '../utils/codeExamples';
+import codeExamples from '../utils/codeExamples';
 import { Playground } from '../store/code';
 
-export default defineComponent({
-  name: 'Editor',
-  components: {
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-  },
-  setup() {
-    const store = inject('store') as ComputedRef<Playground>;
-    const editorRef = ref<HTMLElement | null>(null);
-    let editor: monaco.editor.IStandaloneCodeEditor;
-    const codeExamples = readonly(ref(codeExamplesData));
-    
-    const getEditorValue = () => editor.getValue().replace(/\r\n/g, '\n');
-    
-    onMounted(() => {
-      if (!editorRef.value) return;
-      editor = monaco.editor.create(editorRef.value, {
-        ...getEditorConfig(store.value.type),
-        value: store.value.program,
-      });
-      editor.onDidChangeModelContent(() => {
-        store.value.program = getEditorValue();
-      });
-    });
-    
-    watch(() => store.value.program, () => {
-      if (editor && getEditorValue() !== store.value.program) {
-        editor.setValue(store.value.program);
-      }
-    });
+const store = inject('store') as ComputedRef<Playground>;
+const editorRef = ref<HTMLElement | null>(null);
+let editor: monaco.editor.IStandaloneCodeEditor;
 
-    // Update language and theme based on playground type change
-    watch(() => store.value.type, () => {
-      const editorConfig = getEditorConfig(store.value.type);
-      const editorModel = editor.getModel();
-      if (!editorModel || !editorConfig.language) return;
+const getEditorValue = () => editor.getValue().replace(/\r\n/g, '\n');
 
-      editor.updateOptions({ theme: editorConfig.theme });
-      monaco.editor.setModelLanguage(editorModel, editorConfig.language);
-    })
-    
-    onUnmounted(() => {
-      editor.dispose();
-    });
-    
-    return { editorRef, store, codeExamples };
-  },
+onMounted(() => {
+  if (!editorRef.value) return;
+  editor = monaco.editor.create(editorRef.value, {
+    ...getEditorConfig(store.value.type),
+    value: store.value.program,
+  });
+  editor.onDidChangeModelContent(() => {
+    store.value.program = getEditorValue();
+  });
+});
+
+watch(() => store.value.program, () => {
+  if (editor && getEditorValue() !== store.value.program) {
+    editor.setValue(store.value.program);
+  }
+});
+
+// Update language and theme based on playground type change
+watch(() => store.value.type, () => {
+  const editorConfig = getEditorConfig(store.value.type);
+  const editorModel = editor.getModel();
+  if (!editorModel || !editorConfig.language) return;
+
+  editor.updateOptions({ theme: editorConfig.theme });
+  monaco.editor.setModelLanguage(editorModel, editorConfig.language);
 })
+
+onUnmounted(() => {
+  editor.dispose();
+});
 </script>
 
 <style>

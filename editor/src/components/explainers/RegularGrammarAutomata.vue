@@ -2,7 +2,7 @@
   <Pane class="bg-gray-900 py-5 px-8" min-size="25" size="45">
     <header class="flex justify-between">
       <h2 class="text-2xl font-semibold">Finite Automata conversion</h2>
-      <button class="secondary-btn" @click="$router.back()">
+      <button class="secondary-btn" @click="router.back()">
         Exit explanation
       </button>
     </header>
@@ -44,9 +44,10 @@
   </Pane>
 </template>
 
-<script lang="ts">
-import { ComputedRef, defineComponent, inject, onMounted, ref } from 'vue';
+<script lang="ts" setup>
+import { ComputedRef, inject, onMounted, ref } from 'vue';
 import { Pane } from 'splitpanes';
+import { useRouter } from 'vue-router';
 import { hljs } from '../../config/highlight';
 
 import { RegularGrammar } from '../../../../compiler/src/regular-grammar';
@@ -55,44 +56,33 @@ import { Playground } from '../../store/code';
 import FiniteAutomataExplorer from '../explorers/FiniteAutomata.vue';
 import { ParseTree } from '../../../../compiler/src/regular-grammar/types';
 
-export default defineComponent({
-  name: 'RegularGrammarAutomataExplainer',
-  components: {
-    FiniteAutomataExplorer,
-    Pane,
-  },
-  setup() {
-    const playground = inject('store') as ComputedRef<Playground>;
-    const compiled = playground.value.compiled as RegularGrammar;
-    const step = ref({ graph: null, step: '', rule: '' });
-    const rules = ref<string[]>([]);
+const playground = inject('store') as ComputedRef<Playground>;
+const compiled = playground.value.compiled as RegularGrammar;
+const step = ref({ graph: null, step: '', rule: '' });
+const rules = ref<string[]>([]);
+const router = useRouter();
 
-    let generator: any;
+let generator: any;
 
-    const next = () => {
-      const nextValue = generator.next();
-      if (nextValue === undefined) return;
-      step.value = nextValue.value;
-    };
+const next = () => {
+  const nextValue = generator.next();
+  if (nextValue === undefined) return;
+  step.value = nextValue.value;
+};
 
-    const prev = () => {
-      const prevValue = generator.prev();
-      if (prevValue === undefined) return;
-      step.value = prevValue.value;
-    };
+const prev = () => {
+  const prevValue = generator.prev();
+  if (prevValue === undefined) return;
+  step.value = prevValue.value;
+};
 
-    onMounted(() => {
-      if (!compiled) return;
+onMounted(() => {
+  if (!compiled) return;
 
-      generator = new IterateGenerator(compiled.toFAGenerator());
-      next();
-      rules.value = new SimplifiedGrammarRepresentation(compiled.parseTree as ParseTree)
-        .rules
-        .map((rule) => rule.toString());
-    });
-
-
-    return { next, prev, step, rules, hljs };
-  },
+  generator = new IterateGenerator(compiled.toFAGenerator());
+  next();
+  rules.value = new SimplifiedGrammarRepresentation(compiled.parseTree as ParseTree)
+    .rules
+    .map((rule) => rule.toString());
 });
 </script>

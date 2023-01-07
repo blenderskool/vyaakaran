@@ -7,37 +7,33 @@
   </button>
 </template>
 
-<script lang="ts">
-import { ComputedRef, defineComponent, inject, onMounted, onUnmounted } from 'vue';
+<script lang="ts" setup>
+import { ComputedRef, inject, onMounted, onUnmounted } from 'vue';
 import { Playground } from '../../store/code';
 
-export default defineComponent({
-  name: 'CompileButton',
-  emits: [ 'triggeredCompile' ],
-  setup(_, { emit }) {
-    const store = inject('store') as ComputedRef<Playground>;
+const emit = defineEmits<{
+  (e: 'triggeredCompile'): void
+}>();
 
-    const compile = () => {
-      store.value.compile();
-      emit('triggeredCompile');
-    };
+const store = inject('store') as ComputedRef<Playground>;
 
-    const handleCompileKeybind = (e: KeyboardEvent) => {
-      if (e.altKey && e.code === 'Enter') {
-        e.preventDefault();
-        compile();
-      }
-    };
+const compile = () => {
+  store.value.compile();
+  emit('triggeredCompile');
+};
 
-    onMounted(() => {
-      window.addEventListener('keydown', handleCompileKeybind);
-    });
+const handleCompileKeybind = (e: KeyboardEvent) => {
+  if (e.altKey && e.code === 'Enter') {
+    e.preventDefault();
+    compile();
+  }
+};
 
-    onUnmounted(() => {
-      window.removeEventListener('keydown', handleCompileKeybind);
-    });
+onMounted(() => {
+  window.addEventListener('keydown', handleCompileKeybind);
+});
 
-    return { compile };
-  },
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleCompileKeybind);
 });
 </script>

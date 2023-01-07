@@ -19,13 +19,13 @@
           ref="inputRef"
           class="bg-transparent text-steel-blue-100 focus:outline-none border-none w-20 text-xs"
           :value="name"
-          @change="(e) => $emit('rename', (e.target as HTMLInputElement).value.trim())"
+          @change="(e) => emit('rename', (e.target as HTMLInputElement).value.trim())"
           @blur="() => setEditing(false)"
           @keydown.enter="() => setEditing(false)"
         />
         <span class="max-w-20 overflow-ellipsis overflow-x-hidden" v-else>{{ name }}</span>
       </component>
-      <button class="w-4 h-4 mr-2 text-blue-gray-600 focus:outline-none" v-if="showRemove" @click="() => $emit('remove')" :title="`Remove ${name}`">
+      <button class="w-4 h-4 mr-2 text-blue-gray-600 focus:outline-none" v-if="showRemove" @click="() => emit('remove')" :title="`Remove ${name}`">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="16" height="16" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -34,61 +34,41 @@
   </li>
 </template>
 
-<script lang="ts">
-import { defineComponent, nextTick, PropType, readonly, ref } from 'vue';
+<script lang="ts" setup>
+import { nextTick, ref } from 'vue';
 import useKeyShortcut from '../../utils/useKeyShortcut';
 
-export default defineComponent({
-  name: 'Tab',
-  props: {
-    name: {
-      type: String as PropType<string>,
-      required: false,
-    },
-    to: {
-      type: String as PropType<string>,
-      required: false,
-    },
-    isActive: {
-      type: Boolean as PropType<boolean>,
-      required: false,
-      default: false,
-    },
-    showRemove: {
-      type: Boolean as PropType<boolean>,
-      required: false,
-      default: true,
-    },
-    lang: {
-      type: String as PropType<string>,
-      required: false,
-    },
-  },
-  emits: ['rename', 'remove'],
-  setup() {
-    const inputRef = ref<HTMLInputElement | null>(null);
-    const isEditing = ref<boolean>(false);
-
-    const setEditing = async (state: boolean) => {      
-      isEditing.value = state;
-      if (state) {
-        await nextTick();
-        if (!inputRef.value) return;
-
-        inputRef.value.focus();
-      }
-    };
-
-    // Rename tab shortcut
-    useKeyShortcut((e) => e.key === 'F2', () => setEditing(true));
-    // Cancel renaming tab shortcut
-    useKeyShortcut((e) => e.key === 'Escape' && isEditing.value, () => setEditing(false));
-
-    return {
-      inputRef,
-      setEditing,
-      isEditing: readonly(isEditing),
-    };
-  },
+const props = withDefaults(defineProps<{
+  name?: string,
+  to?: string,
+  isActive?: boolean,
+  showRemove?: boolean,
+  lang?: string,
+}>(), {
+  isActive: false,
+  showRemove: true,
 });
+
+const emit = defineEmits<{
+  (e: 'rename', value: string): void,
+  (e: 'remove'): void,
+}>();
+
+const inputRef = ref<HTMLInputElement | null>(null);
+const isEditing = ref<boolean>(false);
+
+const setEditing = async (state: boolean) => {      
+  isEditing.value = state;
+  if (state) {
+    await nextTick();
+    if (!inputRef.value) return;
+
+    inputRef.value.focus();
+  }
+};
+
+// Rename tab shortcut
+useKeyShortcut((e) => e.key === 'F2', () => setEditing(true));
+// Cancel renaming tab shortcut
+useKeyShortcut((e) => e.key === 'Escape' && isEditing.value, () => setEditing(false));
 </script>

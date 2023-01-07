@@ -49,49 +49,38 @@
   </Pane>
 </template>
 
-<script lang="ts">
-import { computed, ComputedRef, defineComponent, inject, onMounted, ref } from 'vue';
+<script lang="ts" setup>
+import { computed, ComputedRef, inject, ref } from 'vue';
 import { Pane }  from 'splitpanes';
 import PaneHeader from './ui/PaneHeader.vue';
 import { Playground } from '../store/code';
 
-export default defineComponent({
-  name: 'Console',
-  components: {
-    PaneHeader,
-    Pane,
-  },
-  setup() {
-    const store = inject('store') as ComputedRef<Playground>;
-    const consoleRef = ref<HTMLElement | null>(null);
-    const inputCommand = ref<string>('');
-    const errorsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Error').length);
-    const warningsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Warning').length);
+const store = inject('store') as ComputedRef<Playground>;
+const consoleRef = ref<HTMLElement | null>(null);
+const inputCommand = ref<string>('');
+const errorsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Error').length);
+const warningsCount = computed(() => store.value.consoleStream.filter((err) => err.type === 'Warning').length);
 
-    const scrollToBottom = () => {
-      if (!consoleRef.value) return;
-      consoleRef.value.scrollTo(0, consoleRef.value.scrollHeight + 100);
-    };
+const scrollToBottom = () => {
+  if (!consoleRef.value) return;
+  consoleRef.value.scrollTo(0, consoleRef.value.scrollHeight + 100);
+};
 
-    const submitCommand = async () => {
-      const { executeCommand } = await import('../config/console');
-      executeCommand(inputCommand.value, store.value.consoleStream);
-      inputCommand.value = '';
-    };
+const submitCommand = async () => {
+  const { executeCommand } = await import('../config/console');
+  executeCommand(inputCommand.value, store.value.consoleStream);
+  inputCommand.value = '';
+};
 
-    const consoleKeyHandler = async (e: KeyboardEvent) => {
-      if (e.code === 'Enter') {
-        submitCommand();
-      } else if (e.code === 'KeyL' && e.ctrlKey) {
-        e.preventDefault();
-        const { executeCommand } = await import('../config/console');
-        executeCommand('clear', store.value.consoleStream);
-      }
-    }
-
-    return { store, consoleRef, errorsCount, warningsCount, inputCommand, scrollToBottom, submitCommand, consoleKeyHandler };
-  },
-});
+const consoleKeyHandler = async (e: KeyboardEvent) => {
+  if (e.code === 'Enter') {
+    submitCommand();
+  } else if (e.code === 'KeyL' && e.ctrlKey) {
+    e.preventDefault();
+    const { executeCommand } = await import('../config/console');
+    executeCommand('clear', store.value.consoleStream);
+  }
+}
 </script>
 
 <style scoped>

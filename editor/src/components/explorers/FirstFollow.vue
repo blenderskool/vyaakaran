@@ -28,33 +28,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
 import PaneHeader from '../ui/PaneHeader.vue';
 
 import { hljs } from '../../config/highlight';
 
-export default defineComponent({
-  name: 'FirstFollowExplorer',
-  components: {
-    PaneHeader,
-  },
-  props: {
-    compiled: { type: Object as PropType<ContextFreeGrammar>, required: true },
-  },
-  computed: {
-    firstSets() {
-      return this.compiled.findFirstSets();
-    },
-    followSets() {
-      return this.compiled.findFollowSets();
-    },
-  },
-  setup() {
-    return { hljs };
-  }
-});
+const props = defineProps<{
+  compiled: ContextFreeGrammar
+}>();
+
+const firstSets = computed(() => props.compiled.findFirstSets());
+const followSets = computed(() => props.compiled.findFollowSets());
 </script>
 
 <style scoped>

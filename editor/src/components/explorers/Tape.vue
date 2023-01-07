@@ -154,8 +154,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, onMounted, PropType, readonly, ref } from 'vue';
+<script lang="ts" setup>
+import { computed, onMounted, readonly, ref } from 'vue';
 
 interface itType {
   val: string;
@@ -165,290 +165,267 @@ interface Instructions {
   moveDir: number;
 }
 
-export default defineComponent({
-  name: 'Tape',
-  emits: ['toggleShowButtons'],
-  props: {
-    showButtons: { type: Boolean as PropType<boolean>, required: true },
-    instructions: {
-      type: Array as PropType<Instructions[]>,
-      required: true,
-    },
-    isAccepted: {
-      type: Boolean as PropType<boolean>,
-      required: true,
-    },
-  },
-  setup(props, { emit }) {
-    const NUM_CELLS = readonly(ref(500));
-    const CELL_WIDTH = readonly(ref(48));
-    const CENTER_CELL_IDX = readonly(computed(() => NUM_CELLS.value / 2));
-    const TArray = ref<itType[]>([]);
-    const stepCount = ref<number>(1);
-    const inputString = ref<string>('');
-    const isPlaying = ref<boolean>(false);
-    const TID = ref();
-    const headPosition = ref(0);
+const props = defineProps<{
+  showButtons: boolean,
+  instructions: Instructions[],
+  isAccepted: boolean
+}>();
 
-    onMounted(() => {
-      for (let i = 0; i < NUM_CELLS.value; ++i) {
-        TArray.value.push({ val: ' ' });
-      }
-    });
+const emit = defineEmits<{
+  (e: 'toggleShowButtons'): void
+}>();
 
-    const nextStep = (move: number) => {
-      if (move < 0) {
-        let index = props.instructions[stepCount.value - 1].moveDir;
-        let i = 0;
-        const intervalID = setInterval(
-          () => {
-            if (
-              TArray.value[CENTER_CELL_IDX.value + index - 100].val !==
-              props.instructions[stepCount.value].charArray[index]
-            ) {
-              TArray.value[CENTER_CELL_IDX.value + index - 100].val =
-                props.instructions[stepCount.value].charArray[
-                  index
-                ] === '#'
-                  ? ' '
-                  : props.instructions[stepCount.value]
-                      .charArray[index];
-            }
-            headPosition.value += CELL_WIDTH.value;
-            index--;
-            i++;
-            if (i === move * -1) {
-              clearInterval(intervalID);
-              stepCount.value++;
-            }
-          },
-          isPlaying.value ? 1000 : 500
-        );
-      } else if (move > 0) {
-        let index = props.instructions[stepCount.value - 1].moveDir;
-        let i = 0;
-        const intervalID = setInterval(
-          () => {
-            if (
-              TArray.value[CENTER_CELL_IDX.value + index - 100].val !==
-              props.instructions[stepCount.value].charArray[index]
-            ) {
-              TArray.value[CENTER_CELL_IDX.value + index - 100].val =
-                props.instructions[stepCount.value].charArray[
-                  index
-                ] === '#'
-                  ? ' '
-                  : props.instructions[stepCount.value]
-                      .charArray[index];
-            }
-            headPosition.value -= CELL_WIDTH.value;
-            index++;
-            i++;
-            if (i === move) {
-              clearInterval(intervalID);
-              stepCount.value++;
-            }
-          },
-          isPlaying.value ? 1000 : 500
-        );
-      } else {
-        let index = props.instructions[stepCount.value].moveDir;
+const NUM_CELLS = readonly(ref(500));
+const CELL_WIDTH = readonly(ref(48));
+const CENTER_CELL_IDX = readonly(computed(() => NUM_CELLS.value / 2));
+const TArray = ref<itType[]>([]);
+const stepCount = ref<number>(1);
+const inputString = ref<string>('');
+const isPlaying = ref<boolean>(false);
+const TID = ref();
+const headPosition = ref(0);
+
+onMounted(() => {
+  for (let i = 0; i < NUM_CELLS.value; ++i) {
+    TArray.value.push({ val: ' ' });
+  }
+});
+
+const nextStep = (move: number) => {
+  if (move < 0) {
+    let index = props.instructions[stepCount.value - 1].moveDir;
+    let i = 0;
+    const intervalID = setInterval(
+      () => {
         if (
-          props.instructions[stepCount.value].charArray[index] !==
-          TArray.value[CENTER_CELL_IDX.value + index - 100].val
+          TArray.value[CENTER_CELL_IDX.value + index - 100].val !==
+          props.instructions[stepCount.value].charArray[index]
         ) {
           TArray.value[CENTER_CELL_IDX.value + index - 100].val =
-            props.instructions[stepCount.value].charArray[index] ===
-            '#'
-              ? ' '
-              : props.instructions[stepCount.value].charArray[
-                  index
-                ];
-        }
-        stepCount.value++;
-      }
-    };
-
-    const prevStep = (move: number) => {
-      if (move < 0) {
-        let index = props.instructions[stepCount.value - 1].moveDir;
-        let i = 0;
-        const intervalID = setInterval(
-          () => {
-            if (
-              TArray.value[CENTER_CELL_IDX.value + index - 100].val !==
-              props.instructions[stepCount.value - 2].charArray[
-                index
-              ]
-            ) {
-              TArray.value[CENTER_CELL_IDX.value + index - 100].val =
-                props.instructions[stepCount.value - 2]
-                  .charArray[index] === '#'
-                  ? ' '
-                  : props.instructions[stepCount.value - 2]
-                      .charArray[index];
-            }
-            headPosition.value += CELL_WIDTH.value;
-            index--;
-            i++;
-            if (i === move * -1) {
-              clearInterval(intervalID);
-              stepCount.value--;
-              if (stepCount.value - 1 === 0) {
-                loadTM(inputString.value);
-              }
-            }
-          },
-          isPlaying.value ? 1000 : 500
-        );
-      } else if (move > 0) {
-        let index = props.instructions[stepCount.value - 1].moveDir;
-        let i = 0;
-        const intervalID = setInterval(
-          () => {
-            if (
-              TArray.value[CENTER_CELL_IDX.value + index - 100].val !==
-              props.instructions[stepCount.value - 2].charArray[
-                index
-              ]
-            ) {
-              TArray.value[CENTER_CELL_IDX.value + index - 100].val =
-                props.instructions[stepCount.value - 2]
-                  .charArray[index] === '#'
-                  ? ' '
-                  : props.instructions[stepCount.value - 2]
-                      .charArray[index];
-            }
-            headPosition.value -= CELL_WIDTH.value;
-            index++;
-            i++;
-            if (i === move) {
-              clearInterval(intervalID);
-              stepCount.value--;
-              if (stepCount.value - 1 === 0) {
-                loadTM(inputString.value);
-              }
-            }
-          },
-          isPlaying.value ? 1000 : 500
-        );
-      } else {
-        let index = props.instructions[stepCount.value - 2].moveDir;
-        if (
-          props.instructions[stepCount.value - 2].charArray[index] !==
-          TArray.value[CENTER_CELL_IDX.value + index - 100].val
-        ) {
-          TArray.value[CENTER_CELL_IDX.value + index - 100].val =
-            props.instructions[stepCount.value - 2].charArray[
+            props.instructions[stepCount.value].charArray[
               index
             ] === '#'
               ? ' '
-              : props.instructions[stepCount.value - 2].charArray[
-                  index
-                ];
+              : props.instructions[stepCount.value]
+                  .charArray[index];
         }
-        stepCount.value--;
-      }
-    };
+        headPosition.value += CELL_WIDTH.value;
+        index--;
+        i++;
+        if (i === move * -1) {
+          clearInterval(intervalID);
+          stepCount.value++;
+        }
+      },
+      isPlaying.value ? 1000 : 500
+    );
+  } else if (move > 0) {
+    let index = props.instructions[stepCount.value - 1].moveDir;
+    let i = 0;
+    const intervalID = setInterval(
+      () => {
+        if (
+          TArray.value[CENTER_CELL_IDX.value + index - 100].val !==
+          props.instructions[stepCount.value].charArray[index]
+        ) {
+          TArray.value[CENTER_CELL_IDX.value + index - 100].val =
+            props.instructions[stepCount.value].charArray[
+              index
+            ] === '#'
+              ? ' '
+              : props.instructions[stepCount.value]
+                  .charArray[index];
+        }
+        headPosition.value -= CELL_WIDTH.value;
+        index++;
+        i++;
+        if (i === move) {
+          clearInterval(intervalID);
+          stepCount.value++;
+        }
+      },
+      isPlaying.value ? 1000 : 500
+    );
+  } else {
+    let index = props.instructions[stepCount.value].moveDir;
+    if (
+      props.instructions[stepCount.value].charArray[index] !==
+      TArray.value[CENTER_CELL_IDX.value + index - 100].val
+    ) {
+      TArray.value[CENTER_CELL_IDX.value + index - 100].val =
+        props.instructions[stepCount.value].charArray[index] ===
+        '#'
+          ? ' '
+          : props.instructions[stepCount.value].charArray[
+              index
+            ];
+    }
+    stepCount.value++;
+  }
+};
 
-    const nextStepHandler = () => {
-      nextStep(
-        props.instructions[stepCount.value].moveDir -
-          props.instructions[stepCount.value - 1].moveDir
-      );
-    };
-    const previousStepHandler = () => {
-      prevStep(
-        props.instructions[stepCount.value - 2].moveDir -
-          props.instructions[stepCount.value - 1].moveDir
-      );
-    };
+const prevStep = (move: number) => {
+  if (move < 0) {
+    let index = props.instructions[stepCount.value - 1].moveDir;
+    let i = 0;
+    const intervalID = setInterval(
+      () => {
+        if (
+          TArray.value[CENTER_CELL_IDX.value + index - 100].val !==
+          props.instructions[stepCount.value - 2].charArray[
+            index
+          ]
+        ) {
+          TArray.value[CENTER_CELL_IDX.value + index - 100].val =
+            props.instructions[stepCount.value - 2]
+              .charArray[index] === '#'
+              ? ' '
+              : props.instructions[stepCount.value - 2]
+                  .charArray[index];
+        }
+        headPosition.value += CELL_WIDTH.value;
+        index--;
+        i++;
+        if (i === move * -1) {
+          clearInterval(intervalID);
+          stepCount.value--;
+          if (stepCount.value - 1 === 0) {
+            loadTM(inputString.value);
+          }
+        }
+      },
+      isPlaying.value ? 1000 : 500
+    );
+  } else if (move > 0) {
+    let index = props.instructions[stepCount.value - 1].moveDir;
+    let i = 0;
+    const intervalID = setInterval(
+      () => {
+        if (
+          TArray.value[CENTER_CELL_IDX.value + index - 100].val !==
+          props.instructions[stepCount.value - 2].charArray[
+            index
+          ]
+        ) {
+          TArray.value[CENTER_CELL_IDX.value + index - 100].val =
+            props.instructions[stepCount.value - 2]
+              .charArray[index] === '#'
+              ? ' '
+              : props.instructions[stepCount.value - 2]
+                  .charArray[index];
+        }
+        headPosition.value -= CELL_WIDTH.value;
+        index++;
+        i++;
+        if (i === move) {
+          clearInterval(intervalID);
+          stepCount.value--;
+          if (stepCount.value - 1 === 0) {
+            loadTM(inputString.value);
+          }
+        }
+      },
+      isPlaying.value ? 1000 : 500
+    );
+  } else {
+    let index = props.instructions[stepCount.value - 2].moveDir;
+    if (
+      props.instructions[stepCount.value - 2].charArray[index] !==
+      TArray.value[CENTER_CELL_IDX.value + index - 100].val
+    ) {
+      TArray.value[CENTER_CELL_IDX.value + index - 100].val =
+        props.instructions[stepCount.value - 2].charArray[
+          index
+        ] === '#'
+          ? ' '
+          : props.instructions[stepCount.value - 2].charArray[
+              index
+            ];
+    }
+    stepCount.value--;
+  }
+};
 
-    const playHandler = () => {
-      isPlaying.value = true;
+const nextStepHandler = () => {
+  nextStep(
+    props.instructions[stepCount.value].moveDir -
+      props.instructions[stepCount.value - 1].moveDir
+  );
+};
+const previousStepHandler = () => {
+  prevStep(
+    props.instructions[stepCount.value - 2].moveDir -
+      props.instructions[stepCount.value - 1].moveDir
+  );
+};
 
-      let timeoutID = setTimeout(function myTimer() {
-        TID.value = timeoutID;
-        nextStep(
+const playHandler = () => {
+  isPlaying.value = true;
+
+  let timeoutID = setTimeout(function myTimer() {
+    TID.value = timeoutID;
+    nextStep(
+      props.instructions[stepCount.value].moveDir -
+        props.instructions[stepCount.value - 1].moveDir
+    );
+    if (
+      stepCount.value === props.instructions.length ||
+      isPlaying.value === false
+    ) {
+      isPlaying.value = false;
+      clearTimeout(timeoutID);
+    } else {
+      timeoutID = setTimeout(
+        myTimer,
+        Math.abs(
           props.instructions[stepCount.value].moveDir -
             props.instructions[stepCount.value - 1].moveDir
-        );
-        if (
-          stepCount.value === props.instructions.length ||
-          isPlaying.value === false
-        ) {
-          isPlaying.value = false;
-          clearTimeout(timeoutID);
-        } else {
-          timeoutID = setTimeout(
-            myTimer,
-            Math.abs(
-              props.instructions[stepCount.value].moveDir -
-                props.instructions[stepCount.value - 1].moveDir
-            ) * 1000
-          );
-        }
-      }, 0);
-    };
+        ) * 1000
+      );
+    }
+  }, 0);
+};
 
-    const resetHandler = () => {
-      isPlaying.value = false;
-      stepCount.value = 1;
-      headPosition.value = 0;
-      loadTM(inputString.value);
-    };
+const resetHandler = () => {
+  isPlaying.value = false;
+  stepCount.value = 1;
+  headPosition.value = 0;
+  loadTM(inputString.value);
+};
 
-    const pauseHandler = () => {
-      isPlaying.value = !isPlaying.value;
-      clearTimeout(TID.value);
-    };
+const pauseHandler = () => {
+  isPlaying.value = !isPlaying.value;
+  clearTimeout(TID.value);
+};
 
-    const anotherInputHandler = () => {
-      emit('toggleShowButtons');
-      inputString.value = '';
-      stepCount.value = 1;
-      isPlaying.value = false;
-      headPosition.value = 0;
-      for (let i = 0; i < NUM_CELLS.value; ++i) {
-        TArray.value[i].val = ' ';
-      }
-    };
+const anotherInputHandler = () => {
+  emit('toggleShowButtons');
+  inputString.value = '';
+  stepCount.value = 1;
+  isPlaying.value = false;
+  headPosition.value = 0;
+  for (let i = 0; i < NUM_CELLS.value; ++i) {
+    TArray.value[i].val = ' ';
+  }
+};
 
-    const loadTM = (input: string) => {
-      inputString.value = input;
-      for (let i = 0, j = 0; i < NUM_CELLS.value; ++i) {
-        if (i >= CENTER_CELL_IDX.value && i < CENTER_CELL_IDX.value + input.length) {
-          TArray.value[i].val = input[j];
-          ++j;
-        } else {
-          TArray.value[i].val = '';
-        }
-      }
-    };
+const loadTM = (input: string) => {
+  inputString.value = input;
+  for (let i = 0, j = 0; i < NUM_CELLS.value; ++i) {
+    if (i >= CENTER_CELL_IDX.value && i < CENTER_CELL_IDX.value + input.length) {
+      TArray.value[i].val = input[j];
+      ++j;
+    } else {
+      TArray.value[i].val = '';
+    }
+  }
+};
 
-    const isDone = () => {
-      return stepCount.value === props.instructions.length;
-    };
+const isDone = () => {
+  return stepCount.value === props.instructions.length;
+};
 
-    return {
-      CELL_WIDTH,
-      CENTER_CELL_IDX,
-      headPosition,
-      TArray,
-      nextStep,
-      nextStepHandler,
-      resetHandler,
-      playHandler,
-      loadTM,
-      isPlaying,
-      pauseHandler,
-      isDone,
-      anotherInputHandler,
-      stepCount,
-      previousStepHandler,
-    };
-  },
-});
+defineExpose({ loadTM });
 </script>
 
 <style scoped>

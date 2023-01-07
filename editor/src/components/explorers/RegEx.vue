@@ -8,30 +8,22 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
-
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { RegularGrammar } from '../../../../compiler/src/regular-grammar';
 import PaneHeader from '../ui/PaneHeader.vue';
 
-export default defineComponent({
-  name: 'RegExExplorer',
-  props: {
-    compiled: { type: Object as PropType<RegularGrammar>, required: true },
-  },
-  components: {
-    PaneHeader,
-  },
-  computed: {
-    regexHTML() {
-      return this.compiled.toRegEx().result
-        .replace(/(\*)/g, '<sup class="closure">$1</sup>')
-        .replace(/(\+)/g, '<span class="union">$1</span>')
-        .replace(/([\(\)])/g, '<span class="bracket">$1</span>')
-        .replace(/(\.)/g, '<span class="concat">$1</span>');
-    }
-  },
-});
+const props = defineProps<{
+  compiled: RegularGrammar
+}>();
+
+const regexHTML = computed(() => (
+  props.compiled.toRegEx().result
+    .replace(/(\*)/g, '<sup class="closure">$1</sup>')
+    .replace(/(\+)/g, '<span class="union">$1</span>')
+    .replace(/([\(\)])/g, '<span class="bracket">$1</span>')
+    .replace(/(\.)/g, '<span class="concat">$1</span>')
+));
 </script>
 
 <style scoped>

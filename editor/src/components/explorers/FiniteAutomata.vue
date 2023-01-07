@@ -21,8 +21,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onUnmounted, onUpdated, PropType, ref, watch } from 'vue';
+<script lang="ts" setup>
+import { onUnmounted, onUpdated, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { edgeConfig, getNodeConfig } from '../../config/graph';
@@ -35,87 +35,82 @@ import RadioTabs from '../ui/RadioTabs.vue';
 import { Edge, Network } from 'vis-network/declarations/entry-esnext';
 import { FAGraph } from '../../../../compiler/src/regular-grammar';
 
-export default defineComponent({
-  name: 'FiniteAutomataExplorer',
-  props: {
-    name: { type: String as PropType<string> },
-    getGraph: { type: Function as PropType<Function>, required: true },
-    showTypeSelector: { type: Boolean as PropType<boolean>, default: true },
-    showExplainationOption: { type: Boolean as PropType<boolean>, default: true },
-  },
-  components: {
-    PaneHeader,
-    RadioTabs,
-  },
-  setup({ getGraph, showTypeSelector }) {
-    const faType = ref<'ε-NFA' | 'NFA'>('ε-NFA');
-    const outputRef = ref<HTMLElement | null>(null);
-    const canvasRef = ref<HTMLCanvasElement | null>(null);
-    const [isVisLoading, networkLib, dataLib] = useVisNetwork();
-    const router = useRouter();
-    let network: Network;
-
-    const generateVisGraph = () => {
-      if (isVisLoading.value || !outputRef.value) return;
-
-      const graph: FAGraph = getGraph(showTypeSelector ? faType.value : undefined);
-      const nodes: any[] = [
-        { id: '_START', opacity: 0 },
-        ...Object.keys(graph).map(node => getNodeConfig(node, graph[node].final)),
-      ];
-
-      let edges: Record<string, string[]> = { '_START S': [] };
-      for(const from in graph) {
-        for(const via in graph[from].nodes) {
-          graph[from].nodes[via].forEach(to => {
-            const key = `${from} ${to}`;
-            if (!edges[key]) {
-              edges[key] = [];
-            }
-            edges[key].push(via === SymbolType.Empty ? 'ε' : via);
-          });
-        }
-      }
-
-      const visEdges: Edge[] = Object.keys(edges).map((edge) => {
-        const [from, to] = edge.split(' ');
-        return {
-          ...edgeConfig, from, to,
-          label: `*_${edges[edge].join(',')}_*`,
-        };
-      });
-
-      if (network) {
-        network.destroy();
-      }
-
-      network = new networkLib.value.Network(outputRef.value, {
-        nodes: new dataLib.value.DataSet(nodes),
-        edges: new dataLib.value.DataSet(visEdges),
-      }, {});
-      network.on('beforeDrawing', (ctx: CanvasRenderingContext2D) => {
-        canvasRef.value = ctx.canvas;
-        fillBg(ctx);
-      });
-    };
-
-    const saveFigure = (e: Event) => {
-      if (!network || !canvasRef.value) return;
-      (e.target as HTMLAnchorElement).href = exportToImg(canvasRef.value);
-    };
-
-    const explainConversion = () => {
-      router.push({ ...router.currentRoute.value, query: { explain: faType.value.toLowerCase() } });
-    };
-
-    onUpdated(generateVisGraph);
-    watch(() => faType.value, generateVisGraph);
-    watch(() => isVisLoading, generateVisGraph);
-    onUnmounted(() => network && network.destroy());
-
-    return { outputRef, faType, saveFigure, isVisLoading, explainConversion };
-  }
+const props = withDefaults(defineProps<{
+  name?: string,
+  getGraph: (type: 'ε-NFA' | 'NFA') => FAGraph | null,
+  showTypeSelector?: boolean,
+  showExplainationOption?: boolean
+}>(), {
+  showTypeSelector: true,
+  showExplainationOption: true,
 });
+
+const faType = ref<'ε-NFA' | 'NFA'>('ε-NFA');
+const outputRef = ref<HTMLElement | null>(null);
+const canvasRef = ref<HTMLCanvasElement | null>(null);
+const [isVisLoading, networkLib, dataLib] = useVisNetwork();
+const router = useRouter();
+let network: Network;
+
+const generateVisGraph = () => {
+  if (isVisLoading.value || !outputRef.value) return;
+
+  const graph = props.getGraph(props.showTypeSelector ? faType.value : 'ε-NFA');
+  if (!graph) return;
+
+  const nodes: any[] = [
+    { id: '_START', opacity: 0 },
+    ...Object.keys(graph).map(node => getNodeConfig(node, graph[node].final)),
+  ];
+
+  let edges: Record<string, string[]> = { '_START S': [] };
+  for(const from in graph) {
+    for(const via in graph[from].nodes) {
+      graph[from].nodes[via].forEach(to => {
+        const key = `${from} ${to}`;
+        if (!edges[key]) {
+          edges[key] = [];
+        }
+        edges[key].push(via === SymbolType.Empty ? 'ε' : via);
+      });
+    }
+  }
+
+  const visEdges: Edge[] = Object.keys(edges).map((edge) => {
+    const [from, to] = edge.split(' ');
+    return {
+      ...edgeConfig, from, to,
+      label: `*_${edges[edge].join(',')}_*`,
+    };
+  });
+
+  if (network) {
+    network.destroy();
+  }
+
+  network = new networkLib.value.Network(outputRef.value, {
+    nodes: new dataLib.value.DataSet(nodes),
+    edges: new dataLib.value.DataSet(visEdges),
+  }, {});
+  network.on('beforeDrawing', (ctx: CanvasRenderingContext2D) => {
+    canvasRef.value = ctx.canvas;
+    fillBg(ctx);
+  });
+};
+
+const saveFigure = (e: Event) => {
+  if (!network || !canvasRef.value) return;
+  (e.target as HTMLAnchorElement).href = exportToImg(canvasRef.value);
+};
+
+const explainConversion = () => {
+  router.push({ ...router.currentRoute.value, query: { explain: faType.value.toLowerCase() } });
+};
+
+onUpdated(generateVisGraph);
+watch(() => faType.value, generateVisGraph);
+watch(() => isVisLoading, generateVisGraph);
+onUnmounted(() => network && network.destroy());
 </script>
 
 <style>
