@@ -26,7 +26,7 @@
         <a href="https://vyaakaran.vercel.app/docs/syntax" target="_blank">
           Learn Syntax
         </a>
-        <a class="mx-3" href="https://vyaakaran.vercel.app/feedback" target="_blank">
+        <a class="mx-3" href="https://github.com/blenderskool/vyaakaran/issues/new" target="_blank">
           Feedback
         </a>
       </nav>

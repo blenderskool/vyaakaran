@@ -73,9 +73,6 @@
         <a class="px-4 py-3 hover:text-cyan-300" href="/#features">
           Features
         </a>
-        <a class="px-4 py-3 hover:text-cyan-300" href="/request-api">
-          API
-        </a>
         <a class="px-4 py-3 hover:text-cyan-300" href="/docs/syntax">
           Syntax
         </a>
@@ -109,9 +106,6 @@
       <nav class="absolute top-24 left-4 right-4 bg-20 flex flex-col px-8 py-12 rounded-lg bg-blue-gray-800 border border-blue-gray-700 bg-opacity-80 backdrop-filter backdrop-blur-md shadow-2xl space-y-3 lg:hidden">
         <a class="pb-3 hover:text-cyan-300" href="/#features">
           Features
-        </a>
-        <a class="py-3 hover:text-cyan-300" href="/request-api">
-          API
         </a>
         <a class="py-3 hover:text-cyan-300" href="/docs/syntax">
           Syntax
