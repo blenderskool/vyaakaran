@@ -111,6 +111,7 @@ class JitterConsole {
           .filter(key => command.options?.[key]?.default !== undefined)
           .map(key => [key, command.options?.[key].default])
       ),
+      string: ['_'],
       alias: Object.fromEntries(
         Object.keys(command.options ?? {})
           .map(key => [key, command.options?.[key]?.alias ?? []])
