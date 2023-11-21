@@ -12,7 +12,7 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
-      plugins: [visualizer({ gzipSize: true })],
+      // plugins: [visualizer({ gzipSize: true })],
     }
   },
   server: {
