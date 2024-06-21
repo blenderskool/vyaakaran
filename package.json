@@ -12,7 +12,7 @@
     "editor:build": "pnpm run compiler:build && cd editor && pnpm run build",
     "website:dev": "cd website && pnpm run dev",
     "website:build": "cd website && pnpm run build",
-    "dev": "pnpm run editor:dev && pnpm run website:dev",
+    "dev": "pnpm run editor:dev & pnpm run website:dev",
     "build": "./build.sh"
   }
 }
