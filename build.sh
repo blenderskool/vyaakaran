@@ -1,35 +1,9 @@
 #!/bin/bash
 
-# npm install inside compiler, website and editor if node_modules folder is not present
-if [ ! -d "./compiler/node_modules" ] 
-then
-    pushd ./compiler
-        npm install
-    popd
-fi
-
-if [ ! -d "./website/node_modules" ]
-then
-    pushd ./website
-        npm install
-    popd
-fi
-
-if [ ! -d "./editor/node_modules" ]
-then
-    pushd ./editor
-        npm install
-    popd
-fi
-
 # Build the website
-pushd ./website
-npm run build
-mv ./build ../build
-popd
+pnpm run website:build
+mv ./website/build ./build
 
 # Build the editor and move it under /playground
-pushd ./editor
-npm run build
-mv ./dist ../build/playground
-popd
+npm run editor:build
+mv ./editor/dist ./build/playground

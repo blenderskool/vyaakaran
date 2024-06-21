@@ -1,5 +1,18 @@
 {
+  "name": "vyaakaran",
+  "description": "Visualize formal languages and automata",
+  "author": "Akash Hamirwasia",
+  "license": "MIT",
+  "keywords": [],
+  "private": true,
   "scripts": {
+    "compiler:dev": "cd compiler && pnpm run dev",
+    "compiler:build": "cd compiler && pnpm run build",
+    "editor:dev": "pnpm run compiler:dev & cd editor && pnpm run dev",
+    "editor:build": "pnpm run compiler:build && cd editor && pnpm run build",
+    "website:dev": "cd website && pnpm run dev",
+    "website:build": "cd website && pnpm run build",
+    "dev": "pnpm run editor:dev && pnpm run website:dev",
     "build": "./build.sh"
   }
 }
