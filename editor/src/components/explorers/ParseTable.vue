@@ -41,6 +41,7 @@
 <script lang="ts" setup>
 import { computed, ComputedRef, getCurrentInstance, inject, onMounted, ref } from 'vue';
 import { Pane } from 'splitpanes';
+import { ContextFreeGrammar } from '@vyaakaran/compiler/context-free-grammar';
 
 import LL1ParseTable from './ParseTables/LL1.vue';
 import LRParseTable from './ParseTables/LR.vue';
@@ -49,7 +50,6 @@ import PaneHeader from '../ui/PaneHeader.vue';
 import RadioTabs from '../ui/RadioTabs.vue';
 import BottomUpAutomata from './BottomUpAutomata.vue';
 import { Playground } from '../../store/code';
-import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
 
 const tableType = ref('LL(1)');
 const store = inject('store') as ComputedRef<Playground>;

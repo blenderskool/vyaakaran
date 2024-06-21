@@ -13,12 +13,12 @@
 <script lang="ts" setup>
 import { ComputedRef, inject } from 'vue';
 import { Pane, Splitpanes } from 'splitpanes';
+import { type FAGraph, RegularGrammar } from '@vyaakaran/compiler/regular-grammar';
 
 import Empty from './Empty.vue';
 import FiniteAutomataExplorer from '../explorers/FiniteAutomata.vue';
 import RegExExplorer from '../explorers/RegEx.vue';
 import { Playground } from '../../store/code';
-import { FAGraph, RegularGrammar } from '../../../../compiler/src/regular-grammar';
 
 const store = inject('store') as ComputedRef<Playground>;
 

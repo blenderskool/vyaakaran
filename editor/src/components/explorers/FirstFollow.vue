@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
+import { ContextFreeGrammar } from '@vyaakaran/compiler/context-free-grammar';
 import PaneHeader from '../ui/PaneHeader.vue';
 
 import { hljs } from '../../config/highlight';

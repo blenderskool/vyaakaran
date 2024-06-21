@@ -23,8 +23,8 @@
 <script lang="ts" setup>
 import { onUnmounted, onUpdated, ref, watch } from 'vue';
 import { Edge, Network } from 'vis-network/declarations/entry-esnext';
+import { State, OrderedHashSet } from '@vyaakaran/compiler/utils';
 
-import { State, OrderedHashSet } from '../../../../compiler/src/utils';
 import { exportToImg, fillBg } from '../../utils/canvas';
 import { edgeConfig, getNodeConfig } from '../../config/graph';
 import useVisNetwork from '../../utils/useVisNetwork';

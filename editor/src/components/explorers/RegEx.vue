@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { RegularGrammar } from '../../../../compiler/src/regular-grammar';
+import { RegularGrammar } from '@vyaakaran/compiler/regular-grammar';
 import PaneHeader from '../ui/PaneHeader.vue';
 
 const props = defineProps<{

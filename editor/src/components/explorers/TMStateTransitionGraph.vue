@@ -22,7 +22,7 @@
 <script lang="ts" setup>
 import { Edge, Network } from 'vis-network/declarations/entry-esnext';
 import { onUnmounted, onUpdated, ref, watch } from 'vue';
-import { TuringMachineParseTree, TuringMachineStateTransition } from '../../../../compiler/src/turing-machine/types';
+import { TuringMachineParseTree, TuringMachineStateTransition } from '@vyaakaran/compiler/turing-machine';
 import { edgeConfig, getNodeConfig, tmEdgeConfig } from '../../config/graph';
 import { exportToImg, fillBg } from '../../utils/canvas';
 import useVisNetwork from '../../utils/useVisNetwork';

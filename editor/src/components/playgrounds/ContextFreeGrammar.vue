@@ -11,8 +11,8 @@
 <script lang="ts" setup>
 import { ComputedRef, inject } from 'vue';
 import { Splitpanes, Pane } from 'splitpanes';
+import { ContextFreeGrammar } from '@vyaakaran/compiler/context-free-grammar';
 
-import { ContextFreeGrammar } from '../../../../compiler/src/context-free-grammar';
 import ParseTableExplorer from '../explorers/ParseTable.vue';
 import FirstFollowExplorer from '../explorers/FirstFollow.vue';
 import { Playground } from '../../store/code';

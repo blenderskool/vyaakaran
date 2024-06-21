@@ -1,5 +1,4 @@
-import { Ref, ref } from '@vue/reactivity';
-import { onMounted } from '@vue/runtime-core';
+import { onMounted, ref, Ref } from 'vue';
 
 type VisNetworkLib = typeof import('vis-network/peer/esm/vis-network');
 type VisDataLib = typeof import('vis-data/peer/esm/vis-data');
@@ -14,8 +13,8 @@ const useVisNetwork = (): [Ref<boolean>, Ref<VisNetworkLib>, Ref<VisDataLib>] =>
 
   onMounted(async () => {
     const result = await Promise.all([
-      import('vis-network/peer/esm/vis-network'),
-      import('vis-data/peer/esm/vis-data'),
+      import('vis-network/peer/esm/vis-network.min'),
+      import('vis-data/peer/esm/vis-data.min'),
     ]);
     networkLib.value = result[0];
     dataLib.value = result[1];

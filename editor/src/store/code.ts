@@ -1,8 +1,8 @@
+import { CompileError, CompilerClass } from '@vyaakaran/compiler';
+import { ContextFreeGrammar } from '@vyaakaran/compiler/context-free-grammar';
+import { RegularGrammar } from '@vyaakaran/compiler/regular-grammar';
+import { StateTransitionGrammar } from '@vyaakaran/compiler/turing-machine';
 import { reactive } from 'vue';
-import { CompileError, CompilerClass } from '../../../compiler/src/regular-grammar/types';
-import { RegularGrammar } from '../../../compiler/src/regular-grammar';
-import { ContextFreeGrammar } from '../../../compiler/src/context-free-grammar';
-import { StateTransitionGrammar } from '../../../compiler/src/turing-machine';
 import router from '../router';
 
 interface ConsoleStream {
@@ -123,10 +123,6 @@ function getActivePlayground(): Playground {
 }
 
 export {
-  playgrounds,
-  ConsoleStream,
-  getActivePlayground,
-  Playground,
-  newPlayground,
-  PlaygroundType,
+  ConsoleStream, Playground, PlaygroundType, getActivePlayground, newPlayground, playgrounds
 };
+

@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ContextFreeGrammar } from '@vyaakaran/compiler/context-free-grammar';
 import { hljs } from '../../../config/highlight';
-import { ContextFreeGrammar } from '../../../../../compiler/src/context-free-grammar';
 
 const props = defineProps<{
   compiled: ContextFreeGrammar,

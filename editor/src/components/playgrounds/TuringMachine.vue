@@ -46,13 +46,15 @@
 <script lang="ts" setup>
 import { ComputedRef, inject, ref } from 'vue';
 import { Pane, Splitpanes } from 'splitpanes';
-import { TestInput } from '../../../../compiler/src/turing-machine/input';
-import { TuringMachineParseTree } from '../../../../compiler/src/turing-machine/types';
+import {
+  TuringMachineParseTree,
+  TestInput,
+} from '@vyaakaran/compiler/turing-machine';
 import PaneHeader from '../ui/PaneHeader.vue';
 import Tape from '../explorers/Tape.vue';
 import TMStateTransitionGraph from '../explorers/TMStateTransitionGraph.vue';
-import Empty from './Empty.vue';
 import { Playground } from '../../store/code';
+import Empty from './Empty.vue';
 
 interface Instructions {
   charArray: string[];
@@ -71,7 +73,7 @@ const handleInputSubmit = () => {
   childComponentRef.value.loadTM(inputString.value);
   let testobj = new TestInput(
     inputString.value,
-    (store.value.compiled.parseTree as TuringMachineParseTree)
+    store.value.compiled.parseTree as TuringMachineParseTree
   );
 
   let strgen = testobj.CheckString();

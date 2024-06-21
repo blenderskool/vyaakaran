@@ -24,16 +24,16 @@
 <script lang="ts" setup>
 import { onUnmounted, onUpdated, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { SymbolType } from '@vyaakaran/compiler';
+import { type FAGraph } from '@vyaakaran/compiler/regular-grammar';
 
 import { edgeConfig, getNodeConfig } from '../../config/graph';
-import { SymbolType } from '../../../../compiler/src/regular-grammar/types';
 import { exportToImg, fillBg } from '../../utils/canvas';
 import useVisNetwork from '../../utils/useVisNetwork';
 
 import PaneHeader from '../ui/PaneHeader.vue';
 import RadioTabs from '../ui/RadioTabs.vue';
 import { Edge, Network } from 'vis-network/declarations/entry-esnext';
-import { FAGraph } from '../../../../compiler/src/regular-grammar';
 
 const props = withDefaults(defineProps<{
   name?: string,

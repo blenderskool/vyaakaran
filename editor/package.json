@@ -1,7 +1,11 @@
 {
-  "name": "vyaakaran-editor",
+  "name": "@vyaakaran/editor",
   "version": "0.3.0",
+  "description": "",
   "author": "Akash Hamirwasia",
+  "license": "MIT",
+  "keywords": [],
+  "private": true,
   "scripts": {
     "dev": "vite --port 3000",
     "build": "vite build",
@@ -9,6 +13,7 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.6.7",
+    "@vyaakaran/compiler": "workspace:*",
     "argv-split": "^2.0.1",
     "dedent-js": "^1.0.1",
     "highlight.js": "^10.6.0",
