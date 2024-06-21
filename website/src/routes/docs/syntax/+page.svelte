@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { hljs } from '../../../../editor/src/config/highlight';
-  import Code from '../../components/Code.svelte';
+  import { hljs } from '../../../../../editor/src/config/highlight';
+  import Code from '../../../components/Code.svelte';
 
   onMount(() => {
     document.querySelectorAll('.language-vyaakaran-grammar').forEach((element) => {
-      element.innerHTML = hljs.highlight('vyaakaran grammar', element.textContent).value;
+      element.innerHTML = hljs.highlight('vyaakaran grammar', element.textContent.trim()).value;
     });
   });
 </script>
@@ -23,7 +23,7 @@
     Vyaakaran Syntax
   </h1>
   <div class="mt-4 flex items-center space-x-3 text-blue-gray-400">
-    <img src="https://github.com/blenderskool.png" width="32" height="32" class="rounded-full" />
+    <img src="https://github.com/blenderskool.png" width="32" height="32" class="rounded-full" alt="Akash Hamirwasia" />
     <span>By <a href="https://akashhamirwasia.com" target="_blank">Akash Hamirwasia</a></span>
   </div>
 

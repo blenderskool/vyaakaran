@@ -17,18 +17,18 @@ export default defineConfig({
         DEFAULT: {
           css: {
             h1: {
-              color: colors.blueGray[200],
+              color: colors.slate[200],
               fontWeight: 'bold',
               fontSize: theme('fontSize.4xl')
             },
             h2: {
-              color: colors.blueGray[200],
+              color: colors.slate[200],
               fontWeight: '600',
               fontSize: theme('fontSize.2xl'),
               marginTop: theme('spacing.12')
             },
             h3: {
-              color: colors.blueGray[200],
+              color: colors.slate[200],
               fontSize: theme('fontSize.xl'),
               marginTop: theme('spacing.8'),
               fontWeight: '500',
@@ -44,7 +44,7 @@ export default defineConfig({
               }
             },
             strong: {
-              color: colors.blueGray[200],
+              color: colors.slate[200],
             },
             code: {
               color: colors.cyan[600],
@@ -57,7 +57,7 @@ export default defineConfig({
               content: '""'
             },
             pre: {
-              backgroundColor: colors.blueGray[800],
+              backgroundColor: colors.slate[800],
               whiteSpace: 'pre-line',
               marginTop: theme('spacing.6'),
               padding: theme('spacing.4'),

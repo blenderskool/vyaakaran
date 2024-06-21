@@ -1,7 +1,3 @@
-<script lang="ts" context="module">
-	export const prerender = true;
-</script>
-
 <script lang="ts">
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
@@ -105,12 +101,12 @@
             Loading
           </div>
         {:else if timeIdx >= 49}
-          <div class="pt-4 px-5 flex-1" transition:fade>
+          <div class="pt-4 px-5 flex-1" transition:fade|global>
             <div class="text-xs text-blue-gray-300">Finite Automaton</div>
             <img src="automata.png" alt="Generated Finite Automaton" class="mt-4 select-none">
           </div>
 
-          <div class="mt-auto py-2 px-4 border-t border-blue-gray-800" transition:fade>
+          <div class="mt-auto py-2 px-4 border-t border-blue-gray-800" transition:fade|global>
             <div class="text-xs text-blue-gray-300">Regular Expression</div>
             <p class="text-sm mt-4 mb-2 font-fira hljs-terminal">
               a<sup class="hljs-operator">*</sup> b c<sup class="hljs-operator">*</sup>

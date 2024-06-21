@@ -1,32 +1,39 @@
 {
-  "name": "vyaakaran-site",
+  "name": "@vyaakaran/website",
   "version": "0.0.1",
+  "description": "",
   "author": "Akash Hamirwasia",
+  "license": "MIT",
+  "keywords": [],
+  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "svelte-kit dev --port 3001",
-    "build": "svelte-kit build",
-    "preview": "svelte-kit preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "eslint --ignore-path .gitignore ."
+    "dev": "vite dev --port 3001",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint": "eslint ."
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "^1.0.0-next.26",
-    "@sveltejs/kit": "1.0.0-next.232",
-    "@typescript-eslint/eslint-plugin": "^4.19.0",
-    "@typescript-eslint/parser": "^4.19.0",
-    "eslint": "^7.22.0",
-    "eslint-plugin-svelte3": "^3.2.0",
-    "svelte": "^3.44.0",
-    "svelte-check": "^2.0.0",
-    "svelte-preprocess": "^4.0.0",
-    "tslib": "^2.0.0",
-    "typescript": "^4.0.0",
-    "vite-plugin-windicss": "^1.5.4"
+    "@sveltejs/adapter-static": "^3.0.2",
+    "@sveltejs/kit": "^2.0.0",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@types/eslint": "^8.56.7",
+    "eslint": "^9.0.0",
+    "eslint-plugin-svelte": "^2.36.0",
+    "globals": "^15.0.0",
+    "svelte": "^4.2.7",
+    "svelte-check": "^3.6.0",
+    "tslib": "^2.4.1",
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.0.0-alpha.20",
+    "vite": "^5.0.3",
+    "vite-plugin-windicss": "^1.8.10",
+    "windicss": "^3.1.7"
   },
-  "type": "module",
   "dependencies": {
     "highlight.js": "^10.6.0",
-    "svelte-intersection-observer": "^0.7.1"
+    "svelte-intersection-observer": "^1.0.0"
   }
 }
