@@ -1,4 +1,4 @@
-import { ParseTree, SymbolType, Token, TokenType } from '../../regular-grammar/types';
+import { ParseTree, SymbolType, Token, TokenType } from '../../types';
 import { GrammarRule, OrderedHashSet, SimplifiedGrammarRepresentation, State } from '../../utils';
 import { findFollowSets, PredectiveSets, collectSet, findFirstSets } from './top-down-parsing';
 

@@ -1,5 +1,5 @@
 import { RegularGrammarSemanticAnalyzer } from '../regular-grammar';
-import { CompileError, SymbolType } from '../regular-grammar/types';
+import { CompileError, SymbolType } from '../types';
 import { GrammarRule } from '../utils';
 
 class SemanticAnalyzer extends RegularGrammarSemanticAnalyzer {

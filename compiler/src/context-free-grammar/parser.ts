@@ -1,5 +1,5 @@
 import { RegularGrammarParser } from '../regular-grammar';
-import { SymbolType } from '../regular-grammar/types';
+import { SymbolType } from '../types';
 
 class Parser extends RegularGrammarParser {
   protected static readonly parseTable = {

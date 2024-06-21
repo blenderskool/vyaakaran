@@ -1,5 +1,5 @@
-import { SymbolType } from './regular-grammar/types';
-import { randInt, shuffle, SimplifiedGrammarRepresentation } from './utils';
+import { SymbolType } from '../types';
+import { randInt, shuffle, SimplifiedGrammarRepresentation } from '../utils';
 import { EarleyParser } from './validator';
 
 const MAX_ITER = 1e3;

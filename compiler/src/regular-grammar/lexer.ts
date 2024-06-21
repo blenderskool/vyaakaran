@@ -1,4 +1,4 @@
-import { Token, TokenType, SymbolType } from './types';
+import { Token, TokenType, SymbolType } from '../types';
 import { isUpperAlpha } from '../utils';
 
 class Lexer {

@@ -1,5 +1,5 @@
 import { SimplifiedGrammarRepresentation } from '../utils';
-import { ParseTree, SymbolType, Token, CompileError, TokenType } from './types';
+import { ParseTree, SymbolType, CompileError } from '../types';
 
 class SemanticAnalyzer {
   protected parseTree: ParseTree;

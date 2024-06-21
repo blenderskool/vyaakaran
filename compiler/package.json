@@ -1,22 +1,51 @@
 {
-  "name": "vyaakaran-compiler",
+  "name": "@vyaakaran/compiler",
   "version": "0.2.0",
   "description": "",
-  "main": "dist/index.js",
-  "scripts": {
-    "build": "tsc",
-    "parse": "node dist/index.js"
-  },
-  "keywords": [],
   "author": "Akash Hamirwasia",
   "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^14.14.21",
-    "tslint": "^6.1.3",
-    "typescript": "^4.1.3"
+  "keywords": [],
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./regular-grammar": {
+      "types": "./dist/regular-grammar/index.d.ts",
+      "default": "./dist/regular-grammar/index.js"
+    },
+    "./context-free-grammar": {
+      "types": "./dist/context-free-grammar/index.d.ts",
+      "default": "./dist/context-free-grammar/index.js"
+    },
+    "./turing-machine": {
+      "types": "./dist/turing-machine/index.d.ts",
+      "default": "./dist/turing-machine/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "default": "./dist/utils.js"
+    },
+    "./tools": {
+      "types": "./dist/tools/index.d.ts",
+      "default": "./dist/tools/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "playground": "node dist/index.js"
   },
   "dependencies": {
     "chevrotain": "^10.1.2",
     "just-clone": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.21",
+    "tslint": "^6.1.3",
+    "typescript": "^4.1.3"
   }
 }

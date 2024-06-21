@@ -1,4 +1,4 @@
-import { SymbolType, Token } from '../../regular-grammar/types';
+import { SymbolType, Token } from '../../types';
 import { GrammarRule, SimplifiedGrammarRepresentation } from '../../utils';
 
 type PredectiveSets = Record<string, Set<string>>;

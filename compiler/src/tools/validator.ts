@@ -1,5 +1,5 @@
-import { SymbolType, ParseTree } from './regular-grammar/types';
-import { GrammarRule, HashSet, SimplifiedGrammarRepresentation, State } from './utils';
+import { SymbolType, ParseTree } from '../types';
+import { GrammarRule, HashSet, SimplifiedGrammarRepresentation, State } from '../utils';
 
 class EarleyState extends State {
   origin: number;

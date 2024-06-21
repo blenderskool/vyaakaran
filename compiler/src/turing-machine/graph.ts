@@ -1,4 +1,4 @@
-import { CompileError } from "../regular-grammar/types";
+import { CompileError } from "../types";
 import { TuringMachineAST, TuringMachineStateTransition } from "./types";
 
 export class GraphHandler {

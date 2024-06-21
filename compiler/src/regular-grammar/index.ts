@@ -1,7 +1,7 @@
 import RegularGrammarLexer from './lexer';
 import RegularGrammarParser from './parser';
 import RegularGrammarSemanticAnalyzer from './semantic';
-import { ParseTree, Token, SymbolType, CompilerClass } from './types';
+import { ParseTree, Token, SymbolType, CompilerClass } from '../types';
 import { getGeneratorReturn, SimplifiedGrammarRepresentation } from '../utils';
 
 type FAGraph = Record<string, { nodes: Record<string, Set<string>>, final: boolean}>;
@@ -353,5 +353,5 @@ export {
   RegularGrammarParser,
   RegularGrammarSemanticAnalyzer,
   RegularGrammar,
-  FAGraph,
+  FAGraph
 };

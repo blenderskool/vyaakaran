@@ -1,10 +1,10 @@
-import { GraphHandler } from "./graph";
-import { StateTransitionSemanticAnalyser } from "./semantic";
-import { StateTransitionLexer } from "./lexer";
+import { GraphHandler } from './graph';
+import { StateTransitionLexer } from './lexer';
+import { StateTransitionSemanticAnalyser } from './semantic';
 
-import { StateTransitionParser } from "./parser";
-import { CompilerClass } from "../regular-grammar/types";
-import { TuringMachineAST } from "./types";
+import { CompilerClass } from '../types';
+import { StateTransitionParser } from './parser';
+import { TuringMachineAST } from './types';
 
 export class StateTransitionGrammar extends CompilerClass {
   graphObj: GraphHandler;
@@ -22,7 +22,7 @@ export class StateTransitionGrammar extends CompilerClass {
         let message = `${error.message} at ${error.line}:${error.column}`;
 
         this.errors.push({
-          type: "Error",
+          type: 'Error',
           message: message,
         });
       }
@@ -42,7 +42,7 @@ export class StateTransitionGrammar extends CompilerClass {
     if (parserObj.errors.length > 0) {
       parserObj.errors.forEach((err) => {
         this.errors.push({
-          type: "Error",
+          type: 'Error',
           message: `${err.message} at ${err.token.startLine}:${err.token.startColumn}`,
         });
       });
@@ -69,3 +69,6 @@ export class StateTransitionGrammar extends CompilerClass {
     return this;
   }
 }
+
+export * from './types';
+export * from './input';

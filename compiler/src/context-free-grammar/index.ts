@@ -1,7 +1,7 @@
 import RegularGrammarLexer from '../regular-grammar/lexer';
 import ContextFreeGrammarParser from './parser';
 import ContextFreeGrammarSemanticAnalyzer from './semantic';
-import { CompilerClass, ParseTree } from '../regular-grammar/types';
+import { CompilerClass, ParseTree } from '../types';
 import { SimplifiedGrammarRepresentation } from '../utils';
 import { findFirstSets, findFollowSets, findLALR1Table, findLL1Table, findLR0Table, findLR1Table, findSLR1Table } from './algorithms';
 

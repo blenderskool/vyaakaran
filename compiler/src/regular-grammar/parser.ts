@@ -1,4 +1,4 @@
-import { SymbolType, Token, ParseTree, CompileError } from './types';
+import { SymbolType, Token, ParseTree, CompileError } from '../types';
 import Lexer from './lexer';
 
 class Parser {

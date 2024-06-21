@@ -1,4 +1,4 @@
-import { TuringMachineParseTree } from './../turing-machine/types';
+import { TuringMachineParseTree } from './turing-machine/types';
 
 enum TokenType {
   Literal = 'LITERAL',

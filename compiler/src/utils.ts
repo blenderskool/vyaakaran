@@ -1,5 +1,5 @@
 import clone from 'just-clone';
-import { ParseTree, SymbolType, Token } from './regular-grammar/types';
+import { ParseTree, SymbolType, Token } from './types';
 
 /**
  * Checkes whether the first character in the parameter
