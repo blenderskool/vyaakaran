@@ -69,7 +69,7 @@ To build all the modules, run:
 pnpm run build
 ```
 
-Running the above command will product following artifacts:
+Running the above command will produce following artifacts:
 - `compiler/dist/` will contain the built `@vyaakaran/compiler` package.
 - `build/playground/` will contain the built Vyaakaran editor.
 - `build/` will contain the rest of Vyaakaran website.
