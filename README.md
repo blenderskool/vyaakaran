@@ -59,7 +59,7 @@ Following tools must be installed:
    - `website`: `pnpm run website:dev`
 
 3. The dev server should start running. To view the changes for:
-   - `compiler`: Modify `compiler/src/playground.ts` file and run `pnpm run compiler:playground`.
+   - `compiler`: Modify `compiler/src/playground.ts` file and run `pnpm run playground` inside `compiler` directory.
    - `editor`: Open `localhost:3000`.
    - `website`: Open `localhost:3001`.
 
