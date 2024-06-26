@@ -14,7 +14,8 @@
     "website:build": "cd website && pnpm run build",
     "dev": "pnpm run editor:dev & pnpm run website:dev",
     "build": "./build.sh",
-    "test": "vitest"
+    "test:compiler": "vitest run compiler",
+    "test:editor": "vitest run editor"
   },
   "devDependencies": {
     "vitest": "^1.6.0"
