@@ -37,20 +37,29 @@ describe("Testing Compiler", () => {
   it("Find First Sets", () => {
     grammar.parse().semanticAnalysis();
     const firstSets = grammar.findFirstSets();
+    const actualFirstSets = {
+      S: new Set(['0', '1', '#']),
+      A: new Set(['0', '1', '#'])
+    };
+
     expect(firstSets).toBeDefined();
-    expect(firstSets).toEqual(findFirstSets(grammar["grammar"]));
+    expect(firstSets).toMatchObject(actualFirstSets)
   });
 
   it("Find Follow Sets", () => {
     grammar.parse().semanticAnalysis();
+    
     const followSets = grammar.findFollowSets();
+    const actualFollowSets = {
+      S: new Set(['$']),
+      A: new Set(['$'])
+    };
     expect(followSets).toBeDefined();
-    expect(followSets).toEqual(findFollowSets(grammar["grammar"]));
+    expect(followSets).toMatchObject(actualFollowSets);
   });
 
   it("Conversion To LL1", () => {
     grammar.parse().semanticAnalysis().toLL1();
-
     expect(grammar.result["conflicts"]).toBeDefined();
     expect(grammar.result["conclusions"]).toBeDefined();
     expect(grammar.result["conclusions"]).not.toHaveLength(0);
