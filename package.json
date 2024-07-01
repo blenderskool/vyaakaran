@@ -13,6 +13,11 @@
     "website:dev": "cd website && pnpm run dev",
     "website:build": "cd website && pnpm run build",
     "dev": "pnpm run editor:dev & pnpm run website:dev",
-    "build": "./build.sh"
+    "build": "./build.sh",
+    "compiler:test": "cd compiler && pnpm run test",
+    "editor:test": "cd editor && pnpm run test"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
   }
 }
