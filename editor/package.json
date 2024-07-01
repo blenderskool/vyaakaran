@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "vite --port 3000",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "test":"vitest"
   },
   "dependencies": {
     "@headlessui/vue": "^1.6.7",
