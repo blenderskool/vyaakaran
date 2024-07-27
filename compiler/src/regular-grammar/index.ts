@@ -245,7 +245,6 @@ class RegularGrammar extends CompilerClass {
           stack.push([via, to]);
         });
       }
-      console.log("hello world");
       if (graph[root].nodes["#"]) {
         graph[root].nodes["#"].forEach((to) => {
           dfs(to, stack);
@@ -470,8 +469,132 @@ class RegularGrammar extends CompilerClass {
     this.result = dfa;
     return this;
   }
-}
+  minimizeDFA() {
+    const dfa: FAGraph = this.toDFA().result;
+    const alphabet: Set<string> = new Set();
+    const result: FAGraph = {};
 
+    // Get the alphabet
+    for (const state in dfa) {
+      for (const symbol in dfa[state].nodes) {
+        alphabet.add(symbol);
+      }
+    }
+
+    const finalStates = new Set(
+      Object.keys(dfa).filter((state) => dfa[state].final)
+    );
+    const nonFinalStates = new Set(
+      Object.keys(dfa).filter((state) => !dfa[state].final)
+    );
+
+    let partitions = [finalStates, nonFinalStates].filter(
+      (set) => set.size > 0
+    );
+    let workList = [...partitions];
+
+    while (workList.length > 0) {
+      const partition = workList.pop()!;
+
+      for (const symbol of alphabet) {
+        const inverseTrans = this.getInverseTransitions(dfa, symbol);
+        const splitters = new Set<string>();
+
+        for (const state of partition) {
+          if (inverseTrans[state]) {
+            for (const fromState of inverseTrans[state]) {
+              splitters.add(fromState);
+            }
+          }
+        }
+
+        for (let i = 0; i < partitions.length; i++) {
+          const currentPartition = partitions[i];
+
+          const intersection = new Set(
+            [...currentPartition].filter((x) => splitters.has(x))
+          );
+          const difference = new Set(
+            [...currentPartition].filter((x) => !splitters.has(x))
+          );
+
+          if (intersection.size > 0 && difference.size > 0) {
+            partitions.splice(i, 1, intersection, difference);
+            workList.push(intersection);
+            workList.push(difference);
+            break;
+          }
+        }
+      }
+    }
+
+    const minimizedDFA: FAGraph = {};
+    for (let i = 0; i < partitions.length; i++) {
+      const partitionState = `_S-${i}`;
+      const representativeState = partitions[i].values().next().value;
+
+      minimizedDFA[partitionState] = {
+        nodes: {},
+        final: dfa[representativeState].final,
+      };
+      for (const symbol of alphabet) {
+        const nextState = dfa[representativeState].nodes[symbol]
+          ?.values()
+          .next().value;
+        if (nextState) {
+          const nextPartitionIndex = partitions.findIndex((partition) =>
+            partition.has(nextState)
+          );
+          if (nextPartitionIndex !== -1) {
+            minimizedDFA[partitionState].nodes[symbol] = new Set([
+              `_S-${nextPartitionIndex}`,
+            ]);
+          }
+        }
+      }
+    }
+
+    const startPartitionIndex = partitions.findIndex((partition) =>
+      partition.has("S")
+    );
+    if (startPartitionIndex !== -1) {
+      const oldStartState = `_S-${startPartitionIndex}`;
+
+      // Rename the start state to 'S'
+      minimizedDFA["S"] = minimizedDFA[oldStartState];
+      delete minimizedDFA[oldStartState];
+
+      // Update all transitions to the new 'S' state
+      for (const state in minimizedDFA) {
+        for (const symbol in minimizedDFA[state].nodes) {
+          if (minimizedDFA[state].nodes[symbol].has(oldStartState)) {
+            minimizedDFA[state].nodes[symbol].delete(oldStartState);
+            minimizedDFA[state].nodes[symbol].add("S");
+          }
+        }
+      }
+    }
+
+    this.result = minimizedDFA;
+    return this;
+  }
+
+  private getInverseTransitions(
+    dfa: FAGraph,
+    symbol: string
+  ): Record<string, Set<string>> {
+    const inverse: Record<string, Set<string>> = {};
+    for (const fromState in dfa) {
+      for (const toState of dfa[fromState].nodes[symbol] || []) {
+        if (!inverse[toState]) {
+          inverse[toState] = new Set();
+        }
+        inverse[toState].add(fromState);
+      }
+    }
+    return inverse;
+  }
+}
 export {
   RegularGrammarLexer,
   RegularGrammarParser,
