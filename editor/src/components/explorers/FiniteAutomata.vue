@@ -6,7 +6,7 @@
         <div class="flex space-x-2">
           <RadioTabs
             name="FA-type"
-            :options="['ε-NFA', 'NFA', 'DFA']"
+            :options="['ε-NFA', 'NFA', 'DFA', 'minDFA']"
             v-model="faType"
             v-if="showTypeSelector"
           />
@@ -52,7 +52,7 @@ import { Edge, Network } from "vis-network/declarations/entry-esnext";
 const props = withDefaults(
   defineProps<{
     name?: string;
-    getGraph: (type: "ε-NFA" | "NFA" | "DFA") => FAGraph | null;
+    getGraph: (type: "ε-NFA" | "NFA" | "DFA" | "minDFA") => FAGraph | null;
     showTypeSelector?: boolean;
     showExplainationOption?: boolean;
   }>(),
@@ -62,7 +62,7 @@ const props = withDefaults(
   }
 );
 
-const faType = ref<"ε-NFA" | "NFA" | "DFA">("ε-NFA");
+const faType = ref<"ε-NFA" | "NFA" | "DFA" | "minDFA">("ε-NFA");
 const outputRef = ref<HTMLElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const [isVisLoading, networkLib, dataLib] = useVisNetwork();
