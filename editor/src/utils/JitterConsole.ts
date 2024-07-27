@@ -1,6 +1,7 @@
 import minimist from 'minimist';
 import split from 'argv-split';
 import { ConsoleStream, getActivePlayground, Playground, playgrounds } from '../store/code';
+import { generateRightRegularGrammar } from '../ai/openai';
 
 type CommandParamValue = number | string | boolean;
 
@@ -18,6 +19,7 @@ type CommandConfig = {
       type: NumberConstructor | StringConstructor | BooleanConstructor,
       default?: CommandParamValue,
       alias?: string[],
+      description?: string,
     }>,
     handler: (playground: Playground, options: Record<string, CommandParamValue>, args: Record<string, CommandParamValue>) => unknown,
   }>;
@@ -46,6 +48,7 @@ class JitterConsole {
   constructor(config: CommandConfig) {
     this.config = config;
     JitterConsole.addHelp(config);
+    JitterConsole.addGenerate(config);
   }
 
   private static helpForCommand({ commands }: CommandConfig, command: string) {
@@ -61,7 +64,7 @@ class JitterConsole {
   }
 
   private static addHelp(config: CommandConfig) {
-    config.commands['help'] = {
+    config.commands['help'] = {      
       description: 'Get help for commands.<br/>Pass &lt;command&gt; to get help on specific command',
       args: [
         {
@@ -88,6 +91,61 @@ class JitterConsole {
     };
   }
 
+  private static addGenerate(config: CommandConfig) {
+    config.commands['generate'] = {
+      description: 'Generate and print a given string to the console with specified grammar type',
+      args: [
+        {
+          name: 'grammar_type',
+          type: String,
+          default: '',
+        },
+        {
+          name: 'string',
+          type: String,
+          default: '',
+        }
+      ],
+      options: {
+        example: {
+          type: String,
+          alias: ['e'],
+          description: 'Provide example strings for grammar generation'
+        }
+      },
+      async handler(playground, options, args) {
+        const grammarType = args.grammar_type as string;
+        const inputString = args.string as string;
+        const exampleStrings = options.example ? (options.example as string).split(',') : [];
+
+        if (!grammarType) {
+          pushToStream(playground, 'Error', 'Error: Grammar type not specified. Please use "generate <grammar_type> <string>"');
+          return;
+        }
+
+        if (!['rg', 'cfg', 'tm'].includes(grammarType)) {
+          pushToStream(playground, 'Error', 'Error: Invalid grammar type. Supported types are rg, cfg, tm, and ai.');
+          return;
+        }
+
+        if (grammarType === 'rg') {
+          try {
+            const generatedString = await generateRightRegularGrammar(inputString, exampleStrings);
+            pushToStream(playground, 'Output', `Response: ${generatedString}`);
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              pushToStream(playground, 'Error', `Error generating AI response: ${error.message}`);
+            } else {
+              pushToStream(playground, 'Error', 'An unknown error occurred while generating AI response');
+            }
+          }
+        } else {
+          pushToStream(playground, 'Output', 'This grammar type is not yet implemented.');
+        }
+      }
+    };
+  }
+
   /**
    * Parse input command string and execute appropriate handler for that command
    * @param input Command String
@@ -104,6 +162,21 @@ class JitterConsole {
     if (this.config.commands[commandName] === undefined) throw new Error(`${commandName} is not a supported command. Type 'help' to get a list of supported commands.`);
 
     const command = this.config.commands[commandName];
+
+    if (commandName === 'generate') {
+      const argv = minimist(commandStr.slice(1), {
+        string: ['example'],
+        alias: { e: 'example' }
+      });
+      const grammarType = argv._[0];
+    const generatedString = argv._.slice(1).join(' ');
+    const exampleOption: Record<string, CommandParamValue> = {};
+    if (argv.example) {
+      exampleOption.example = argv.example;
+    }
+    command.handler(playground, exampleOption, { grammar_type: grammarType, string: generatedString });
+    return;
+    }
 
     const argv = minimist(commandStr.slice(1), {
       default: Object.fromEntries(
