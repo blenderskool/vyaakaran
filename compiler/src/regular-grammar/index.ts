@@ -1,10 +1,13 @@
-import RegularGrammarLexer from './lexer';
-import RegularGrammarParser from './parser';
-import RegularGrammarSemanticAnalyzer from './semantic';
-import { ParseTree, Token, SymbolType, CompilerClass } from '../types';
-import { getGeneratorReturn, SimplifiedGrammarRepresentation } from '../utils';
+import RegularGrammarLexer from "./lexer";
+import RegularGrammarParser from "./parser";
+import RegularGrammarSemanticAnalyzer from "./semantic";
+import { ParseTree, Token, SymbolType, CompilerClass } from "../types";
+import { getGeneratorReturn, SimplifiedGrammarRepresentation } from "../utils";
 
-type FAGraph = Record<string, { nodes: Record<string, Set<string>>, final: boolean}>;
+type FAGraph = Record<
+  string,
+  { nodes: Record<string, Set<string>>; final: boolean }
+>;
 
 class RegularGrammar extends CompilerClass {
   result: any;
@@ -27,9 +30,11 @@ class RegularGrammar extends CompilerClass {
 
   semanticAnalysis() {
     if (!this.errors.length) {
-      const errors = new RegularGrammarSemanticAnalyzer(this.parseTree as ParseTree).analyze();
-      this.errors.push(...errors.filter(err => err.type === 'Error'));
-      this.warnings.push(...errors.filter(err => err.type === 'Warning'));
+      const errors = new RegularGrammarSemanticAnalyzer(
+        this.parseTree as ParseTree
+      ).analyze();
+      this.errors.push(...errors.filter((err) => err.type === "Error"));
+      this.warnings.push(...errors.filter((err) => err.type === "Warning"));
     }
 
     return this;
@@ -40,7 +45,7 @@ class RegularGrammar extends CompilerClass {
    * Involves following steps:
    *    - Finds all "NON-TERMINAL" -> "TERMS" rules from the parse tree using DFS in Grammar2DRepresentation.
    *      Every OR production is extracted separately here.
-   * 
+   *
    *    Reference: http://www.jflap.org/modules/ConvertedFiles/Regular%20Grammar%20to%20DFA%20Conversion%20Module.pdf
    *    - For each of the above rules:
    *        1. If production is of the form  Vi -> w.Vj where w is one or more terminals, then
@@ -50,10 +55,10 @@ class RegularGrammar extends CompilerClass {
    *        2. If production is of the form Vi -> w where w is one or more terminals, then
    *          a series of states are created which derive w from Vi and end in a final state _FIN.
    *          Intermidate states get added for every terminal in w.
-   * 
+   *
    *        3. If the production is of the form Vi -> ε, then
    *          Vi is marked as a final state
-   * 
+   *
    *        4. If the production is of the form Vi -> Vj, then
    *          a ∈ transition from Vi to Vj is added in the graph
    */
@@ -76,9 +81,11 @@ class RegularGrammar extends CompilerClass {
         graph[from].nodes[via] = new Set();
       }
       graph[from].nodes[via].add(to);
-    }
+    };
 
-    const rules = new SimplifiedGrammarRepresentation(this.parseTree as ParseTree).rules;
+    const rules = new SimplifiedGrammarRepresentation(
+      this.parseTree as ParseTree
+    ).rules;
 
     for (const rule of rules) {
       const { lhs: context, rhs: termsStack } = rule;
@@ -86,51 +93,69 @@ class RegularGrammar extends CompilerClass {
 
       // Add intermediate states and transitions. Required for Rule 1, 2
       let start = context;
-      for(let i=0; i < termsStack.length-1; i++) {
+      for (let i = 0; i < termsStack.length - 1; i++) {
         const term = termsStack[i];
 
         if (!graph[start]) {
           graph[start] = { nodes: {}, final: false };
         }
 
-        const toState = termsStack[i+1].type[1] === SymbolType.State ? termsStack[i+1].value : `_S-${++midStateCnt}`;
+        const toState =
+          termsStack[i + 1].type[1] === SymbolType.State
+            ? termsStack[i + 1].value
+            : `_S-${++midStateCnt}`;
         addToGraph(start, term.value, toState);
-        
+
         if (!graph[toState]) {
           graph[toState] = { nodes: {}, final: false };
         }
-        
+
         if (explain) {
-          yield { graph, step: `Add transition from ${start} via ${term.value} to ${toState}`, rule: ruleString };
+          yield {
+            graph,
+            step: `Add transition from ${start} via ${term.value} to ${toState}`,
+            rule: ruleString,
+          };
         }
 
         start = toState;
       }
 
       // Rule 4
-      if (termsStack.length === 1 && termsStack[0].type[1] === SymbolType.State) {
+      if (
+        termsStack.length === 1 &&
+        termsStack[0].type[1] === SymbolType.State
+      ) {
         const toState = termsStack[0].value;
-        addToGraph(context, '#', toState);
+        addToGraph(context, "#", toState);
 
         if (!graph[toState]) {
           graph[toState] = { nodes: {}, final: false };
         }
 
         if (explain) {
-          yield { graph, step: `Production is of form Vi -> Vj, add ε transition from state ${context} to ${toState} in graph`, rule: ruleString };
+          yield {
+            graph,
+            step: `Production is of form Vi -> Vj, add ε transition from state ${context} to ${toState} in graph`,
+            rule: ruleString,
+          };
         }
       }
 
-      switch(termsStack[termsStack.length-1].type[1]) {
+      switch (termsStack[termsStack.length - 1].type[1]) {
         // Rule 2 (Adding transition to _FIN state)
         case SymbolType.Literal:
-          if (!graph['_FIN']){
-            graph['_FIN'] = { nodes: {}, final: true };
+          if (!graph["_FIN"]) {
+            graph["_FIN"] = { nodes: {}, final: true };
           }
-          const { value } = termsStack[termsStack.length-1];
-          addToGraph(start, value, '_FIN');
+          const { value } = termsStack[termsStack.length - 1];
+          addToGraph(start, value, "_FIN");
           if (explain) {
-            yield { graph, step: `Production ends at a terminal, add transition to FINAL state`, rule: ruleString };
+            yield {
+              graph,
+              step: `Production ends at a terminal, add transition to FINAL state`,
+              rule: ruleString,
+            };
           }
           break;
 
@@ -141,7 +166,11 @@ class RegularGrammar extends CompilerClass {
           }
           graph[context].final = true;
           if (explain) {
-            yield { graph, step: `Production derives to ε, mark ${context} as final state`, rule: ruleString };
+            yield {
+              graph,
+              step: `Production derives to ε, mark ${context} as final state`,
+              rule: ruleString,
+            };
           }
       }
     }
@@ -156,24 +185,24 @@ class RegularGrammar extends CompilerClass {
 
   /**
    * Naive Finite Automata Optimizer
-   * 
+   *
    * Optimizes the following:
    *    - Removes unreachable states (states without any incoming transitions)
    *    - TODO: Merge duplicate states (states which have same outgoing transitions)
    */
   optimizeFA() {
     const graph: FAGraph = this.result;
-    let incomingNodes = new Set([ 'S' ]);
+    let incomingNodes = new Set(["S"]);
 
     // Construct set of all nodes that have incoming edges
-    for(const from in graph) {
-      for(const via in graph[from].nodes) {
-        incomingNodes = new Set([ ...incomingNodes, ...graph[from].nodes[via] ]);
+    for (const from in graph) {
+      for (const via in graph[from].nodes) {
+        incomingNodes = new Set([...incomingNodes, ...graph[from].nodes[via]]);
       }
     }
 
     // Remove nodes which are unreachable
-    for(const from in graph) {
+    for (const from in graph) {
       if (!incomingNodes.has(from)) {
         delete graph[from];
       }
@@ -185,7 +214,7 @@ class RegularGrammar extends CompilerClass {
 
   /**
    * Constructs Epsilon-Free Finite Automata by using Epsilon Finite Automata.
-   * 
+   *
    * Makes use of following rules:
    *  - For all Vi -ε-> Vj transitions as T:
    *    - Add all non ε transitions from Vj to any other Vk as transitions from Vi to Vk
@@ -194,9 +223,9 @@ class RegularGrammar extends CompilerClass {
    *          - Repeat this recusively for all states along the path that have some outgoing ε transition (using DFS)
    *          - If Vn is a final state, mark Vj as final
    *    - Remove transition T
-   * 
+   *
    *    - If Vj is a final state, mark Vi also final
-   * 
+   *
    * NOTE: Optimizer should be run to remove unreachable states after transition deletions in above steps.
    */
   toEpsilonFreeFA() {
@@ -209,16 +238,16 @@ class RegularGrammar extends CompilerClass {
       if (visited.has(root)) return;
       visited.add(root);
 
-      for(const via in graph[root].nodes) {
-        if (via === '#') continue;
+      for (const via in graph[root].nodes) {
+        if (via === "#") continue;
 
         graph[root].nodes[via].forEach((to) => {
           stack.push([via, to]);
         });
       }
-
-      if (graph[root].nodes['#']) {
-        graph[root].nodes['#'].forEach((to) => {
+      console.log("hello world");
+      if (graph[root].nodes["#"]) {
+        graph[root].nodes["#"].forEach((to) => {
           dfs(to, stack);
 
           if (graph[to].final) {
@@ -229,23 +258,26 @@ class RegularGrammar extends CompilerClass {
     };
 
     // For every node in the graph, check if ε transitions exist
-    for(const node in graph) {
-      resultGraph[node] = { nodes: {...graph[node].nodes}, final: graph[node].final };
+    for (const node in graph) {
+      resultGraph[node] = {
+        nodes: { ...graph[node].nodes },
+        final: graph[node].final,
+      };
 
       // If no ε transition exist, then check next node
-      if (!graph[node].nodes['#']) continue;
+      if (!graph[node].nodes["#"]) continue;
 
       // Remove the ε transition
-      delete resultGraph[node].nodes['#'];
+      delete resultGraph[node].nodes["#"];
 
       // For all the nodes reachable via ε transition, get all non ε transition stack along the path using DFS
-      graph[node].nodes['#'].forEach((to) => {
+      graph[node].nodes["#"].forEach((to) => {
         const stack: [string, string][] = [];
         visited.clear();
         dfs(to, stack);
 
         // Add the transitions from the stack
-        stack.forEach(([ via, to ]) => {
+        stack.forEach(([via, to]) => {
           const { nodes } = resultGraph[node];
           if (!nodes[via]) {
             nodes[via] = new Set();
@@ -266,7 +298,7 @@ class RegularGrammar extends CompilerClass {
 
   /**
    * Constructs a Regular Expression from Finite Automata.
-   * 
+   *
    * Makes use of Brzozowski algebraic method
    * Reference: This amazing StackOverflow answer - https://cs.stackexchange.com/a/2392
    */
@@ -283,25 +315,25 @@ class RegularGrammar extends CompilerClass {
         sigma.add(token.value);
       }
 
-      for(let i = 0; i < root.body.length; i++) {
+      for (let i = 0; i < root.body.length; i++) {
         dfs(root.body[i] as ParseTree);
       }
-    }
+    };
     dfs(this.parseTree as ParseTree);
 
     const star = (exp) => {
-      if (!exp || exp === 'ε') return 'ε';
+      if (!exp || exp === "ε") return "ε";
 
-      return exp + '*';
-    }
+      return exp + "*";
+    };
     const concat = (a, b) => {
-      if (!a || !b) return '';
+      if (!a || !b) return "";
 
-      if (a === 'ε') return b;
-      if (b === 'ε') return a;
+      if (a === "ε") return b;
+      if (b === "ε") return a;
 
       return `(${a}.${b})`;
-    }
+    };
 
     const union = (a, b) => {
       if (!a || !b || a === b) return a || b;
@@ -309,49 +341,141 @@ class RegularGrammar extends CompilerClass {
       return `(${a} + ${b})`;
     };
 
-    const nodes = ['S', ...Object.keys(graph).filter(s => s !== 'S')];
+    const nodes = ["S", ...Object.keys(graph).filter((s) => s !== "S")];
     const A = [];
     const B = [];
 
-    for(let i=0; i < nodes.length; i++) {
-      B[i] = graph[nodes[i]].final ? 'ε' : '';
+    for (let i = 0; i < nodes.length; i++) {
+      B[i] = graph[nodes[i]].final ? "ε" : "";
       A[i] = [];
 
-      for(let j=0; j < nodes.length; j++) {
-        A[i][j] = '';
+      for (let j = 0; j < nodes.length; j++) {
+        A[i][j] = "";
         sigma.forEach((a: string) => {
-          A[i][j] = union(A[i][j], graph[nodes[i]].nodes[a]?.has(nodes[j]) ? a : '');
+          A[i][j] = union(
+            A[i][j],
+            graph[nodes[i]].nodes[a]?.has(nodes[j]) ? a : ""
+          );
         });
       }
     }
 
-    for(let n = B.length-1; n >= 0; n--) {
+    for (let n = B.length - 1; n >= 0; n--) {
       B[n] = concat(star(A[n][n]), B[n]);
 
-      for(let j=0; j < n; j++) {
+      for (let j = 0; j < n; j++) {
         A[n][j] = concat(star(A[n][n]), A[n][j]);
       }
 
-      for(let i=0; i < n; i++) {
+      for (let i = 0; i < n; i++) {
         B[i] = union(B[i], concat(A[i][n], B[n]));
 
-        for(let j=0; j < n; j++) {
+        for (let j = 0; j < n; j++) {
           A[i][j] = union(A[i][j], concat(A[i][n], A[n][j]));
         }
       }
     }
 
     this.result = B[0];
-    
+
+    return this;
+  }
+
+  /**
+   * Constructs a Deterministic Finite Automaton (DFA) from a Non-deterministic Finite Automaton (NFA).
+   * 1. Create a DFA start state from the NFA start state
+   * 2. For each DFA state and each input symbol:
+   *    a. Compute the set of NFA states reachable from the current DFA state
+   *    b. If this set of states is new, add it as a new DFA state
+   * 3. Repeat step 2 until no new DFA states are created
+   * 4. Mark DFA states as final if they contain any NFA final states
+   **/
+
+  toDFA() {
+    const nfa: FAGraph = this.toEpsilonFreeFA().result;
+    const dfa: FAGraph = {};
+    const alphabet: Set<string> = new Set();
+    const stateQueue: Set<string>[] = [];
+    const processedStates: Set<string>[] = [];
+    const DEAD_STATE = "Φ";
+
+    // Get the alphabet(List of terminals)
+    for (const state in nfa) {
+      for (const symbol in nfa[state].nodes) {
+        alphabet.add(symbol);
+      }
+    }
+
+    dfa[DEAD_STATE] = { nodes: {}, final: false };
+    for (const symbol of alphabet) {
+      dfa[DEAD_STATE].nodes[symbol] = new Set([DEAD_STATE]);
+    }
+
+    // Helper function to get the next state set
+    const getNextStateSet = (
+      currentSet: Set<string>,
+      symbol: string
+    ): Set<string> => {
+      const nextSet = new Set<string>();
+      for (const state of currentSet) {
+        if (nfa[state].nodes[symbol]) {
+          nfa[state].nodes[symbol].forEach((nextState) =>
+            nextSet.add(nextState)
+          );
+        }
+      }
+      return nextSet;
+    };
+
+    // Helper function to convert set to sorted string (for state naming)
+    const setToString = (set: Set<string>): string =>
+      Array.from(set).sort().join(",");
+
+    // Start with the initial state
+    const initialState = new Set(["S"]);
+    stateQueue.push(initialState);
+
+    while (stateQueue.length > 0) {
+      const currentSet = stateQueue.shift()!;
+      const currentState = setToString(currentSet);
+
+      if (processedStates.some((set) => setToString(set) === currentState))
+        continue;
+
+      processedStates.push(currentSet);
+
+      dfa[currentState] = { nodes: {}, final: false };
+
+      // Check if the current state set contains any final state from NFA
+      dfa[currentState].final = Array.from(currentSet).some(
+        (state) => nfa[state].final
+      );
+
+      for (const symbol of alphabet) {
+        const nextSet = getNextStateSet(currentSet, symbol);
+        if (nextSet.size > 0) {
+          const nextState = setToString(nextSet);
+          dfa[currentState].nodes[symbol] = new Set([nextState]);
+
+          if (!processedStates.some((set) => setToString(set) === nextState)) {
+            stateQueue.push(nextSet);
+          }
+        } else {
+          // Transition to dead state if next set is empty
+          dfa[currentState].nodes[symbol] = new Set([DEAD_STATE]);
+        }
+      }
+    }
+
+    this.result = dfa;
     return this;
   }
 }
-
 
 export {
   RegularGrammarLexer,
   RegularGrammarParser,
   RegularGrammarSemanticAnalyzer,
   RegularGrammar,
-  FAGraph
+  FAGraph,
 };
