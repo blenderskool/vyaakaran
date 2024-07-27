@@ -1,10 +1,32 @@
 import minimist from 'minimist';
 import split from 'argv-split';
-import { ConsoleStream, getActivePlayground, Playground, playgrounds } from '../store/code';
+import { ConsoleStream, getActivePlayground, Playground,playgrounds, PlaygroundType  } from '../store/code';
 import { generateRightRegularGrammar } from '../ai/openai';
+import { newPlayground } from '../store/code';
+import { nextTick, watchEffect } from 'vue';
+import router from '../router';
+
+//Playground code from vue 
+const addNewPlayground = async (type: PlaygroundType,input: string="") => {
+  playgrounds.push(newPlayground(`Program ${playgrounds.length + 1}`, type,input));
+  await nextTick();
+  router.replace({ params: { id: playgrounds.length-1 } });
+  emit('close');
+};
+
+//Regex from reponse
+function extractGrammar(input: string): string | undefined {
+  const grammarRegex = /<grammar>([\s\S]*?)<\/grammar>/;
+  const match = input.match(grammarRegex);
+  
+  if (match && match[1]) {
+    return match[1].trim();
+  }
+  
+  return undefined;
+}
 
 type CommandParamValue = number | string | boolean;
-
 type CommandConfig = {
   name: string,
   version: string,
@@ -131,7 +153,8 @@ class JitterConsole {
         if (grammarType === 'rg') {
           try {
             const generatedString = await generateRightRegularGrammar(inputString, exampleStrings);
-            pushToStream(playground, 'Output', `Response: ${generatedString}`);
+            const grammar = extractGrammar(generatedString);
+            addNewPlayground("RG",grammar);
           } catch (error: unknown) {
             if (error instanceof Error) {
               pushToStream(playground, 'Error', `Error generating AI response: ${error.message}`);
@@ -230,3 +253,7 @@ class JitterConsole {
 }
 
 export { JitterConsole, pushToStream };
+
+function emit(arg0: string) {
+  throw new Error('Function not implemented.');
+}

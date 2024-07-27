@@ -18,7 +18,7 @@ export async function generateRightRegularGrammar(userRequest: string, exampleSt
       {
         model: "gpt-4o",  // or "gpt-4" if you have access
         messages: [{ role: "user", content: prompt }],
-        temperature: 0.1,
+        temperature: 0.0,
       },
       {
         headers: {
