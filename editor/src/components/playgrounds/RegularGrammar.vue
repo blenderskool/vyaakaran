@@ -36,7 +36,9 @@ import { Playground } from "../../store/code";
 
 const store = inject("store") as ComputedRef<Playground>;
 
-const getAutomataGraph = (faType: "ε-NFA" | "NFA" | "DFA"): FAGraph => {
+const getAutomataGraph = (
+  faType: "ε-NFA" | "NFA" | "DFA" | "minDFA"
+): FAGraph => {
   const compiled = store.value.compiled as RegularGrammar;
   switch (faType) {
     case "ε-NFA":
@@ -45,6 +47,8 @@ const getAutomataGraph = (faType: "ε-NFA" | "NFA" | "DFA"): FAGraph => {
       return compiled.toEpsilonFreeFA().optimizeFA().result;
     case "DFA":
       return compiled.toDFA().optimizeFA().result;
+    case "minDFA":
+      return compiled.toDFA().minimizeDFA().optimizeFA().result;
   }
 };
 </script>
