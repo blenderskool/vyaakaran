@@ -188,6 +188,7 @@ class RegularGrammar extends CompilerClass {
    *
    * Optimizes the following:
    *    - Removes unreachable states (states without any incoming transitions)
+   *    - Removes states which can't reach any final states.
    *    - TODO: Merge duplicate states (states which have same outgoing transitions)
    */
   optimizeFA() {
@@ -204,6 +205,45 @@ class RegularGrammar extends CompilerClass {
     // Remove nodes which are unreachable
     for (const from in graph) {
       if (!incomingNodes.has(from)) {
+        delete graph[from];
+      }
+    }
+
+    this.result = graph;
+    return this;
+  }
+
+  optimizeReachableFinal() {
+    const graph: FAGraph = this.result;
+    const finalStates: Set<string> = new Set(
+      Object.keys(this.result).filter((state) => this.result[state].final)
+    );
+    let reachableFinal = new Set<string>([...finalStates]);
+    let changed = true;
+
+    // Iterate until no more changes
+    while (changed) {
+      changed = false;
+      for (const from in graph) {
+        if (!reachableFinal.has(from)) {
+          for (const via in graph[from].nodes) {
+            if (
+              Array.from(graph[from].nodes[via]).some((to) =>
+                reachableFinal.has(to)
+              )
+            ) {
+              reachableFinal.add(from);
+              changed = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // Remove states that can't reach a final state
+    for (const from in graph) {
+      if (!reachableFinal.has(from)) {
         delete graph[from];
       }
     }
