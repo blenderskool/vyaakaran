@@ -45,6 +45,9 @@ importers:
       argv-split:
         specifier: ^2.0.1
         version: 2.0.1
+      axios:
+        specifier: ^1.7.2
+        version: 1.7.2
       dedent-js:
         specifier: ^1.0.1
         version: 1.0.1
