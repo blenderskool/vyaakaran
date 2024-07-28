@@ -1,17 +1,17 @@
 import minimist from 'minimist';
 import split from 'argv-split';
 import { ConsoleStream, getActivePlayground, Playground, playgrounds, PlaygroundType } from '../store/code';
-import { generateContextFreeGrammar, generateRightRegularGrammar } from '../ai/openai';
 import { newPlayground } from '../store/code';
 import { nextTick, watchEffect } from 'vue';
 import router from '../router';
+import { IProvider } from '../ai/Providers/IProvider';
+import { ProviderFactory, ProviderType } from '../ai/Providers/ProviderFactory';
 
 //Playground code from vue 
 const addNewPlayground = async (type: PlaygroundType, input: string = "") => {
   playgrounds.push(newPlayground(`Program ${playgrounds.length + 1}`, type, input));
   await nextTick();
   router.replace({ params: { id: playgrounds.length - 1 } });
-  emit('close');
 };
 
 //Regex from reponse
@@ -67,10 +67,13 @@ function pushToStream(playground: Playground, type: ConsoleStream['type'], messa
  */
 class JitterConsole {
   private config: CommandConfig;
-  constructor(config: CommandConfig) {
+  private provider: IProvider;
+
+  constructor(config: CommandConfig,providerType: ProviderType) {
     this.config = config;
+    this.provider = ProviderFactory.createProvider(providerType);
     JitterConsole.addHelp(config);
-    JitterConsole.addGenerate(config);
+    JitterConsole.addGenerate(config,this.provider);
   }
 
   private static helpForCommand({ commands }: CommandConfig, command: string) {
@@ -113,7 +116,7 @@ class JitterConsole {
     };
   }
 
-  private static addGenerate(config: CommandConfig) {
+  private static addGenerate(config: CommandConfig, provider:IProvider) {
     config.commands['generate'] = {
       description: 'Generate and print a given string to the console with specified grammar type',
       args: [
@@ -146,7 +149,7 @@ class JitterConsole {
         }
 
         if (!['rg', 'cfg', 'tm'].includes(grammarType)) {
-          pushToStream(playground, 'Error', 'Error: Invalid grammar type. Supported types are rg, cfg, tm, and ai.');
+          pushToStream(playground, 'Error', 'Error: Invalid grammar type. Supported types are rg, cfg and tm');
           return;
         }
 
@@ -163,9 +166,9 @@ class JitterConsole {
         try {
           let generatedString;
           if (grammarType === 'rg') {
-            generatedString = await generateRightRegularGrammar(inputString, exampleStrings);
+            generatedString = await provider.generateRightRegularGrammar(inputString,exampleStrings);
           } else if (grammarType === 'cfg') {
-            generatedString = await generateContextFreeGrammar(inputString, exampleStrings);
+            generatedString = await provider.generateContextFreeGrammar(inputString, exampleStrings);
           } else {
             throw new Error('This grammar type is not yet implemented.');
           }
@@ -275,8 +278,5 @@ class JitterConsole {
 
 export { JitterConsole, pushToStream };
 
-function emit(arg0: string) {
-  throw new Error('Function not implemented.');
-}
 
 
