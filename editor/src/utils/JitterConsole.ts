@@ -146,7 +146,7 @@ class JitterConsole {
         }
 
         if (!['rg', 'cfg', 'tm'].includes(grammarType)) {
-          pushToStream(playground, 'Error', 'Error: Invalid grammar type. Supported types are rg, cfg, tm, and ai.');
+          pushToStream(playground, 'Error', 'Error: Invalid grammar type. Supported types are rg, cfg, tm.');
           return;
         }
 

@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { generateRightRegularGrammarPrompt } from './rg_prompt';
 
-// const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-const OPENAI_API_KEY = "sk-arjun-ai-6W4PtIcGb7g6XNAZStLJT3BlbkFJ7GUh2rjPm5uClCMoUd14";
-const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+const OPENAI_API_URL = import.meta.env.VITE_OPENAI_API_URL;
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
+
+console.log(OPENAI_API_URL)
 export async function generateRightRegularGrammar(userRequest: string, exampleStrings: string[] = []): Promise<string> {
   if (!OPENAI_API_KEY) {
     throw new Error('OpenAI API key is not set. Please check your environment variables.');
