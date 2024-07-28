@@ -1,16 +1,16 @@
 import minimist from 'minimist';
 import split from 'argv-split';
-import { ConsoleStream, getActivePlayground, Playground,playgrounds, PlaygroundType  } from '../store/code';
-import { generateRightRegularGrammar } from '../ai/openai';
+import { ConsoleStream, getActivePlayground, Playground, playgrounds, PlaygroundType } from '../store/code';
+import { generateContextFreeGrammar, generateRightRegularGrammar } from '../ai/openai';
 import { newPlayground } from '../store/code';
 import { nextTick, watchEffect } from 'vue';
 import router from '../router';
 
 //Playground code from vue 
-const addNewPlayground = async (type: PlaygroundType,input: string="") => {
-  playgrounds.push(newPlayground(`Program ${playgrounds.length + 1}`, type,input));
+const addNewPlayground = async (type: PlaygroundType, input: string = "") => {
+  playgrounds.push(newPlayground(`Program ${playgrounds.length + 1}`, type, input));
   await nextTick();
-  router.replace({ params: { id: playgrounds.length-1 } });
+  router.replace({ params: { id: playgrounds.length - 1 } });
   emit('close');
 };
 
@@ -18,11 +18,11 @@ const addNewPlayground = async (type: PlaygroundType,input: string="") => {
 function extractGrammar(input: string): string | undefined {
   const grammarRegex = /<grammar>([\s\S]*?)<\/grammar>/;
   const match = input.match(grammarRegex);
-  
+
   if (match && match[1]) {
     return match[1].trim();
   }
-  
+
   return undefined;
 }
 
@@ -49,7 +49,7 @@ type CommandConfig = {
 
 function pushToStream(playground: Playground, type: ConsoleStream['type'], message: string | string[]) {
   if (!Array.isArray(message)) {
-    message = [ message ];
+    message = [message];
   }
 
   playground.consoleStream.push(
@@ -86,7 +86,7 @@ class JitterConsole {
   }
 
   private static addHelp(config: CommandConfig) {
-    config.commands['help'] = {      
+    config.commands['help'] = {
       description: 'Get help for commands.<br/>Pass &lt;command&gt; to get help on specific command',
       args: [
         {
@@ -100,7 +100,7 @@ class JitterConsole {
         if (args.command === '') {
           const commands = Object.keys(config.commands);
           helpMessage = `${config.name} v${config.version}<br/>Commands:<br/><br/><table><tbody>`;
-  
+
           commands.forEach((command) => helpMessage += JitterConsole.helpForCommand(config, command));
           helpMessage += '</tbody></table>';
         } else {
@@ -150,20 +150,41 @@ class JitterConsole {
           return;
         }
 
-        if (grammarType === 'rg') {
-          try {
-            const generatedString = await generateRightRegularGrammar(inputString, exampleStrings);
-            const grammar = extractGrammar(generatedString);
-            addNewPlayground("RG",grammar);
-          } catch (error: unknown) {
-            if (error instanceof Error) {
-              pushToStream(playground, 'Error', `Error generating AI response: ${error.message}`);
-            } else {
-              pushToStream(playground, 'Error', 'An unknown error occurred while generating AI response');
-            }
+        const spinChars = ['|', '/', '-', '\\'];
+        let spinIndex = 0;
+        const spinMessageId = playground.consoleStream.length;
+
+        pushToStream(playground, 'Output', `Generating grammar ${spinChars[spinIndex]}`);
+        const spinAnimation = setInterval(() => {
+          spinIndex = (spinIndex + 1) % spinChars.length;
+          playground.consoleStream[spinMessageId].message = `Generating grammar ${spinChars[spinIndex]}`;
+        }, 250);
+
+        try {
+          let generatedString;
+          if (grammarType === 'rg') {
+            generatedString = await generateRightRegularGrammar(inputString, exampleStrings);
+          } else if (grammarType === 'cfg') {
+            generatedString = await generateContextFreeGrammar(inputString, exampleStrings);
+          } else {
+            throw new Error('This grammar type is not yet implemented.');
           }
-        } else {
-          pushToStream(playground, 'Output', 'This grammar type is not yet implemented.');
+
+          clearInterval(spinAnimation);
+          playground.consoleStream[spinMessageId].message = 'Grammar generated!';
+          const grammar = extractGrammar(generatedString);
+          if (grammar) {
+            addNewPlayground(grammarType.toUpperCase() as PlaygroundType, grammar);
+          } else {
+            throw new Error('Failed to extract grammar from generated string.');
+          }
+        } catch (error: unknown) {
+          clearInterval(spinAnimation);
+          if (error instanceof Error) {
+            pushToStream(playground, 'Error', `Error generating AI response: ${error.message}`);
+          } else {
+            pushToStream(playground, 'Error', 'An unknown error occurred while generating AI response');
+          }
         }
       }
     };
@@ -192,13 +213,13 @@ class JitterConsole {
         alias: { e: 'example' }
       });
       const grammarType = argv._[0];
-    const generatedString = argv._.slice(1).join(' ');
-    const exampleOption: Record<string, CommandParamValue> = {};
-    if (argv.example) {
-      exampleOption.example = argv.example;
-    }
-    command.handler(playground, exampleOption, { grammar_type: grammarType, string: generatedString });
-    return;
+      const generatedString = argv._.slice(1).join(' ');
+      const exampleOption: Record<string, CommandParamValue> = {};
+      if (argv.example) {
+        exampleOption.example = argv.example;
+      }
+      command.handler(playground, exampleOption, { grammar_type: grammarType, string: generatedString });
+      return;
     }
 
     const argv = minimist(commandStr.slice(1), {
@@ -225,7 +246,7 @@ class JitterConsole {
 
     const options: Record<string, CommandParamValue> = {};
     if (command.options !== undefined) {
-      for(const option in command.options) {
+      for (const option in command.options) {
         const optionConfig = command.options[option];
         if (optionConfig.default === undefined && argv[option] === undefined) {
           throw new Error(`Required option &lt;${option}&gt; not set`);
@@ -237,7 +258,7 @@ class JitterConsole {
 
     const args: Record<string, CommandParamValue> = {};
     if (command.args !== undefined) {
-      for(const i in command.args) {
+      for (const i in command.args) {
         const arg = command.args[i];
         if (arg.default === undefined && argv._[i] === undefined) {
           throw new Error(`Required argument &lt;${arg.name}&gt; not passed`);
@@ -257,3 +278,5 @@ export { JitterConsole, pushToStream };
 function emit(arg0: string) {
   throw new Error('Function not implemented.');
 }
+
+
