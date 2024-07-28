@@ -23,21 +23,25 @@
       <path d="M21 6l0 13" />
     </svg>
   </button>
+  <Teleport to="body">
+    <Transition name="fade">
+      <SyntaxGuideModal v-if="isSyntaxGuideVisible" @close="closeSyntaxGuide" />
+    </Transition>
+  </Teleport>
 </template>
 
-<script lang="ts" setup>
-import { ComputedRef, inject, onMounted, onUnmounted } from "vue";
-import { SyntaxGuide } from "../../store/syntaxGuide";
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
+import SyntaxGuideModal from "./SyntaxGuideModel.vue";
 
-const emit = defineEmits<{
-  (e: "showSyntaxGuide"): void;
-}>();
-
-const store = inject("syntaxStore") as ComputedRef<SyntaxGuide>;
+const isSyntaxGuideVisible = ref(false);
 
 const showSyntaxGuide = () => {
-  store.value.toggleSyntaxGuide();
-  emit("showSyntaxGuide");
+  isSyntaxGuideVisible.value = true;
+};
+
+const closeSyntaxGuide = () => {
+  isSyntaxGuideVisible.value = false;
 };
 
 const handleSyntaxGuideKeybind = (e: KeyboardEvent) => {
@@ -55,3 +59,15 @@ onUnmounted(() => {
   window.removeEventListener("keydown", handleSyntaxGuideKeybind);
 });
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
