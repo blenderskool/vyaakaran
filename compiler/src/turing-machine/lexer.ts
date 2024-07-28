@@ -90,7 +90,7 @@ export class StateTransitionLexer {
 
   tokenizer() {
     const chevLexer = new Lexer(TokenList);
-    let tokenRes = chevLexer.tokenize(this.program);
+    const tokenRes = chevLexer.tokenize(this.program);
 
     for (let i = tokenRes.tokens.length - 1; i > 0; i--) {
       if (

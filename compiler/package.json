@@ -37,7 +37,9 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "playground": "tsx src/playground.ts"
+    "playground": "tsx src/playground.ts",
+    "lint": "eslint .",
+    "lint:fix" : "eslint . --fix"
   },
   "dependencies": {
     "chevrotain": "^10.1.2",

@@ -105,16 +105,16 @@ const vykrnConsole = new JitterConsole({
         }
 
         if (playground.type === 'TM') {
-          let tstr = (args.string as string).trim();
+          const tstr = (args.string as string).trim();
           const str = tstr + '#';
-          let genobj = new TestInput(
+          const genobj = new TestInput(
             str,
             playground.compiled.parseTree as Map<
               string,
               TuringMachineStateTransition[]
             >
           );
-          let strcheck = genobj.consoleTestString();
+          const strcheck = genobj.consoleTestString();
           if (strcheck)
             pushToStream(playground, 'Success', 'string was accepted');
           else pushToStream(playground, 'Warning', 'string was rejected');

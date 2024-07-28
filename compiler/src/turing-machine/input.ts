@@ -14,7 +14,7 @@ export class TestInput {
     for (let index = 0;  index < 100 ; index++) {
       this.tape.push("#")
     }
-    for (var i of str) {
+    for (const i of str) {
       this.tape.push(i);
     }
     for (let index = 0; index < 100; index++) {
@@ -37,7 +37,7 @@ export class TestInput {
     let index = 100;
     this.initTape();
     this.toTape(this.input);
-    let value = {
+    const value = {
       moveDir: 100,
       string: this.tape,
       accepted: false,
@@ -50,7 +50,7 @@ export class TestInput {
         this.vertices.get(s)
       ) {
         let statecount = 0;
-        for (var j of this.vertices.get(s)) {
+        for (const j of this.vertices.get(s)) {
           if (this.tape[index] == j.readSymbol) {
             this.tape[index] = j.writeSymbol;
             // value.moveDir = this.tMove(j.transition);
@@ -89,7 +89,7 @@ export class TestInput {
         this.vertices.get(s)
       ) {
         let statecount = 0;
-        for (var j of this.vertices.get(s)) {
+        for (const j of this.vertices.get(s)) {
           if (this.tape[index] == j.readSymbol) {
             this.tape[index] = j.writeSymbol;
             index = index + this.tMove(j.transition);

@@ -18,8 +18,8 @@ export class StateTransitionGrammar extends CompilerClass {
     const tokenStream = new StateTransitionLexer(this.program).tokenizer();
 
     if (tokenStream.errors.length > 0) {
-      for (let error of tokenStream.errors) {
-        let message = `${error.message} at ${error.line}:${error.column}`;
+      for (const error of tokenStream.errors) {
+        const message = `${error.message} at ${error.line}:${error.column}`;
 
         this.errors.push({
           type: 'Error',
@@ -37,7 +37,7 @@ export class StateTransitionGrammar extends CompilerClass {
 
     const parserObj = new StateTransitionParser();
     parserObj.input = lexRes.tokens;
-    let cstOutput = parserObj.grammarStart();
+    const cstOutput = parserObj.grammarStart();
 
     if (parserObj.errors.length > 0) {
       parserObj.errors.forEach((err) => {
