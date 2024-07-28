@@ -5,9 +5,8 @@ import { SimplifiedGrammarRepresentation } from '@vyaakaran/compiler/utils';
 import pkg from '../../package.json';
 import { ConsoleStream } from '../store/code';
 import { JitterConsole, pushToStream } from '../utils/JitterConsole';
-import { ProviderType } from '../ai/Providers/ProviderFactory';
+import { providerType } from '../ai/providerConfig';
 
-const providerType: ProviderType = ProviderType.OPENAI;
 
 const vykrnConsole = new JitterConsole({
   name: 'Vyaakaran console',

@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { IProvider } from './IProvider';
+import { IProvider } from '../ProviderInit/IProvider';
 import { generateRightRegularGrammarPrompt } from '../prompt_templates/rg_prompt';
 import { generateContextFreeGrammarPrompt } from '../prompt_templates/cfg_prompt';
 

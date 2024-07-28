@@ -1,7 +1,7 @@
 import { IProvider } from './IProvider';
-import { OpenAIProvider } from './OpenAIProvider';
-import { ClaudeProvider } from './ClaudeProvider';
-import { GroqProvider } from './GroqProvider';
+import { OpenAIProvider } from '../ProviderList/OpenAIProvider';
+import { ClaudeProvider } from '../ProviderList/ClaudeProvider';
+import { GroqProvider } from '../ProviderList/GroqProvider';
 
 export enum ProviderType {
     OPENAI,

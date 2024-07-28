@@ -4,8 +4,8 @@ import { ConsoleStream, getActivePlayground, Playground, playgrounds, Playground
 import { newPlayground } from '../store/code';
 import { nextTick, watchEffect } from 'vue';
 import router from '../router';
-import { IProvider } from '../ai/Providers/IProvider';
-import { ProviderFactory, ProviderType } from '../ai/Providers/ProviderFactory';
+import { IProvider } from '../ai/ProviderInit/IProvider';
+import { ProviderFactory, ProviderType } from '../ai/ProviderInit/ProviderFactory';
 
 //Playground code from vue 
 const addNewPlayground = async (type: PlaygroundType, input: string = "") => {
