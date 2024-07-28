@@ -1,8 +1,8 @@
 <template>
   <div
-    class="font-fira fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    class="font-fira fixed inset-0 bg-black  flex justify-center z-50 h-0"
   >
-    <div class="relative bg-black p-6 rounded-lg shadow-xl max-w-md w-full">
+    <div class="h-100 relative bg-black p-6 rounded-lg shadow-xl max-w-md w-full" v-draggable>
       <button
         @click="$emit('close')"
         class="absolute top-0 right-0 my-4 mx-2 px-2 py-1 bg-black text-white rounded"
