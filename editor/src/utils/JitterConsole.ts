@@ -118,7 +118,7 @@ class JitterConsole {
 
   private static addGenerate(config: CommandConfig, provider:IProvider) {
     config.commands['generate'] = {
-      description: 'Generate and print a given string to the console with specified grammar type',
+      description: 'Generate and print a given string to the console with specified grammar type \n\n grammar_type = rg, cfg, tm \n\nUse --example <string> to add example strings for better generation ',
       args: [
         {
           name: 'grammar_type',
