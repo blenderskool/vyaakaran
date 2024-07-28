@@ -40,8 +40,8 @@ import KeyboardKey from '../components/ui/KeyboardKey.vue';
 const props = defineProps<{ show: boolean }>();
 const emit = defineEmits<{ (e: 'close'): void }>();
 
-const addNewPlayground = async (type: PlaygroundType) => {
-  playgrounds.push(newPlayground(`Program ${playgrounds.length + 1}`, type));
+const addNewPlayground = async (type: PlaygroundType,input: string="") => {
+  playgrounds.push(newPlayground(`Program ${playgrounds.length + 1}`, type,input));
   await nextTick();
   router.replace({ params: { id: playgrounds.length-1 } });
   emit('close');
