@@ -1,22 +1,29 @@
 <template>
   <div class="relative flex flex-col" v-if="getView().type !== 'default'">
-    <EditorTabs @new-playground="() => showNewPlaygroundModal = true" />
+    <EditorTabs @new-playground="() => (showNewPlaygroundModal = true)" />
     <Splitpanes class="flex relative w-screen view" :dbl-click-splitter="false">
       <component :is="getView().view" />
     </Splitpanes>
   </div>
   <div class="relative flex flex-col" v-else>
-    <EditorTabs @new-playground="() => showNewPlaygroundModal = true" />
+    <EditorTabs @new-playground="() => (showNewPlaygroundModal = true)" />
 
     <Splitpanes class="flex relative w-screen view" :dbl-click-splitter="false">
       <Pane class="relative overflow-visible" min-size="25" size="45">
-        <Splitpanes class="h-full editor-console-split" horizontal :dbl-click-splitter="false">
+        <Splitpanes
+          class="h-full editor-console-split"
+          horizontal
+          :dbl-click-splitter="false"
+        >
           <Pane>
             <Editor />
           </Pane>
           <Console />
         </Splitpanes>
-        <CompileButton />
+        <div class="flex flex-col items-end space-y-20">
+          <CompileButton />
+          <SyntaxSheet />
+        </div>
       </Pane>
 
       <Pane min-size="45">
@@ -24,46 +31,55 @@
       </Pane>
     </Splitpanes>
   </div>
-  <NewPlaygroundModal :show="showNewPlaygroundModal" @close="showNewPlaygroundModal = false" />
-  <footer class="h-6 text-xxs flex items-center px-5 bg-gray-900 text-cool-gray-500 border-t border-solid border-gray-800 font-semibold justify-end space-x-2">
+  <NewPlaygroundModal
+    :show="showNewPlaygroundModal"
+    @close="showNewPlaygroundModal = false"
+  />
+  <footer
+    class="h-6 text-xxs flex items-center px-5 bg-gray-900 text-cool-gray-500 border-t border-solid border-gray-800 font-semibold justify-end space-x-2"
+  >
     <span>
       A side project designed & developed by
-      {{ ' ' }}
-      <a class="text-cyan-300" href="https://akashhamirwasia.com">Akash Hamirwasia</a>
+      {{ " " }}
+      <a class="text-cyan-300" href="https://akashhamirwasia.com"
+        >Akash Hamirwasia</a
+      >
     </span>
-    <span>
-      Vyaakaran v{{ pkg.version }}
-    </span>
+    <span> Vyaakaran v{{ pkg.version }} </span>
   </footer>
 </template>
 
 <script lang="ts" setup>
-import { computed, provide, ref } from 'vue';
-import { Splitpanes, Pane } from 'splitpanes';
-import { useRoute } from 'vue-router';
+import { computed, provide, ref } from "vue";
+import { Splitpanes, Pane } from "splitpanes";
+import { useRoute } from "vue-router";
 
-import { getActivePlayground, PlaygroundType } from '../store/code';
-import pkg from '../../package.json';
+import { getActivePlayground, PlaygroundType } from "../store/code";
+import pkg from "../../package.json";
 
-import NewPlaygroundModal from '../components/NewPlaygroundModal.vue';
-import CompileButton from '../components/ui/CompileButton.vue';
-import Editor from '../components/Editor.vue';
-import Console from '../components/Console.vue';
-import EditorTabs from '../components/EditorTabs/EditorTabs.vue';
-import RegularGrammarPlayground from '../components/playgrounds/RegularGrammar.vue';
-import ContextFreeGrammarPlayground from '../components/playgrounds/ContextFreeGrammar.vue';
-import TuringMachinePlayground from '../components/playgrounds/TuringMachine.vue';
+import NewPlaygroundModal from "../components/NewPlaygroundModal.vue";
+import CompileButton from "../components/ui/CompileButton.vue";
+import SyntaxSheet from "../components/ui/SyntaxSheet.vue";
+import Editor from "../components/Editor.vue";
+import Console from "../components/Console.vue";
+import EditorTabs from "../components/EditorTabs/EditorTabs.vue";
+import RegularGrammarPlayground from "../components/playgrounds/RegularGrammar.vue";
+import ContextFreeGrammarPlayground from "../components/playgrounds/ContextFreeGrammar.vue";
+import TuringMachinePlayground from "../components/playgrounds/TuringMachine.vue";
 
-import RegularGrammarAutomataExplainer from '../components/explainers/RegularGrammarAutomata.vue';
-import useKeyShortcut from '../utils/useKeyShortcut';
+import RegularGrammarAutomataExplainer from "../components/explainers/RegularGrammarAutomata.vue";
+import useKeyShortcut from "../utils/useKeyShortcut";
 
-const views: Record<PlaygroundType, Record<string, { params?: string[], view: any }>> = {
+const views: Record<
+  PlaygroundType,
+  Record<string, { params?: string[]; view: any }>
+> = {
   RG: {
     nfa: {
       params: [],
       view: RegularGrammarAutomataExplainer,
     },
-    'ε-nfa': {
+    "ε-nfa": {
       params: [],
       view: RegularGrammarAutomataExplainer,
     },
@@ -86,24 +102,30 @@ const views: Record<PlaygroundType, Record<string, { params?: string[], view: an
 const playground = computed(getActivePlayground);
 const showNewPlaygroundModal = ref(false);
 const route = useRoute();
-provide('store', playground);
+provide("store", playground);
 
 const getView = () => {
-  let explain = (
-    (Array.isArray(route.query['explain']) ? route.query['explain'][0] : route.query['explain'])
-    ??
-    'default'
-  );
+  let explain =
+    (Array.isArray(route.query["explain"])
+      ? route.query["explain"][0]
+      : route.query["explain"]) ?? "default";
 
-  if (explain === 'default' || playground.value.errors.length || !playground.value.compiled) {
-    return { type: 'default', view: views[playground.value.type].default.view };
+  if (
+    explain === "default" ||
+    playground.value.errors.length ||
+    !playground.value.compiled
+  ) {
+    return { type: "default", view: views[playground.value.type].default.view };
   }
 
   const params = views[playground.value.type][explain].params ?? [];
 
-  for(const param of params) {
+  for (const param of params) {
     if (route.query[param] === undefined) {
-      return { type: 'default', view: views[playground.value.type].default.view };
+      return {
+        type: "default",
+        view: views[playground.value.type].default.view,
+      };
     }
   }
 
@@ -111,9 +133,12 @@ const getView = () => {
 };
 
 // New playground hotkey
-useKeyShortcut((e) => e.shiftKey && e.code === 'KeyN', () => {
-  showNewPlaygroundModal.value = true;
-});
+useKeyShortcut(
+  (e) => e.shiftKey && e.code === "KeyN",
+  () => {
+    showNewPlaygroundModal.value = true;
+  }
+);
 </script>
 
 <style scoped>
