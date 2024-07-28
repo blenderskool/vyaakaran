@@ -7,17 +7,6 @@ const sampleProgram = `
 S -> 0 1 S | 1 0 S | A.
 A -> 0 1 A | 1 0 A | #.
 
-// Type your grammar here...
-
-// Syntax cheat-sheet:
-//    * Start symbol                 S
-//    * Follow (->):                 ->
-//    * ε or λ:                      ε or λ or #
-//    * Or (|):                      |
-//    * End each rule:               .
-//    * Comments:                    // comment
-//    * Non-terminals:               start with uppercase character
-//    * Terminals:                   start with any other character
 `;
 
 const router = createRouter({
