@@ -12,6 +12,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
     "@headlessui/vue": "^1.6.7",
     "@vyaakaran/compiler": "workspace:*",
     "argv-split": "^2.0.1",
