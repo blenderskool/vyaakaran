@@ -1,3 +1,3 @@
-import { ProviderType } from "./ProviderInit/ProviderFactory";
+import { ProviderType } from './ProviderInit/ProviderFactory';
 
 export const providerType: ProviderType = ProviderType.OPENAI;

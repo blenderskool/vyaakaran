@@ -10,7 +10,9 @@ export class ClaudeProvider implements IProvider {
 
   constructor() {
     if (!ANTHROPIC_API_KEY) {
-      throw new Error('Anthropic API key is not set. Please check your environment variables.');
+      throw new Error(
+        'Anthropic API key is not set. Please check your environment variables.'
+      );
     }
     this.anthropic = new Anthropic({
       apiKey: ANTHROPIC_API_KEY,
@@ -45,20 +47,34 @@ export class ClaudeProvider implements IProvider {
     } catch (error) {
       console.error('Error calling Claude API:', error);
       if (error instanceof Error) {
-        throw new Error(`Failed to generate response from Claude: ${error.message}`);
+        throw new Error(
+          `Failed to generate response from Claude: ${error.message}`
+        );
       } else {
         throw new Error('Failed to generate response from Claude');
       }
     }
   }
 
-  async generateRightRegularGrammar(userRequest: string, exampleStrings: string[]): Promise<string> {
-    const prompt = generateRightRegularGrammarPrompt(userRequest, exampleStrings);
+  async generateRightRegularGrammar(
+    userRequest: string,
+    exampleStrings: string[]
+  ): Promise<string> {
+    const prompt = generateRightRegularGrammarPrompt(
+      userRequest,
+      exampleStrings
+    );
     return this.generateGrammar(prompt);
   }
 
-  async generateContextFreeGrammar(userRequest: string, exampleStrings: string[]): Promise<string> {
-    const prompt = generateContextFreeGrammarPrompt(userRequest, exampleStrings);
+  async generateContextFreeGrammar(
+    userRequest: string,
+    exampleStrings: string[]
+  ): Promise<string> {
+    const prompt = generateContextFreeGrammarPrompt(
+      userRequest,
+      exampleStrings
+    );
     return this.generateGrammar(prompt);
   }
 }

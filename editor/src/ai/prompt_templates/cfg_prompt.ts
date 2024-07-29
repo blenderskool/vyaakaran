@@ -1,4 +1,7 @@
-export const generateContextFreeGrammarPrompt = (userRequest: string,exampleStrings:string[]=[]): string => `
+export const generateContextFreeGrammarPrompt = (
+  userRequest: string,
+  exampleStrings: string[] = []
+): string => `
 You are tasked with generating a context-free grammar (CFG) based on a user's request. Your goal is to create a valid grammar that satisfies the given language requirements and can be validated using an example string.
 
 Here is the user's request:

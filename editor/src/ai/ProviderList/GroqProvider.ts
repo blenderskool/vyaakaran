@@ -9,7 +9,9 @@ const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 export class GroqProvider implements IProvider {
   constructor() {
     if (!GROQ_API_KEY) {
-      throw new Error('Groq API key is not set. Please check your environment variables.');
+      throw new Error(
+        'Groq API key is not set. Please check your environment variables.'
+      );
     }
   }
 
@@ -23,7 +25,7 @@ export class GroqProvider implements IProvider {
         },
         {
           headers: {
-            'Authorization': `Bearer ${GROQ_API_KEY}`,
+            Authorization: `Bearer ${GROQ_API_KEY}`,
             'Content-Type': 'application/json',
           },
         }
@@ -37,20 +39,34 @@ export class GroqProvider implements IProvider {
     } catch (error) {
       console.error('Error calling Groq API:', error);
       if (error instanceof Error) {
-        throw new Error(`Failed to generate response from Groq: ${error.message}`);
+        throw new Error(
+          `Failed to generate response from Groq: ${error.message}`
+        );
       } else {
         throw new Error('Failed to generate response from Groq');
       }
     }
   }
 
-  async generateRightRegularGrammar(userRequest: string, exampleStrings: string[]): Promise<string> {
-    const prompt = generateRightRegularGrammarPrompt(userRequest, exampleStrings);
+  async generateRightRegularGrammar(
+    userRequest: string,
+    exampleStrings: string[]
+  ): Promise<string> {
+    const prompt = generateRightRegularGrammarPrompt(
+      userRequest,
+      exampleStrings
+    );
     return this.generateGrammar(prompt);
   }
 
-  async generateContextFreeGrammar(userRequest: string, exampleStrings: string[]): Promise<string> {
-    const prompt = generateContextFreeGrammarPrompt(userRequest, exampleStrings);
+  async generateContextFreeGrammar(
+    userRequest: string,
+    exampleStrings: string[]
+  ): Promise<string> {
+    const prompt = generateContextFreeGrammarPrompt(
+      userRequest,
+      exampleStrings
+    );
     return this.generateGrammar(prompt);
   }
 }

@@ -1,4 +1,7 @@
-export const generateRightRegularGrammarPrompt = (userRequest: string,exampleStrings:string[]=[]): string => `
+export const generateRightRegularGrammarPrompt = (
+  userRequest: string,
+  exampleStrings: string[] = []
+): string => `
 You are tasked with generating a right-regular grammar based on a user's request. Your goal is to create a grammar that follows the specified syntax and accurately represents the language described in the user's request.
 
 First, let's review the Backus-Naur Form (BNF) syntax for right regular grammar:
