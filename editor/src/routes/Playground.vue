@@ -40,7 +40,7 @@
   >
     <span>
       A side project designed & developed by
-      {{ " " }}
+      {{ ' ' }}
       <a class="text-cyan-300" href="https://akashhamirwasia.com"
         >Akash Hamirwasia</a
       >
@@ -50,25 +50,25 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, provide, ref } from "vue";
-import { Splitpanes, Pane } from "splitpanes";
-import { useRoute } from "vue-router";
+import { computed, provide, ref } from 'vue';
+import { Splitpanes, Pane } from 'splitpanes';
+import { useRoute } from 'vue-router';
 
-import { getActivePlayground, PlaygroundType } from "../store/code";
-import pkg from "../../package.json";
+import { getActivePlayground, PlaygroundType } from '../store/code';
+import pkg from '../../package.json';
 
-import NewPlaygroundModal from "../components/NewPlaygroundModal.vue";
-import CompileButton from "../components/ui/CompileButton.vue";
-import SyntaxSheet from "../components/ui/SyntaxSheet.vue";
-import Editor from "../components/Editor.vue";
-import Console from "../components/Console.vue";
-import EditorTabs from "../components/EditorTabs/EditorTabs.vue";
-import RegularGrammarPlayground from "../components/playgrounds/RegularGrammar.vue";
-import ContextFreeGrammarPlayground from "../components/playgrounds/ContextFreeGrammar.vue";
-import TuringMachinePlayground from "../components/playgrounds/TuringMachine.vue";
+import NewPlaygroundModal from '../components/NewPlaygroundModal.vue';
+import CompileButton from '../components/ui/CompileButton.vue';
+import SyntaxSheet from '../components/ui/SyntaxSheet.vue';
+import Editor from '../components/Editor.vue';
+import Console from '../components/Console.vue';
+import EditorTabs from '../components/EditorTabs/EditorTabs.vue';
+import RegularGrammarPlayground from '../components/playgrounds/RegularGrammar.vue';
+import ContextFreeGrammarPlayground from '../components/playgrounds/ContextFreeGrammar.vue';
+import TuringMachinePlayground from '../components/playgrounds/TuringMachine.vue';
 
-import RegularGrammarAutomataExplainer from "../components/explainers/RegularGrammarAutomata.vue";
-import useKeyShortcut from "../utils/useKeyShortcut";
+import RegularGrammarAutomataExplainer from '../components/explainers/RegularGrammarAutomata.vue';
+import useKeyShortcut from '../utils/useKeyShortcut';
 
 const views: Record<
   PlaygroundType,
@@ -79,7 +79,7 @@ const views: Record<
       params: [],
       view: RegularGrammarAutomataExplainer,
     },
-    "ε-nfa": {
+    'ε-nfa': {
       params: [],
       view: RegularGrammarAutomataExplainer,
     },
@@ -102,20 +102,20 @@ const views: Record<
 const playground = computed(getActivePlayground);
 const showNewPlaygroundModal = ref(false);
 const route = useRoute();
-provide("store", playground);
+provide('store', playground);
 
 const getView = () => {
   let explain =
-    (Array.isArray(route.query["explain"])
-      ? route.query["explain"][0]
-      : route.query["explain"]) ?? "default";
+    (Array.isArray(route.query['explain'])
+      ? route.query['explain'][0]
+      : route.query['explain']) ?? 'default';
 
   if (
-    explain === "default" ||
+    explain === 'default' ||
     playground.value.errors.length ||
     !playground.value.compiled
   ) {
-    return { type: "default", view: views[playground.value.type].default.view };
+    return { type: 'default', view: views[playground.value.type].default.view };
   }
 
   const params = views[playground.value.type][explain].params ?? [];
@@ -123,7 +123,7 @@ const getView = () => {
   for (const param of params) {
     if (route.query[param] === undefined) {
       return {
-        type: "default",
+        type: 'default',
         view: views[playground.value.type].default.view,
       };
     }
@@ -134,7 +134,7 @@ const getView = () => {
 
 // New playground hotkey
 useKeyShortcut(
-  (e) => e.shiftKey && e.code === "KeyN",
+  (e) => e.shiftKey && e.code === 'KeyN',
   () => {
     showNewPlaygroundModal.value = true;
   }

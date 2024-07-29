@@ -22,32 +22,32 @@
 </template>
 
 <script lang="ts" setup>
-import { ComputedRef, inject, onMounted, onUnmounted } from "vue";
-import { Playground } from "../../store/code";
+import { ComputedRef, inject, onMounted, onUnmounted } from 'vue';
+import { Playground } from '../../store/code';
 
 const emit = defineEmits<{
-  (e: "triggeredCompile"): void;
+  (e: 'triggeredCompile'): void;
 }>();
 
-const store = inject("store") as ComputedRef<Playground>;
+const store = inject('store') as ComputedRef<Playground>;
 
 const compile = () => {
   store.value.compile();
-  emit("triggeredCompile");
+  emit('triggeredCompile');
 };
 
 const handleCompileKeybind = (e: KeyboardEvent) => {
-  if (e.altKey && e.code === "Enter") {
+  if (e.altKey && e.code === 'Enter') {
     e.preventDefault();
     compile();
   }
 };
 
 onMounted(() => {
-  window.addEventListener("keydown", handleCompileKeybind);
+  window.addEventListener('keydown', handleCompileKeybind);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("keydown", handleCompileKeybind);
+  window.removeEventListener('keydown', handleCompileKeybind);
 });
 </script>

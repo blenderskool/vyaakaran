@@ -24,12 +24,22 @@ const router = createRouter({
       component: Playground,
       beforeEnter(to, _, next) {
         try {
-          playgrounds.push(newPlayground('Program 1', (to.params.type as string).toUpperCase() as PlaygroundType, sampleProgram));
-          return next({ name: 'Playground', params: { id: 0 }, query: to.query });
-        } catch(err) {
+          playgrounds.push(
+            newPlayground(
+              'Program 1',
+              (to.params.type as string).toUpperCase() as PlaygroundType,
+              sampleProgram
+            )
+          );
+          return next({
+            name: 'Playground',
+            params: { id: 0 },
+            query: to.query,
+          });
+        } catch (err) {
           return next({ name: '404' });
         }
-      }
+      },
     },
     {
       name: 'Playground',
@@ -37,7 +47,11 @@ const router = createRouter({
       component: Playground,
       beforeEnter(to, _, next) {
         if (!to.params.id || Number(to.params.id) >= playgrounds.length) {
-          return next({ name: 'NewPlayground', params: { type: 'RG' }, query: to.query });
+          return next({
+            name: 'NewPlayground',
+            params: { type: 'RG' },
+            query: to.query,
+          });
         } else {
           return next();
         }
@@ -56,7 +70,9 @@ router.afterEach((to) => {
 
   // Update page title to new tab's name
   if (to.name === 'Playground') {
-    document.title = `${playgrounds[Number(to.params.id)].name} | Vyaakaran Playground`;
+    document.title = `${
+      playgrounds[Number(to.params.id)].name
+    } | Vyaakaran Playground`;
   }
 });
 

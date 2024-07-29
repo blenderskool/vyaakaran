@@ -31,8 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
-import SyntaxGuideModal from "./SyntaxGuideModel.vue";
+import { ref, onMounted, onUnmounted } from 'vue';
+import SyntaxGuideModal from './SyntaxGuideModel.vue';
 
 const isSyntaxGuideVisible = ref(false);
 
@@ -45,18 +45,18 @@ const closeSyntaxGuide = () => {
 };
 
 const handleSyntaxGuideKeybind = (e: KeyboardEvent) => {
-  if (e.altKey && e.code === "KeyS") {
+  if (e.altKey && e.code === 'KeyS') {
     e.preventDefault();
     showSyntaxGuide();
   }
 };
 
 onMounted(() => {
-  window.addEventListener("keydown", handleSyntaxGuideKeybind);
+  window.addEventListener('keydown', handleSyntaxGuideKeybind);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("keydown", handleSyntaxGuideKeybind);
+  window.removeEventListener('keydown', handleSyntaxGuideKeybind);
 });
 </script>
 

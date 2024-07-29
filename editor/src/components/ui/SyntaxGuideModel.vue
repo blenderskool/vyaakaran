@@ -1,8 +1,9 @@
 <template>
-  <div
-    class="font-fira fixed inset-0 bg-black  flex justify-center z-50 h-0"
-  >
-    <div class="h-100 relative bg-black p-6 rounded-lg shadow-xl max-w-md w-full" v-draggable>
+  <div class="font-fira fixed inset-0 bg-black flex justify-center z-50 h-0">
+    <div
+      class="h-100 relative bg-black p-6 rounded-lg shadow-xl max-w-md w-full"
+      v-draggable
+    >
       <button
         @click="$emit('close')"
         class="absolute top-0 right-0 my-4 mx-2 px-2 py-1 bg-black text-white rounded"
@@ -44,15 +45,15 @@
 
 <script lang="ts" setup>
 const syntaxRules = [
-  { name: "Start symbol", syntax: "S" },
-  { name: "Follow (->)", syntax: "->" },
-  { name: "ε or λ", syntax: "ε or λ or #" },
-  { name: "Or (|)", syntax: "|" },
-  { name: "End each rule", syntax: "." },
-  { name: "Comments", syntax: "// comment" },
-  { name: "Non-terminals", syntax: "start with uppercase character" },
-  { name: "Terminals", syntax: "start with any other character" },
+  { name: 'Start symbol', syntax: 'S' },
+  { name: 'Follow (->)', syntax: '->' },
+  { name: 'ε or λ', syntax: 'ε or λ or #' },
+  { name: 'Or (|)', syntax: '|' },
+  { name: 'End each rule', syntax: '.' },
+  { name: 'Comments', syntax: '// comment' },
+  { name: 'Non-terminals', syntax: 'start with uppercase character' },
+  { name: 'Terminals', syntax: 'start with any other character' },
 ];
 
-defineEmits(["close"]);
+defineEmits(['close']);
 </script>

@@ -32,7 +32,7 @@ const draggable = {
     el.ondragstart = function () {
       return false;
     };
-  }
+  },
 };
 
 export default draggable;
