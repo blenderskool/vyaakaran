@@ -1,5 +1,5 @@
-import { SimplifiedGrammarRepresentation } from "../utils";
-import { ParseTree, SymbolType, CompileError } from "../types";
+import { SimplifiedGrammarRepresentation } from '../utils';
+import { ParseTree, SymbolType, CompileError } from '../types';
 
 class SemanticAnalyzer {
   protected parseTree: ParseTree;
@@ -34,13 +34,13 @@ class SemanticAnalyzer {
     });
 
     const errors: CompileError[] = [...undeclared].map((nonterminal) => ({
-      type: "Error",
+      type: 'Error',
       message: `${nonterminal} is not defined`,
     }));
 
-    if (!declared.has("S")) {
+    if (!declared.has('S')) {
       errors.push({
-        type: "Error",
+        type: 'Error',
         message: `Start symbol 'S' is not defined`,
       });
     }
@@ -79,12 +79,12 @@ class SemanticAnalyzer {
     };
 
     // Start traversal from start state 'S'
-    traverseConnected("S");
+    traverseConnected('S');
 
     return Object.entries(graph)
       .filter(([, { visited }]) => !visited)
       .map(([vertex]) => ({
-        type: "Warning",
+        type: 'Warning',
         message: `${vertex} is unreachable`,
       }));
   }
@@ -135,8 +135,8 @@ class SemanticAnalyzer {
 
     // Create warnings for all detected cycles
     const warnings: CompileError[] = cycles.map((cycle) => ({
-      type: "Warning" as const,
-      message: `Cyclic dependency detected: ${cycle.join(" → ")} → ${cycle[0]}`,
+      type: 'Warning' as const,
+      message: `Cyclic dependency detected: ${cycle.join(' → ')} → ${cycle[0]}`,
     }));
 
     return warnings;

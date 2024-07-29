@@ -1,8 +1,8 @@
-import RegularGrammarLexer from "./lexer";
-import RegularGrammarParser from "./parser";
-import RegularGrammarSemanticAnalyzer from "./semantic";
-import { ParseTree, Token, SymbolType, CompilerClass } from "../types";
-import { getGeneratorReturn, SimplifiedGrammarRepresentation } from "../utils";
+import RegularGrammarLexer from './lexer';
+import RegularGrammarParser from './parser';
+import RegularGrammarSemanticAnalyzer from './semantic';
+import { ParseTree, Token, SymbolType, CompilerClass } from '../types';
+import { getGeneratorReturn, SimplifiedGrammarRepresentation } from '../utils';
 
 type FAGraph = Record<
   string,
@@ -33,8 +33,8 @@ class RegularGrammar extends CompilerClass {
       const errors = new RegularGrammarSemanticAnalyzer(
         this.parseTree as ParseTree
       ).analyze();
-      this.errors.push(...errors.filter((err) => err.type === "Error"));
-      this.warnings.push(...errors.filter((err) => err.type === "Warning"));
+      this.errors.push(...errors.filter((err) => err.type === 'Error'));
+      this.warnings.push(...errors.filter((err) => err.type === 'Warning'));
     }
 
     return this;
@@ -127,7 +127,7 @@ class RegularGrammar extends CompilerClass {
         termsStack[0].type[1] === SymbolType.State
       ) {
         const toState = termsStack[0].value;
-        addToGraph(context, "#", toState);
+        addToGraph(context, '#', toState);
 
         if (!graph[toState]) {
           graph[toState] = { nodes: {}, final: false };
@@ -145,11 +145,11 @@ class RegularGrammar extends CompilerClass {
       switch (termsStack[termsStack.length - 1].type[1]) {
         // Rule 2 (Adding transition to _FIN state)
         case SymbolType.Literal:
-          if (!graph["_FIN"]) {
-            graph["_FIN"] = { nodes: {}, final: true };
+          if (!graph['_FIN']) {
+            graph['_FIN'] = { nodes: {}, final: true };
           }
           const { value } = termsStack[termsStack.length - 1];
-          addToGraph(start, value, "_FIN");
+          addToGraph(start, value, '_FIN');
           if (explain) {
             yield {
               graph,
@@ -193,7 +193,7 @@ class RegularGrammar extends CompilerClass {
    */
   optimizeFA() {
     const graph: FAGraph = this.result;
-    let incomingNodes = new Set(["S"]);
+    let incomingNodes = new Set(['S']);
 
     // Construct set of all nodes that have incoming edges
     for (const from in graph) {
@@ -279,14 +279,14 @@ class RegularGrammar extends CompilerClass {
       visited.add(root);
 
       for (const via in graph[root].nodes) {
-        if (via === "#") continue;
+        if (via === '#') continue;
 
         graph[root].nodes[via].forEach((to) => {
           stack.push([via, to]);
         });
       }
-      if (graph[root].nodes["#"]) {
-        graph[root].nodes["#"].forEach((to) => {
+      if (graph[root].nodes['#']) {
+        graph[root].nodes['#'].forEach((to) => {
           dfs(to, stack);
 
           if (graph[to].final) {
@@ -304,13 +304,13 @@ class RegularGrammar extends CompilerClass {
       };
 
       // If no ε transition exist, then check next node
-      if (!graph[node].nodes["#"]) continue;
+      if (!graph[node].nodes['#']) continue;
 
       // Remove the ε transition
-      delete resultGraph[node].nodes["#"];
+      delete resultGraph[node].nodes['#'];
 
       // For all the nodes reachable via ε transition, get all non ε transition stack along the path using DFS
-      graph[node].nodes["#"].forEach((to) => {
+      graph[node].nodes['#'].forEach((to) => {
         const stack: [string, string][] = [];
         visited.clear();
         dfs(to, stack);
@@ -361,15 +361,15 @@ class RegularGrammar extends CompilerClass {
     dfs(this.parseTree as ParseTree);
 
     const star = (exp) => {
-      if (!exp || exp === "ε") return "ε";
+      if (!exp || exp === 'ε') return 'ε';
 
-      return exp + "*";
+      return exp + '*';
     };
     const concat = (a, b) => {
-      if (!a || !b) return "";
+      if (!a || !b) return '';
 
-      if (a === "ε") return b;
-      if (b === "ε") return a;
+      if (a === 'ε') return b;
+      if (b === 'ε') return a;
 
       return `(${a}.${b})`;
     };
@@ -380,20 +380,20 @@ class RegularGrammar extends CompilerClass {
       return `(${a} + ${b})`;
     };
 
-    const nodes = ["S", ...Object.keys(graph).filter((s) => s !== "S")];
+    const nodes = ['S', ...Object.keys(graph).filter((s) => s !== 'S')];
     const A = [];
     const B = [];
 
     for (let i = 0; i < nodes.length; i++) {
-      B[i] = graph[nodes[i]].final ? "ε" : "";
+      B[i] = graph[nodes[i]].final ? 'ε' : '';
       A[i] = [];
 
       for (let j = 0; j < nodes.length; j++) {
-        A[i][j] = "";
+        A[i][j] = '';
         sigma.forEach((a: string) => {
           A[i][j] = union(
             A[i][j],
-            graph[nodes[i]].nodes[a]?.has(nodes[j]) ? a : ""
+            graph[nodes[i]].nodes[a]?.has(nodes[j]) ? a : ''
           );
         });
       }
@@ -436,7 +436,7 @@ class RegularGrammar extends CompilerClass {
     const alphabet: Set<string> = new Set();
     const stateQueue: Set<string>[] = [];
     const processedStates: Set<string>[] = [];
-    const DEAD_STATE = "Φ";
+    const DEAD_STATE = 'Φ';
 
     // Get the alphabet(List of terminals)
     for (const state in nfa) {
@@ -468,10 +468,10 @@ class RegularGrammar extends CompilerClass {
 
     // Helper function to convert set to sorted string (for state naming)
     const setToString = (set: Set<string>): string =>
-      Array.from(set).sort().join(",");
+      Array.from(set).sort().join(',');
 
     // Start with the initial state
-    const initialState = new Set(["S"]);
+    const initialState = new Set(['S']);
     stateQueue.push(initialState);
 
     while (stateQueue.length > 0) {
@@ -595,13 +595,13 @@ class RegularGrammar extends CompilerClass {
     }
 
     const startPartitionIndex = partitions.findIndex((partition) =>
-      partition.has("S")
+      partition.has('S')
     );
     if (startPartitionIndex !== -1) {
       const oldStartState = `_S-${startPartitionIndex}`;
 
       // Rename the start state to 'S'
-      minimizedDFA["S"] = minimizedDFA[oldStartState];
+      minimizedDFA['S'] = minimizedDFA[oldStartState];
       delete minimizedDFA[oldStartState];
 
       // Update all transitions to the new 'S' state
@@ -609,7 +609,7 @@ class RegularGrammar extends CompilerClass {
         for (const symbol in minimizedDFA[state].nodes) {
           if (minimizedDFA[state].nodes[symbol].has(oldStartState)) {
             minimizedDFA[state].nodes[symbol].delete(oldStartState);
-            minimizedDFA[state].nodes[symbol].add("S");
+            minimizedDFA[state].nodes[symbol].add('S');
           }
         }
       }

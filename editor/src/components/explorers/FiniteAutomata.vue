@@ -36,23 +36,23 @@
 </template>
 
 <script lang="ts" setup>
-import { onUnmounted, onUpdated, ref, watch } from "vue";
-import { useRouter } from "vue-router";
-import { SymbolType } from "@vyaakaran/compiler";
-import { type FAGraph } from "@vyaakaran/compiler/regular-grammar";
+import { onUnmounted, onUpdated, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { SymbolType } from '@vyaakaran/compiler';
+import { type FAGraph } from '@vyaakaran/compiler/regular-grammar';
 
-import { edgeConfig, getNodeConfig } from "../../config/graph";
-import { exportToImg, fillBg } from "../../utils/canvas";
-import useVisNetwork from "../../utils/useVisNetwork";
+import { edgeConfig, getNodeConfig } from '../../config/graph';
+import { exportToImg, fillBg } from '../../utils/canvas';
+import useVisNetwork from '../../utils/useVisNetwork';
 
-import PaneHeader from "../ui/PaneHeader.vue";
-import RadioTabs from "../ui/RadioTabs.vue";
-import { Edge, Network } from "vis-network/declarations/entry-esnext";
+import PaneHeader from '../ui/PaneHeader.vue';
+import RadioTabs from '../ui/RadioTabs.vue';
+import { Edge, Network } from 'vis-network/declarations/entry-esnext';
 
 const props = withDefaults(
   defineProps<{
     name?: string;
-    getGraph: (type: "ε-NFA" | "NFA" | "DFA" | "minDFA") => FAGraph | null;
+    getGraph: (type: 'ε-NFA' | 'NFA' | 'DFA' | 'minDFA') => FAGraph | null;
     showTypeSelector?: boolean;
     showExplainationOption?: boolean;
   }>(),
@@ -62,7 +62,7 @@ const props = withDefaults(
   }
 );
 
-const faType = ref<"ε-NFA" | "NFA" | "DFA" | "minDFA">("ε-NFA");
+const faType = ref<'ε-NFA' | 'NFA' | 'DFA' | 'minDFA'>('ε-NFA');
 const outputRef = ref<HTMLElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const [isVisLoading, networkLib, dataLib] = useVisNetwork();
@@ -72,15 +72,15 @@ let network: Network;
 const generateVisGraph = () => {
   if (isVisLoading.value || !outputRef.value) return;
 
-  const graph = props.getGraph(props.showTypeSelector ? faType.value : "ε-NFA");
+  const graph = props.getGraph(props.showTypeSelector ? faType.value : 'ε-NFA');
   if (!graph) return;
 
   const nodes: any[] = [
-    { id: "_START", opacity: 0 },
+    { id: '_START', opacity: 0 },
     ...Object.keys(graph).map((node) => getNodeConfig(node, graph[node].final)),
   ];
 
-  let edges: Record<string, string[]> = { "_START S": [] };
+  let edges: Record<string, string[]> = { '_START S': [] };
   for (const from in graph) {
     for (const via in graph[from].nodes) {
       graph[from].nodes[via].forEach((to) => {
@@ -88,18 +88,18 @@ const generateVisGraph = () => {
         if (!edges[key]) {
           edges[key] = [];
         }
-        edges[key].push(via === SymbolType.Empty ? "ε" : via);
+        edges[key].push(via === SymbolType.Empty ? 'ε' : via);
       });
     }
   }
 
   const visEdges: Edge[] = Object.keys(edges).map((edge) => {
-    const [from, to] = edge.split(" ");
+    const [from, to] = edge.split(' ');
     return {
       ...edgeConfig,
       from,
       to,
-      label: `*_${edges[edge].join(",")}_*`,
+      label: `*_${edges[edge].join(',')}_*`,
     };
   });
 
@@ -115,7 +115,7 @@ const generateVisGraph = () => {
     },
     {}
   );
-  network.on("beforeDrawing", (ctx: CanvasRenderingContext2D) => {
+  network.on('beforeDrawing', (ctx: CanvasRenderingContext2D) => {
     canvasRef.value = ctx.canvas;
     fillBg(ctx);
   });

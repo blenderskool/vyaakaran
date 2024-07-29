@@ -22,32 +22,32 @@
 </template>
 
 <script lang="ts" setup>
-import { ComputedRef, inject } from "vue";
-import { Pane, Splitpanes } from "splitpanes";
+import { ComputedRef, inject } from 'vue';
+import { Pane, Splitpanes } from 'splitpanes';
 import {
   type FAGraph,
   RegularGrammar,
-} from "@vyaakaran/compiler/regular-grammar";
+} from '@vyaakaran/compiler/regular-grammar';
 
-import Empty from "./Empty.vue";
-import FiniteAutomataExplorer from "../explorers/FiniteAutomata.vue";
-import RegExExplorer from "../explorers/RegEx.vue";
-import { Playground } from "../../store/code";
+import Empty from './Empty.vue';
+import FiniteAutomataExplorer from '../explorers/FiniteAutomata.vue';
+import RegExExplorer from '../explorers/RegEx.vue';
+import { Playground } from '../../store/code';
 
-const store = inject("store") as ComputedRef<Playground>;
+const store = inject('store') as ComputedRef<Playground>;
 
 const getAutomataGraph = (
-  faType: "ε-NFA" | "NFA" | "DFA" | "minDFA"
+  faType: 'ε-NFA' | 'NFA' | 'DFA' | 'minDFA'
 ): FAGraph => {
   const compiled = store.value.compiled as RegularGrammar;
   switch (faType) {
-    case "ε-NFA":
+    case 'ε-NFA':
       return compiled.toFA().optimizeFA().result;
-    case "NFA":
+    case 'NFA':
       return compiled.toEpsilonFreeFA().optimizeFA().result;
-    case "DFA":
+    case 'DFA':
       return compiled.toDFA().optimizeFA().result;
-    case "minDFA":
+    case 'minDFA':
       return compiled.toDFA().minimizeDFA().optimizeFA().result;
   }
 };
