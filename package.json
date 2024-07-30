@@ -14,5 +14,8 @@
     "website:build": "cd website && pnpm run build",
     "dev": "pnpm run editor:dev & pnpm run website:dev",
     "build": "./build.sh"
+  },
+  "dependencies": {
+    "axios": "^1.7.2"
   }
 }
