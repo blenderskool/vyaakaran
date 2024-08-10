@@ -218,7 +218,7 @@ class RegularGrammar extends CompilerClass {
     const finalStates: Set<string> = new Set(
       Object.keys(this.result).filter((state) => this.result[state].final)
     );
-    let reachableFinal = new Set<string>([...finalStates]);
+    const reachableFinal = new Set<string>([...finalStates]);
     let changed = true;
 
     // Iterate until no more changes
