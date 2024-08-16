@@ -528,10 +528,10 @@ class RegularGrammar extends CompilerClass {
       Object.keys(dfa).filter((state) => !dfa[state].final)
     );
 
-    let partitions = [finalStates, nonFinalStates].filter(
+    const partitions = [finalStates, nonFinalStates].filter(
       (set) => set.size > 0
     );
-    let workList = [...partitions];
+    const workList = [...partitions];
 
     while (workList.length > 0) {
       const partition = workList.pop()!;
