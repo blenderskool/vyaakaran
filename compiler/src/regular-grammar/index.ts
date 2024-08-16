@@ -225,7 +225,7 @@ class RegularGrammar extends CompilerClass {
     while (changed) {
       changed = false;
       for (const from in graph) {
-        if (!reachableFinal.has(from)) {
+        if (reachableFinal.has(from)) continue;
           for (const via in graph[from].nodes) {
             if (
               Array.from(graph[from].nodes[via]).some((to) =>
