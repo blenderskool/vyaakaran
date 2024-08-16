@@ -429,7 +429,6 @@ class RegularGrammar extends CompilerClass {
    * 3. Repeat step 2 until no new DFA states are created
    * 4. Mark DFA states as final if they contain any NFA final states
    **/
-
   toDFA() {
     const nfa: FAGraph = this.toEpsilonFreeFA().result;
     const dfa: FAGraph = {};
