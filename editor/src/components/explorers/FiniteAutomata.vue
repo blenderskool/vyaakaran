@@ -14,7 +14,7 @@
             class="secondary-btn"
             @click="explainConversion"
             v-if="showExplainationOption"
-            :disabled="faType === 'NFA'"
+            :disabled="faType === 'NFA' || faType === 'DFA' || faType === 'minDFA'"
           >
             Explain conversion
           </button>
