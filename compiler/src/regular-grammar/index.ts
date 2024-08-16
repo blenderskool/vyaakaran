@@ -237,15 +237,15 @@ class RegularGrammar extends CompilerClass {
               break;
             }
           }
-        }
+        
       }
     }
 
     // Remove states that can't reach a final state
     for (const from in graph) {
-      if (!reachableFinal.has(from)) {
-        delete graph[from];
-      }
+      if (reachableFinal.has(from)) continue;
+      delete graph[from];
+      
     }
 
     this.result = graph;
