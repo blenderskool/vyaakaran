@@ -105,6 +105,40 @@ class SemanticAnalyzer {
       });
     });
 
+    /**
+     * Detects cyclic dependencies in a directed graph using Depth-First Search (DFS).
+     *
+     * 1. Initialize Data Structures:
+     *    a. Create a `graph` to represent the directed graph with nodes and edges.
+     *    b. Initialize `visited` to track nodes that have been processed.
+     *    c. Initialize `recStack` to track nodes currently in the recursion stack (for cycle detection).
+     *    d. Initialize `cycles` to store detected cycles.
+     *
+     * 2. Define Cycle Detection Function:
+     *    a. Function `detectCycle(node, path = [])`:
+     *       - If the node is not in `visited`:
+     *         - Add `node` to `visited` and `recStack`.
+     *         - Add `node` to `path`.
+     *         - For each neighbor of the `node`:
+     *           - If the neighbor is not in `visited`:
+     *             - Recursively call `detectCycle(neighbor, [...path])`.
+     *             - If a cycle is detected in the recursive call, return true.
+     *           - If the neighbor is in `recStack`:
+     *             - Find the start of the cycle in `path`.
+     *             - Add the detected cycle to `cycles`.
+     *             - Return true.
+     *         - Remove `node` from `recStack` and `path` (backtrack).
+     *       - Return false.
+     *
+     * 3. Detect Cycles for All Nodes:
+     *    a. For each node in the `graph`:
+     *       - If the node is not in `visited`:
+     *         - Call `detectCycle(node)` to start cycle detection.
+     *
+     * 4. Return Detected Cycles:
+     *    - Return the list of `cycles` or use it to generate warnings/errors as needed.
+     */
+
     const detectCycle = (node: string, path: string[] = []): boolean => {
       if (!visited.has(node)) {
         visited.add(node);
