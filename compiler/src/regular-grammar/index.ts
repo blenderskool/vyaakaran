@@ -508,18 +508,42 @@ class RegularGrammar extends CompilerClass {
     this.result = dfa;
     return this;
   }
+  //https://www.irjet.net/archives/V10/i1/IRJET-V10I194.pdf
+  /**
+   * Minimize a Deterministic Finite Automaton (DFA).
+   * 1. Convert the NFA (if applicable) to a DFA.
+   * 2. Extract the alphabets from the DFA transitions.
+   * 3. Partition states into two sets: final states and non-final states.
+   * 4. While there are partitions to process:
+   *    a. Pop a partition from the work list.
+   *    b. For each symbol in the alphabets:
+   *       i. Calculate the inverse transitions for that symbol.
+   *       ii. Identify states that can transition into the current partition.
+   *       iii. Split the current partition if necessary:
+   *            - One subset for states that transition into the partition.
+   *            - Another subset for states that do not transition into the partition.
+   *    c. Update the partitions and work list:
+   *       i. Replace the current partition with the two new subsets.
+   *       ii. Add these new subsets to the work list.
+   *    d. Break the loop to restart with the updated work list.
+   * 5. Construct the minimized DFA using the final partitions.
+   * 6. Rename and update the start state in the minimized DFA.
+   * 7. Return the minimized DFA.
+   **/
+
   minimizeDFA() {
     const dfa: FAGraph = this.toDFA().result;
     const alphabet: Set<string> = new Set();
     const result: FAGraph = {};
 
-    // Get the alphabet
+    //Extract the alphabets from the DFA transitions.
     for (const state in dfa) {
       for (const symbol in dfa[state].nodes) {
         alphabet.add(symbol);
       }
     }
 
+    //Partition states into two sets: final states and non-final states.
     const finalStates = new Set(
       Object.keys(dfa).filter((state) => dfa[state].final)
     );
@@ -538,7 +562,7 @@ class RegularGrammar extends CompilerClass {
       for (const symbol of alphabet) {
         const inverseTrans = this.getInverseTransitions(dfa, symbol);
         const splitters = new Set<string>();
-
+        //The splitters set contains the states that transition into the current partition on a given input symbol.
         for (const state of partition) {
           if (inverseTrans[state]) {
             for (const fromState of inverseTrans[state]) {
@@ -617,6 +641,16 @@ class RegularGrammar extends CompilerClass {
     this.result = minimizedDFA;
     return this;
   }
+
+  /**
+   * Get the inverse transitions for a given symbol in a DFA.
+   * 1. Initialize an empty map `inverse` to store the inverse transitions.
+   * 2. For each state in the DFA (`fromState`):
+   *    a. For each state (`toState`) that `fromState` transitions to on the given symbol:
+   *       i. If `toState` is not already in `inverse`, add it with an empty set.
+   *       ii. Add `fromState` to the set of states in `inverse` that transition to `toState`.
+   * 3. Return the `inverse` map.
+   **/
 
   private getInverseTransitions(
     dfa: FAGraph,
