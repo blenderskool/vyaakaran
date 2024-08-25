@@ -213,6 +213,24 @@ class RegularGrammar extends CompilerClass {
     return this;
   }
 
+  /**
+ * Optimizes the DFA by removing states that cannot reach a final state.
+ *
+ * 1. Find Reachable States:
+ *    a. Iterate while there are changes to be made (`changed` is true):
+ *       - Set `changed` to false at the start of each iteration.
+ *       - For each state in the graph:
+ *         - Skip if the state is already in `reachableFinal`.
+ *         - For each outgoing transition from the state:
+ *           - Check if any destination state of the transition is in `reachableFinal`.
+ *           - If so, add the current state to `reachableFinal`, set `changed` to true, and break to start a new iteration.
+ * 
+ * 2. Remove Unreachable States:
+ *    - For each state in the graph:
+ *      - Remove the state from the graph if it is not in `reachableFinal`.
+ */
+
+
   optimizeReachableFinal() {
     const graph: FAGraph = this.result;
     const finalStates: Set<string> = new Set(
@@ -239,7 +257,6 @@ class RegularGrammar extends CompilerClass {
           }
         
       }
-    }
 
     // Remove states that can't reach a final state
     for (const from in graph) {
@@ -592,37 +609,37 @@ class RegularGrammar extends CompilerClass {
     }
 
     const minimizedDFA: FAGraph = {};
-    for (let i = 0; i < partitions.length; i++) {
-      const partitionState = `_S-${i}`;
-      const representativeState = partitions[i].values().next().value;
+    const setToString = (set: Set<string>): string => Array.from(set).sort().join('|');
 
-      minimizedDFA[partitionState] = {
-        nodes: {},
-        final: dfa[representativeState].final,
-      };
-      for (const symbol of alphabet) {
-        const nextState = dfa[representativeState].nodes[symbol]
-          ?.values()
-          .next().value;
-        if (nextState) {
-          const nextPartitionIndex = partitions.findIndex((partition) =>
-            partition.has(nextState)
-          );
-          if (nextPartitionIndex !== -1) {
-            minimizedDFA[partitionState].nodes[symbol] = new Set([
-              `_S-${nextPartitionIndex}`,
-            ]);
-          }
+  for (const partition of partitions) {
+    const partitionState = setToString(partition);
+    const representativeState = partition.values().next().value;
+
+    minimizedDFA[partitionState] = {
+      nodes: {},
+      final: dfa[representativeState].final,
+    };
+
+    for (const symbol of alphabet) {
+      const nextState = dfa[representativeState].nodes[symbol]
+        ?.values()
+        .next().value;
+      if (nextState) {
+        const nextPartition = partitions.find((p) => p.has(nextState));
+        if (nextPartition) {
+          minimizedDFA[partitionState].nodes[symbol] = new Set([
+            setToString(nextPartition)
+          ]);
         }
       }
     }
+  }
 
-    const startPartitionIndex = partitions.findIndex((partition) =>
-      partition.has('S')
-    );
-    if (startPartitionIndex !== -1) {
-      const oldStartState = `_S-${startPartitionIndex}`;
-
+  // Handle the start state
+  const startPartition = partitions.find((partition) => partition.has('S'));
+  if (startPartition) {
+    const oldStartState = setToString(startPartition);
+    if (oldStartState !== 'S') {
       // Rename the start state to 'S'
       minimizedDFA['S'] = minimizedDFA[oldStartState];
       delete minimizedDFA[oldStartState];
@@ -637,11 +654,11 @@ class RegularGrammar extends CompilerClass {
         }
       }
     }
-
-    this.result = minimizedDFA;
-    return this;
   }
 
+  this.result = minimizedDFA;
+  return this;
+}
   /**
    * Get the inverse transitions for a given symbol in a DFA.
    * 1. Initialize an empty map `inverse` to store the inverse transitions.
@@ -653,21 +670,22 @@ class RegularGrammar extends CompilerClass {
    **/
 
   private getInverseTransitions(
-    dfa: FAGraph,
-    symbol: string
-  ): Record<string, Set<string>> {
-    const inverse: Record<string, Set<string>> = {};
-    for (const fromState in dfa) {
-      for (const toState of dfa[fromState].nodes[symbol] || []) {
-        if (!inverse[toState]) {
-          inverse[toState] = new Set();
-        }
-        inverse[toState].add(fromState);
+  dfa: FAGraph,
+  symbol: string
+): Record<string, Set<string>> {
+  const inverse: Record<string, Set<string>> = {};
+  for (const fromState in dfa) {
+    const toStates = dfa[fromState].nodes[symbol] || new Set<string>();
+    for (const toState of toStates) {
+      if (!inverse[toState]) {
+        inverse[toState] = new Set<string>();
       }
+      inverse[toState].add(fromState);
     }
-    return inverse;
   }
+  return inverse;
 }
+
 export {
   RegularGrammarLexer,
   RegularGrammarParser,
