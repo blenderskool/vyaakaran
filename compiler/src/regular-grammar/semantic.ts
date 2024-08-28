@@ -19,7 +19,7 @@ class SemanticAnalyzer {
    */
   private checkUndeclaredNonTerminals(): CompileError[] {
     const declared: Set<string> = new Set(
-      this.grammar.rules.map(({ lhs }) => lhs)
+      this.grammar.rules.map(({ lhs }) => lhs),
     );
     const undeclared: Set<string> = new Set();
 
@@ -88,6 +88,7 @@ class SemanticAnalyzer {
         message: `${vertex} is unreachable`,
       }));
   }
+
   // Check cyclic Dependencies from production.
   private checkCyclicDependencies(): CompileError[] {
     const graph: Record<string, Set<string>> = {};
@@ -138,7 +139,6 @@ class SemanticAnalyzer {
      * 4. Return Detected Cycles:
      *    - Return the list of `cycles` or use it to generate warnings/errors as needed.
      */
-
     const detectCycle = (node: string, path: string[] = []): boolean => {
       if (!visited.has(node)) {
         visited.add(node);
