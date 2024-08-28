@@ -273,7 +273,7 @@ class RegularGrammar extends CompilerClass {
   toRegEx() {
     const graph: FAGraph = this.toEpsilonFreeFA().optimizeFA().result;
 
-    const sigma: Set<String> = new Set();
+    const sigma: Set<string> = new Set();
     const dfs = (root: ParseTree) => {
       if (!root) return;
       if (!root.body) return;

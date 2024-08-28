@@ -65,15 +65,15 @@ export class GraphHandler {
   private unreachabilityCheck() {
     if (this.errors.length > 0) return this;
 
-    let visited = new Map<string, boolean>();
+    const visited = new Map<string, boolean>();
     this.vertices.forEach((state) => {
       visited.set(state, false);
     });
 
-    let queue: string[] = ["S"];
+    const queue: string[] = ["S"];
     visited.set("S", true);
     while (queue.length !== 0) {
-      let remEle = queue.shift();
+      const remEle = queue.shift();
 
       if (this.edgeList.has(remEle!)) {
         this.edgeList.get(remEle!)?.forEach((stateTrans) => {
@@ -86,7 +86,7 @@ export class GraphHandler {
     }
 
     let msg = "";
-    for (let state of visited) {
+    for (const state of visited) {
       if (state[1] === false) {
         msg += state[0] + ", ";
         this.edgeList.delete(state[0]);
@@ -116,8 +116,8 @@ export class GraphHandler {
       return this;
     }
 
-    let finalStates = new Set<string>();
-    for (let state of this.edgeList.keys()) {
+    const finalStates = new Set<string>();
+    for (const state of this.edgeList.keys()) {
       if (state[0] === "*") {
         this.errors.push({
           type: "Error",
@@ -126,7 +126,7 @@ export class GraphHandler {
         return this;
       }
 
-      for (let stateTrans of this.edgeList.get(state)!) {
+      for (const stateTrans of this.edgeList.get(state)!) {
         if (stateTrans.nextState[0] === "*") {
           finalStates.add(stateTrans.nextState);
           if (finalStates.size > 1) {
@@ -153,8 +153,8 @@ export class GraphHandler {
   private sameReadSymbolCheck() {
     if (this.errors.length > 0) return this;
 
-    for (let edge of this.edgeList) {
-      let readSymbols = new Set();
+    for (const edge of this.edgeList) {
+      const readSymbols = new Set();
       edge[1].forEach((stateTrans) => {
         if (readSymbols.has(stateTrans.readSymbol)) {
           this.errors.push({
