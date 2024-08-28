@@ -7,7 +7,7 @@ import GrowSlideTransition from './components/transitions/GrowSlideTransition.vu
 
 import 'splitpanes/dist/splitpanes.css';
 import 'virtual:windi.css';
-
+import draggable from './directives/draggable';
 const app = createApp(App);
 
 app.directive('life', {
@@ -19,5 +19,6 @@ app.directive('life', {
 app.component('FadeTransition', FadeTransition);
 app.component('GrowSlideTransition', GrowSlideTransition);
 
+app.directive('draggable', draggable);
 app.use(router);
 app.mount('#app');
