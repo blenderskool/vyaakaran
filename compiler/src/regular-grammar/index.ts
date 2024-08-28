@@ -31,7 +31,7 @@ class RegularGrammar extends CompilerClass {
   semanticAnalysis() {
     if (!this.errors.length) {
       const errors = new RegularGrammarSemanticAnalyzer(
-        this.parseTree as ParseTree
+        this.parseTree as ParseTree,
       ).analyze();
       this.errors.push(...errors.filter((err) => err.type === 'Error'));
       this.warnings.push(...errors.filter((err) => err.type === 'Warning'));
@@ -84,7 +84,7 @@ class RegularGrammar extends CompilerClass {
     };
 
     const rules = new SimplifiedGrammarRepresentation(
-      this.parseTree as ParseTree
+      this.parseTree as ParseTree,
     ).rules;
 
     for (const rule of rules) {
@@ -214,27 +214,25 @@ class RegularGrammar extends CompilerClass {
   }
 
   /**
- * Optimizes the DFA by removing states that cannot reach a final state.
- *
- * 1. Find Reachable States:
- *    a. Iterate while there are changes to be made (`changed` is true):
- *       - Set `changed` to false at the start of each iteration.
- *       - For each state in the graph:
- *         - Skip if the state is already in `reachableFinal`.
- *         - For each outgoing transition from the state:
- *           - Check if any destination state of the transition is in `reachableFinal`.
- *           - If so, add the current state to `reachableFinal`, set `changed` to true, and break to start a new iteration.
- * 
- * 2. Remove Unreachable States:
- *    - For each state in the graph:
- *      - Remove the state from the graph if it is not in `reachableFinal`.
- */
-
-
+   * Optimizes the DFA by removing states that cannot reach a final state.
+   *
+   * 1. Find Reachable States:
+   *    a. Iterate while there are changes to be made (`changed` is true):
+   *       - Set `changed` to false at the start of each iteration.
+   *       - For each state in the graph:
+   *         - Skip if the state is already in `reachableFinal`.
+   *         - For each outgoing transition from the state:
+   *           - Check if any destination state of the transition is in `reachableFinal`.
+   *           - If so, add the current state to `reachableFinal`, set `changed` to true, and break to start a new iteration.
+   *
+   * 2. Remove Unreachable States:
+   *    - For each state in the graph:
+   *      - Remove the state from the graph if it is not in `reachableFinal`.
+   */
   optimizeReachableFinal() {
     const graph: FAGraph = this.result;
     const finalStates: Set<string> = new Set(
-      Object.keys(this.result).filter((state) => this.result[state].final)
+      Object.keys(this.result).filter((state) => this.result[state].final),
     );
     const reachableFinal = new Set<string>([...finalStates]);
     let changed = true;
@@ -244,29 +242,28 @@ class RegularGrammar extends CompilerClass {
       changed = false;
       for (const from in graph) {
         if (reachableFinal.has(from)) continue;
-          for (const via in graph[from].nodes) {
-            if (
-              Array.from(graph[from].nodes[via]).some((to) =>
-                reachableFinal.has(to)
-              )
-            ) {
-              reachableFinal.add(from);
-              changed = true;
-              break;
-            }
+        for (const via in graph[from].nodes) {
+          if (
+            Array.from(graph[from].nodes[via]).some((to) =>
+              reachableFinal.has(to),
+            )
+          ) {
+            reachableFinal.add(from);
+            changed = true;
+            break;
           }
-        
+        }
       }
 
-    // Remove states that can't reach a final state
-    for (const from in graph) {
-      if (reachableFinal.has(from)) continue;
-      delete graph[from];
-      
-    }
+      // Remove states that can't reach a final state
+      for (const from in graph) {
+        if (reachableFinal.has(from)) continue;
+        delete graph[from];
+      }
 
-    this.result = graph;
-    return this;
+      this.result = graph;
+      return this;
+    }
   }
 
   /**
@@ -410,7 +407,7 @@ class RegularGrammar extends CompilerClass {
         sigma.forEach((a: string) => {
           A[i][j] = union(
             A[i][j],
-            graph[nodes[i]].nodes[a]?.has(nodes[j]) ? a : ''
+            graph[nodes[i]].nodes[a]?.has(nodes[j]) ? a : '',
           );
         });
       }
@@ -469,13 +466,13 @@ class RegularGrammar extends CompilerClass {
     // Helper function to get the next state set
     const getNextStateSet = (
       currentSet: Set<string>,
-      symbol: string
+      symbol: string,
     ): Set<string> => {
       const nextSet = new Set<string>();
       for (const state of currentSet) {
         if (nfa[state].nodes[symbol]) {
           nfa[state].nodes[symbol].forEach((nextState) =>
-            nextSet.add(nextState)
+            nextSet.add(nextState),
           );
         }
       }
@@ -503,7 +500,7 @@ class RegularGrammar extends CompilerClass {
 
       // Check if the current state set contains any final state from NFA
       dfa[currentState].final = Array.from(currentSet).some(
-        (state) => nfa[state].final
+        (state) => nfa[state].final,
       );
 
       for (const symbol of alphabet) {
@@ -525,7 +522,7 @@ class RegularGrammar extends CompilerClass {
     this.result = dfa;
     return this;
   }
-  //https://www.irjet.net/archives/V10/i1/IRJET-V10I194.pdf
+
   /**
    * Minimize a Deterministic Finite Automaton (DFA).
    * 1. Convert the NFA (if applicable) to a DFA.
@@ -546,8 +543,9 @@ class RegularGrammar extends CompilerClass {
    * 5. Construct the minimized DFA using the final partitions.
    * 6. Rename and update the start state in the minimized DFA.
    * 7. Return the minimized DFA.
+   *
+   * @link https://www.irjet.net/archives/V10/i1/IRJET-V10I194.pdf
    **/
-
   minimizeDFA() {
     const dfa: FAGraph = this.toDFA().result;
     const alphabet: Set<string> = new Set();
@@ -562,14 +560,14 @@ class RegularGrammar extends CompilerClass {
 
     //Partition states into two sets: final states and non-final states.
     const finalStates = new Set(
-      Object.keys(dfa).filter((state) => dfa[state].final)
+      Object.keys(dfa).filter((state) => dfa[state].final),
     );
     const nonFinalStates = new Set(
-      Object.keys(dfa).filter((state) => !dfa[state].final)
+      Object.keys(dfa).filter((state) => !dfa[state].final),
     );
 
     const partitions = [finalStates, nonFinalStates].filter(
-      (set) => set.size > 0
+      (set) => set.size > 0,
     );
     const workList = [...partitions];
 
@@ -592,10 +590,10 @@ class RegularGrammar extends CompilerClass {
           const currentPartition = partitions[i];
 
           const intersection = new Set(
-            [...currentPartition].filter((x) => splitters.has(x))
+            [...currentPartition].filter((x) => splitters.has(x)),
           );
           const difference = new Set(
-            [...currentPartition].filter((x) => !splitters.has(x))
+            [...currentPartition].filter((x) => !splitters.has(x)),
           );
 
           if (intersection.size > 0 && difference.size > 0) {
@@ -609,56 +607,58 @@ class RegularGrammar extends CompilerClass {
     }
 
     const minimizedDFA: FAGraph = {};
-    const setToString = (set: Set<string>): string => Array.from(set).sort().join('|');
+    const setToString = (set: Set<string>): string =>
+      Array.from(set).sort().join('|');
 
-  for (const partition of partitions) {
-    const partitionState = setToString(partition);
-    const representativeState = partition.values().next().value;
+    for (const partition of partitions) {
+      const partitionState = setToString(partition);
+      const representativeState = partition.values().next().value;
 
-    minimizedDFA[partitionState] = {
-      nodes: {},
-      final: dfa[representativeState].final,
-    };
+      minimizedDFA[partitionState] = {
+        nodes: {},
+        final: dfa[representativeState].final,
+      };
 
-    for (const symbol of alphabet) {
-      const nextState = dfa[representativeState].nodes[symbol]
-        ?.values()
-        .next().value;
-      if (nextState) {
-        const nextPartition = partitions.find((p) => p.has(nextState));
-        if (nextPartition) {
-          minimizedDFA[partitionState].nodes[symbol] = new Set([
-            setToString(nextPartition)
-          ]);
-        }
-      }
-    }
-  }
-
-  // Handle the start state
-  const startPartition = partitions.find((partition) => partition.has('S'));
-  if (startPartition) {
-    const oldStartState = setToString(startPartition);
-    if (oldStartState !== 'S') {
-      // Rename the start state to 'S'
-      minimizedDFA['S'] = minimizedDFA[oldStartState];
-      delete minimizedDFA[oldStartState];
-
-      // Update all transitions to the new 'S' state
-      for (const state in minimizedDFA) {
-        for (const symbol in minimizedDFA[state].nodes) {
-          if (minimizedDFA[state].nodes[symbol].has(oldStartState)) {
-            minimizedDFA[state].nodes[symbol].delete(oldStartState);
-            minimizedDFA[state].nodes[symbol].add('S');
+      for (const symbol of alphabet) {
+        const nextState = dfa[representativeState].nodes[symbol]
+          ?.values()
+          .next().value;
+        if (nextState) {
+          const nextPartition = partitions.find((p) => p.has(nextState));
+          if (nextPartition) {
+            minimizedDFA[partitionState].nodes[symbol] = new Set([
+              setToString(nextPartition),
+            ]);
           }
         }
       }
     }
+
+    // Handle the start state
+    const startPartition = partitions.find((partition) => partition.has('S'));
+    if (startPartition) {
+      const oldStartState = setToString(startPartition);
+      if (oldStartState !== 'S') {
+        // Rename the start state to 'S'
+        minimizedDFA['S'] = minimizedDFA[oldStartState];
+        delete minimizedDFA[oldStartState];
+
+        // Update all transitions to the new 'S' state
+        for (const state in minimizedDFA) {
+          for (const symbol in minimizedDFA[state].nodes) {
+            if (minimizedDFA[state].nodes[symbol].has(oldStartState)) {
+              minimizedDFA[state].nodes[symbol].delete(oldStartState);
+              minimizedDFA[state].nodes[symbol].add('S');
+            }
+          }
+        }
+      }
+    }
+
+    this.result = minimizedDFA;
+    return this;
   }
 
-  this.result = minimizedDFA;
-  return this;
-}
   /**
    * Get the inverse transitions for a given symbol in a DFA.
    * 1. Initialize an empty map `inverse` to store the inverse transitions.
@@ -668,22 +668,22 @@ class RegularGrammar extends CompilerClass {
    *       ii. Add `fromState` to the set of states in `inverse` that transition to `toState`.
    * 3. Return the `inverse` map.
    **/
-
   private getInverseTransitions(
-  dfa: FAGraph,
-  symbol: string
-): Record<string, Set<string>> {
-  const inverse: Record<string, Set<string>> = {};
-  for (const fromState in dfa) {
-    const toStates = dfa[fromState].nodes[symbol] || new Set<string>();
-    for (const toState of toStates) {
-      if (!inverse[toState]) {
-        inverse[toState] = new Set<string>();
+    dfa: FAGraph,
+    symbol: string,
+  ): Record<string, Set<string>> {
+    const inverse: Record<string, Set<string>> = {};
+    for (const fromState in dfa) {
+      const toStates = dfa[fromState].nodes[symbol] || new Set<string>();
+      for (const toState of toStates) {
+        if (!inverse[toState]) {
+          inverse[toState] = new Set<string>();
+        }
+        inverse[toState].add(fromState);
       }
-      inverse[toState].add(fromState);
     }
+    return inverse;
   }
-  return inverse;
 }
 
 export {
